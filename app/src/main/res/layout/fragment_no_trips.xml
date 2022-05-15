@@ -76,11 +76,12 @@
             app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/createBtn"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginTop="19dp"
             android:background="@drawable/dark_round_button"
+            android:onClick="onClick"
             android:text="Create a Trip"
             android:textAllCaps="false"
             android:textColor="#F9F7F7"
