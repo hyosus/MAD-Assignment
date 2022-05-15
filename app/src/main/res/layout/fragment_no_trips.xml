@@ -16,7 +16,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
             android:text="Upcoming"
             android:textAlignment="textStart"
             android:textColor="#112D4E"
@@ -38,8 +37,10 @@
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="0dp"
-            android:layout_height="500dp"
-            android:layout_marginTop="12dp"
+            android:layout_height="350dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="20dp"
             android:src="@drawable/travel_img"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,26 +48,45 @@
 
         <TextView
             android:id="@+id/textView4"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            tools:layout_editor_absoluteX="166dp"
-            tools:layout_editor_absoluteY="556dp" />
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="20dp"
+            android:text="Traveling Somewhere?"
+            android:textAlignment="center"
+            android:textColor="#112D4E"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
         <TextView
             android:id="@+id/textView5"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            tools:layout_editor_absoluteX="166dp"
-            tools:layout_editor_absoluteY="598dp" />
+            android:layout_marginTop="8dp"
+            android:text="Creating a trip helps you get discovered by potential hosts and people to meet."
+            android:textAlignment="center"
+            android:textColor="#112D4E"
+            android:textSize="14dp"
+            app:layout_constraintEnd_toEndOf="@+id/textView4"
+            app:layout_constraintStart_toStartOf="@+id/textView4"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
         <Button
             android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button"
-            tools:layout_editor_absoluteX="150dp"
-            tools:layout_editor_absoluteY="637dp" />
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="19dp"
+            android:background="@drawable/dark_round_button"
+            android:text="Create a Trip"
+            android:textAllCaps="false"
+            android:textColor="#F9F7F7"
+            android:textSize="16dp"
+            app:layout_constraintEnd_toEndOf="@+id/textView5"
+            app:layout_constraintStart_toStartOf="@+id/textView5"
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
