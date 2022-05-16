@@ -32,13 +32,13 @@
         app:layout_constraintTop_toBottomOf="@+id/backBtn" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/nameTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:ems="10"
+        android:hint="Trip Name"
         android:inputType="textPersonName"
-        android:text="Trip Name"
         android:textColor="@color/dark_blue"
         android:textSize="16dp"
         app:layout_constraintEnd_toEndOf="@+id/textView6"
@@ -47,56 +47,58 @@
         tools:ignore="TouchTargetSizeCheck" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName2"
+        android:id="@+id/destinationTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:ems="10"
+        android:hint="Destination"
         android:inputType="textPersonName"
-        android:text="Destination"
         android:textColor="@color/dark_blue"
         android:textSize="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/nameTxt"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName"
+        app:layout_constraintStart_toStartOf="@+id/nameTxt"
+        app:layout_constraintTop_toBottomOf="@+id/nameTxt"
         tools:ignore="TouchTargetSizeCheck" />
 
     <EditText
-        android:id="@+id/editTextDate"
+        android:id="@+id/startTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="40dp"
         android:ems="8"
+        android:focusable="false"
+        android:hint="Start Date"
         android:inputType="date"
         android:textColor="@color/dark_blue"
         android:textSize="16dp"
-        app:layout_constraintEnd_toStartOf="@+id/editTextDate2"
+        app:layout_constraintEnd_toStartOf="@+id/endTxt"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName2"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2"
-        tools:ignore="TouchTargetSizeCheck"
-        tools:text="Start Date" />
+        app:layout_constraintStart_toStartOf="@+id/destinationTxt"
+        app:layout_constraintTop_toBottomOf="@+id/destinationTxt"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <EditText
-        android:id="@+id/editTextDate2"
+        android:id="@+id/endTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="8"
+        android:focusable="false"
+        android:hint="End Date"
         android:inputType="date"
         android:textColor="@color/dark_blue"
         android:textSize="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPersonName2"
+        app:layout_constraintEnd_toEndOf="@+id/destinationTxt"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/editTextDate"
-        app:layout_constraintTop_toTopOf="@+id/editTextDate"
-        tools:ignore="TouchTargetSizeCheck"
-        tools:text="End Date" />
+        app:layout_constraintStart_toEndOf="@+id/startTxt"
+        app:layout_constraintTop_toTopOf="@+id/startTxt"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/saveBtn"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginEnd="20dp"
