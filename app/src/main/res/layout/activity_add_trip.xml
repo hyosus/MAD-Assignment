@@ -6,6 +6,38 @@
     android:layout_height="match_parent"
     tools:context=".AddTrip">
 
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="Start Date"
+        android:textColor="@color/dark_blue"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="@+id/destinationTxt"
+        app:layout_constraintTop_toBottomOf="@+id/destinationTxt" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="End Date"
+        android:textColor="@color/dark_blue"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="@+id/endTxt"
+        app:layout_constraintTop_toTopOf="@+id/textView10" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Title"
+        android:textColor="@color/dark_blue"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
     <ImageView
         android:id="@+id/backBtn"
         android:layout_width="35dp"
@@ -25,7 +57,7 @@
         android:layout_marginEnd="20dp"
         android:text="Add Trip"
         android:textColor="@color/dark_blue"
-        android:textSize="18dp"
+        android:textSize="22dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/backBtn"
@@ -34,63 +66,72 @@
     <EditText
         android:id="@+id/nameTxt"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/btn_border"
         android:ems="10"
-        android:hint="Trip Name"
         android:inputType="textPersonName"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:textColor="@color/dark_blue"
         android:textSize="16dp"
         app:layout_constraintEnd_toEndOf="@+id/textView6"
         app:layout_constraintStart_toStartOf="@+id/textView6"
-        app:layout_constraintTop_toBottomOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/textView8"
         tools:ignore="TouchTargetSizeCheck" />
 
     <EditText
         android:id="@+id/destinationTxt"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/btn_border"
         android:ems="10"
-        android:hint="Destination"
         android:inputType="textPersonName"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:textColor="@color/dark_blue"
         android:textSize="16dp"
         app:layout_constraintEnd_toEndOf="@+id/nameTxt"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/nameTxt"
-        app:layout_constraintTop_toBottomOf="@+id/nameTxt"
+        app:layout_constraintTop_toBottomOf="@+id/textView9"
         tools:ignore="TouchTargetSizeCheck" />
 
     <EditText
         android:id="@+id/startTxt"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="6dp"
         android:layout_marginEnd="40dp"
+        android:background="@drawable/btn_border"
         android:ems="8"
         android:focusable="false"
-        android:hint="Start Date"
         android:inputType="date"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:textColor="@color/dark_blue"
         android:textSize="16dp"
         app:layout_constraintEnd_toStartOf="@+id/endTxt"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="@+id/destinationTxt"
-        app:layout_constraintTop_toBottomOf="@+id/destinationTxt"
+        app:layout_constraintTop_toBottomOf="@+id/textView10"
         tools:ignore="TouchTargetSizeCheck" />
 
     <EditText
         android:id="@+id/endTxt"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:background="@drawable/btn_border"
         android:ems="8"
         android:focusable="false"
-        android:hint="End Date"
         android:inputType="date"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:textColor="@color/dark_blue"
         android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/startTxt"
         app:layout_constraintEnd_toEndOf="@+id/destinationTxt"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/startTxt"
@@ -99,11 +140,23 @@
 
     <ImageView
         android:id="@+id/saveBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintBottom_toBottomOf="@+id/backBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/backBtn"
         app:srcCompat="@drawable/save_icon" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="Destination"
+        android:textColor="@color/dark_blue"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="@+id/nameTxt"
+        app:layout_constraintTop_toBottomOf="@+id/nameTxt" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
