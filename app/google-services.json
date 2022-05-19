@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "544462281916",
+    "firebase_url": "https://mad-assignment-be575-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "mad-assignment-be575",
+    "storage_bucket": "mad-assignment-be575.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544462281916:android:157e7fe8bbef5ab9ee04b9",
+        "android_client_info": {
+          "package_name": "sg.edu.np.mad.assignment"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "544462281916-j4kmj8k5e9m5md4ujcltqljluuj90bjh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0dQ-elECOug0_RRXoNgdrsy2fn1Qk5ps"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544462281916-j4kmj8k5e9m5md4ujcltqljluuj90bjh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

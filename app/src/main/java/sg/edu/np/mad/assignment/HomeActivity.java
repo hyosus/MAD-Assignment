@@ -9,13 +9,12 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-import sg.edu.np.mad.assignment.databinding.ActivityMainBinding;
+import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -28,11 +27,19 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        ArrayList<Trip> tripList = new ArrayList<>();
+        tripList.add(new Trip("singapore", "12/05/2022", "17/05.2022", "june holi"));
+
+
         // Show NoTripsFragment if user has not created any trips
-        if (Trips == null){
-            //Log.v("test","empty");
+        if (tripList.isEmpty()){
             loadFragment(new NoTripsFragment());
         }
+        else {
+            loadFragment(new TripsFragment());
+        }
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragFrame,new TripsFragment()).commit();
 
         bottomNavigationView = findViewById(R.id.navBar);
 
