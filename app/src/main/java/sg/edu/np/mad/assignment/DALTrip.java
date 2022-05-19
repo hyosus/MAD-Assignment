@@ -7,10 +7,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
-public class DAOTrip {
+public class DALTrip {
 
     private DatabaseReference databaseReference;
-    public DAOTrip(){
+    public DALTrip(){
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         databaseReference = db.getReference(Trip.class.getSimpleName());
     }

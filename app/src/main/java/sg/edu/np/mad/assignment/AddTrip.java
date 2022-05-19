@@ -2,14 +2,10 @@ package sg.edu.np.mad.assignment;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,7 +13,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -58,9 +53,9 @@ public class AddTrip extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // validation();
-                DAOTrip dao = new DAOTrip();
+                DALTrip dalTrip = new DALTrip();
                 Trip trip = new Trip(dest.getText().toString(), sd.getText().toString(), ed.getText().toString(), name.getText().toString());
-                dao.add(trip).addOnSuccessListener(new OnSuccessListener<Void>() {
+                dalTrip.add(trip).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         finish();
