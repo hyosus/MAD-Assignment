@@ -54,8 +54,7 @@ public class AddTrip extends AppCompatActivity {
 
 
         // Save user input
-        Button submit = findViewById(R.id.submit);
-        submit.setOnClickListener((new View.OnClickListener() {
+        save.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // validation();
