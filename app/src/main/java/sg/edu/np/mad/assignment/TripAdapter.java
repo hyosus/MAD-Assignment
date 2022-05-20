@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
@@ -24,23 +23,24 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
         this.dataHolder = dataHolder;
     }
 
-    public TripAdapter(List<Trip> dataHolder) {
-        this.dataHolder = dataHolder;
-    }
-
     @NonNull
     @Override
     public myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.trip_view_holder, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ongoing_trip_view_holder, parent, false);
         return new myviewholder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull myviewholder holder, int position) {
-        Trip t = dataHolder.get(position);
+        //Trip t = dataHolder.get(position);
         holder.title.setText(dataHolder.get(position).getTripName());
-        String dateStr = dataHolder.get(position).getStartDate() + dataHolder.get(position).getEndDate();
+
+        // get start and end date in a single string
+        String dateStr = dataHolder.get(position).getStartDate() + " - " + dataHolder.get(position).getEndDate();
+
         holder.date.setText(dateStr);
+
+        String startD = dataHolder.get(position).getStartDate();
 
     }
 
@@ -52,13 +52,14 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
     class myviewholder extends RecyclerView.ViewHolder
     {
         ImageView img;
-        TextView title, date;
+        TextView title, date, daysLeft;
 
         public myviewholder(@NonNull View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.bgVH);
             title = itemView.findViewById(R.id.titleVH);
             date = itemView.findViewById(R.id.dateVH);
+            daysLeft = itemView.findViewById(R.id.daysLeftVH);
 
         }
     }

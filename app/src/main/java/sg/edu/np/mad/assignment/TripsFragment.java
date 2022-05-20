@@ -54,17 +54,13 @@ public class TripsFragment extends Fragment {
 
         showData();
 
-//        Trip obj = new Trip("Singapore","12/05/2022", "15/05/2022", "Holiday");
-//        dataHolder.add(obj);
-
-//        recyclerView.setAdapter(new TripAdapter(dataHolder));
-
         return mview;
     }
 
     private void showData()
     {
-
+        // eDate.compareTo(sDate)<0
+        String todaydate = "21/05/2022";
         db.collection("Trip")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -73,24 +69,21 @@ public class TripsFragment extends Fragment {
                         // Call when data is retrieved
                         for (DocumentSnapshot doc: task.getResult()) {
                             Trip trip = new Trip(
-                                    doc.getString("tripName"),
-                                    doc.getString("endDate"),
+                                    doc.getString("destination"),
                                     doc.getString("startDate"),
-                                    doc.getString("destination"));
-                            dataHolder.add(trip);
+                                    doc.getString("endDate"),
+                                    doc.getString("tripName"));
+
+
+                            if (todaydate.compareTo(doc.getString("startDate")) > 0 & todaydate.compareTo(doc.getString("endDate")) < 0){
+                                dataHolder.add(trip);
+                            }
+
                         }
+
                         adapter = new TripAdapter(TripsFragment.this, dataHolder);
 
                         recyclerView.setAdapter(adapter);
-
-                        Log.v("ret", dataHolder.toString());
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Call when there is error while retrieving
 
                     }
                 });
