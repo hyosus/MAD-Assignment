@@ -10,18 +10,20 @@ public class TripViewHolder extends RecyclerView.ViewHolder {
     TextView title;
     ImageView bg;
 
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_trip_view_holder);
-//    }
-
     public TripViewHolder(View itemView){
         super(itemView);
 
 
         title = itemView.findViewById(R.id.titleVH);
         bg = itemView.findViewById(R.id.bgVH);
+
+        // Set intent to itinerary
+        bg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
     }
 }

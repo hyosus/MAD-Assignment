@@ -1,5 +1,6 @@
 package sg.edu.np.mad.assignment;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +11,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
 {
-    ArrayList<Trip> dataHolder;
+    TripsFragment tripsFragment;
+    List<Trip> dataHolder;
+    Context context;
 
-    public TripAdapter(ArrayList<Trip> dataHolder) {
+    public TripAdapter(TripsFragment tripsFragment, List<Trip> dataHolder) {
+        this.tripsFragment = tripsFragment;
+        this.dataHolder = dataHolder;
+    }
+
+    public TripAdapter(List<Trip> dataHolder) {
         this.dataHolder = dataHolder;
     }
 
@@ -30,6 +39,8 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
     public void onBindViewHolder(@NonNull myviewholder holder, int position) {
         Trip t = dataHolder.get(position);
         holder.title.setText(dataHolder.get(position).getTripName());
+        String dateStr = dataHolder.get(position).getStartDate() + dataHolder.get(position).getEndDate();
+        holder.date.setText(dateStr);
 
     }
 
@@ -41,12 +52,13 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
     class myviewholder extends RecyclerView.ViewHolder
     {
         ImageView img;
-        TextView title;
+        TextView title, date;
 
         public myviewholder(@NonNull View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.bgVH);
             title = itemView.findViewById(R.id.titleVH);
+            date = itemView.findViewById(R.id.dateVH);
 
         }
     }

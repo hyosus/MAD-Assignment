@@ -23,7 +23,6 @@ public class AddTrip extends AppCompatActivity {
 //    final Calendar startCalendar= Calendar.getInstance();
 //    final Calendar endCalendar= Calendar.getInstance();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,9 +43,10 @@ public class AddTrip extends AppCompatActivity {
             }
         }));
 
-        // Get user input
+
         save = findViewById(R.id.saveBtn);
 
+        DALTrip dalTrip = new DALTrip();
 
         // Save user input
         save.setOnClickListener((new View.OnClickListener() {
@@ -55,18 +55,12 @@ public class AddTrip extends AppCompatActivity {
                 // validation();
                 DALTrip dalTrip = new DALTrip();
                 Trip trip = new Trip(dest.getText().toString(), sd.getText().toString(), ed.getText().toString(), name.getText().toString());
-                dalTrip.add(trip).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        finish();
-                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                dalTrip.createTrip(trip);
+                finish();
+                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
 
-
-//                Trips t = new Trips(dest.toString(), sd.toString(), ed.toString(), name.toString());
-//                Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
-//                startActivity(Intent);
+                Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
+                startActivity(Intent);
             }
         }));
 
