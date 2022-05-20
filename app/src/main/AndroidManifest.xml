@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Assignment">
         <activity
-            android:name=".TripViewHolder"
+            android:name=".OngoingTripViewHolder"
             android:exported="false" />
         <activity
             android:name=".AddTrip"

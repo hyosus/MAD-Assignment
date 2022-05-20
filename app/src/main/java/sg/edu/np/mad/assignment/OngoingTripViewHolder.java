@@ -6,11 +6,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class TripViewHolder extends RecyclerView.ViewHolder {
+public class OngoingTripViewHolder extends RecyclerView.ViewHolder {
     TextView title;
     ImageView bg;
 
-    public TripViewHolder(View itemView){
+    public OngoingTripViewHolder(View itemView){
         super(itemView);
 
 
