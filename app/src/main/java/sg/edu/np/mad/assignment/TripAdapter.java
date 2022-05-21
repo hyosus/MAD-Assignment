@@ -9,6 +9,10 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
@@ -16,6 +20,10 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
     TripsFragment tripsFragment;
     List<Trip> dataHolder;
     Context context;
+
+    private Calendar calendar;
+    private SimpleDateFormat dateFormat;
+    private String todaydate;
 
     public TripAdapter(Context context, List<Trip> dataHolder) {
         this.tripsFragment = tripsFragment;
@@ -32,12 +40,35 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
     public void onBindViewHolder(final TripAdapter.myviewholder holder, int position) {
         holder.title.setText(dataHolder.get(position).getTripName());
 
-        // get start and end date in a single string
-        String dateStr = dataHolder.get(position).getStartDate() + " - " + dataHolder.get(position).getEndDate();
+        // get start and end duration in a single string
+        String durationStr = dataHolder.get(position).getStartDate() + " - " + dataHolder.get(position).getEndDate();
 
-        holder.date.setText(dateStr);
+        holder.duration.setText(durationStr);
 
-        String startD = dataHolder.get(position).getStartDate();
+        // get current date
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("dd/M/yyyy");
+        todaydate = dateFormat.format(calendar.getTime());
+
+        try {
+            Date today = dateFormat.parse(todaydate);
+            Date startdate = dateFormat.parse(dataHolder.get(position).getStartDate());
+
+            long difference = Math.abs(startdate.getTime() - today.getTime());
+            long differenceDates = difference / (24 * 60 * 60 * 1000);
+            String dayDifference = Long.toString(differenceDates);
+
+            if (today.after(startdate))
+            {
+                holder.daysLeft.setVisibility(View.GONE);
+                holder.timeIcon.setVisibility(View.GONE);
+            }
+
+            holder.daysLeft.setText(dayDifference + " day(s)");
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -48,14 +79,15 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
 
     class myviewholder extends RecyclerView.ViewHolder
     {
-        ImageView img;
-        TextView title, date, daysLeft;
+        ImageView img, timeIcon;
+        TextView title, duration, daysLeft;
 
         public myviewholder(View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.bgVH);
+            timeIcon = itemView.findViewById(R.id.timeIconVH);
             title = itemView.findViewById(R.id.titleVH);
-            date = itemView.findViewById(R.id.dateVH);
+            duration = itemView.findViewById(R.id.dateVH);
             daysLeft = itemView.findViewById(R.id.daysLeftVH);
 
         }
