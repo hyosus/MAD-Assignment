@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -18,21 +17,19 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
     List<Trip> dataHolder;
     Context context;
 
-    public TripAdapter(TripsFragment tripsFragment, List<Trip> dataHolder) {
+    public TripAdapter(Context context, List<Trip> dataHolder) {
         this.tripsFragment = tripsFragment;
         this.dataHolder = dataHolder;
     }
 
-    @NonNull
     @Override
-    public myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ongoing_trip_view_holder, parent, false);
+    public TripAdapter.myviewholder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.trip_view_holder, parent, false);
         return new myviewholder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull myviewholder holder, int position) {
-        //Trip t = dataHolder.get(position);
+    public void onBindViewHolder(final TripAdapter.myviewholder holder, int position) {
         holder.title.setText(dataHolder.get(position).getTripName());
 
         // get start and end date in a single string
@@ -54,7 +51,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
         ImageView img;
         TextView title, date, daysLeft;
 
-        public myviewholder(@NonNull View itemView) {
+        public myviewholder(View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.bgVH);
             title = itemView.findViewById(R.id.titleVH);

@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,19 +26,25 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class TripsFragment extends Fragment {
     private View mview;
-    RecyclerView recyclerView;
+    RecyclerView ongoingRV, upcomingRV;
     List<Trip> dataHolder = new ArrayList<>();
-    ArrayList<Trip> tripList;
+    List<Trip> dataHolder2 = new ArrayList<>();
+
+    private Calendar calendar;
+    private SimpleDateFormat dateFormat;
+    private String todaydate;
 
     // Firestore instance
     FirebaseFirestore db;
-
-    TripAdapter adapter;
 
     public TripsFragment() {
         // Required empty public constructor
@@ -46,8 +54,6 @@ public class TripsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mview = inflater.inflate(R.layout.fragment_trips, container, false);
-        recyclerView = mview.findViewById(R.id.ongoingRV);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // init firestore
         db = FirebaseFirestore.getInstance();
@@ -59,33 +65,60 @@ public class TripsFragment extends Fragment {
 
     private void showData()
     {
-        // eDate.compareTo(sDate)<0
-        String todaydate = "21/05/2022";
+        // get current date
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("dd/M/yyyy");
+        todaydate = dateFormat.format(calendar.getTime());
+
+        // get & write firestore data
         db.collection("Trip")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    public void onComplete(Task<QuerySnapshot> task) {
+
                         // Call when data is retrieved
                         for (DocumentSnapshot doc: task.getResult()) {
+
                             Trip trip = new Trip(
                                     doc.getString("destination"),
                                     doc.getString("startDate"),
                                     doc.getString("endDate"),
                                     doc.getString("tripName"));
 
+                            try {
+                                Date today = dateFormat.parse(todaydate);
+                                Date startdate = dateFormat.parse(doc.getString("startDate"));
+                                Date enddate = dateFormat.parse(doc.getString("endDate"));
 
-                            if (todaydate.compareTo(doc.getString("startDate")) > 0 & todaydate.compareTo(doc.getString("endDate")) < 0){
-                                dataHolder.add(trip);
+                                // Display Upcoming trips - today's date AFTER start date & BEFORE end date
+                                if (today.after(startdate) && today.before(enddate)) {
+                                    dataHolder.add(trip);
+
+                                    TripAdapter adapter = new TripAdapter(getContext(), dataHolder);
+                                    ongoingRV= mview.findViewById(R.id.ongoingRV);
+                                    LinearLayoutManager firstManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                                    ongoingRV.setLayoutManager(firstManager);
+                                    ongoingRV.setAdapter(adapter);
+                                }
+                                //Display upcoming trips - today's date BEFORE start date & BEFORE end date
+                                else if (today.before(startdate) && today.before(enddate))
+                                {
+                                    dataHolder2.add(trip);
+                                    TripAdapter adapter2 = new TripAdapter(getContext(), dataHolder2);
+                                    upcomingRV= mview.findViewById(R.id.upcomingRV);
+                                    LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                                    upcomingRV.setLayoutManager(secondManager);
+                                    upcomingRV.setAdapter(adapter2);
+                                }
+
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
 
                         }
-
-                        adapter = new TripAdapter(TripsFragment.this, dataHolder);
-
-                        recyclerView.setAdapter(adapter);
-
                     }
                 });
     }
+
 }

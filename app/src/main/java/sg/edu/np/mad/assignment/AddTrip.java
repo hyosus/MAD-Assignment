@@ -95,7 +95,7 @@ public class AddTrip extends AppCompatActivity {
             startCalendar.set(Calendar.YEAR, year);
             startCalendar.set(Calendar.MONTH,month);
             startCalendar.set(Calendar.DAY_OF_MONTH,day);
-            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MM/yyy");
+            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/M/yyy");
             sd.setText(dateFormat.format(startCalendar.getTime()));
         };
 
@@ -103,7 +103,7 @@ public class AddTrip extends AppCompatActivity {
             endCalendar.set(Calendar.YEAR, year);
             endCalendar.set(Calendar.MONTH,month);
             endCalendar.set(Calendar.DAY_OF_MONTH,day);
-            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MM/yyy");
+            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/M/yyy");
             ed.setText(dateFormat.format(endCalendar.getTime()));
         };
 

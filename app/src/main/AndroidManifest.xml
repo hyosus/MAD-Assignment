@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Assignment">
         <activity
+            android:name=".UpcomingTripViewHolder"
+            android:exported="false" />
+        <activity
             android:name=".OngoingTripViewHolder"
             android:exported="false" />
         <activity

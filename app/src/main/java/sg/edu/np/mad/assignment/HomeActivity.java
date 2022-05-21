@@ -8,11 +8,17 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -20,6 +26,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private Object Trips;
     BottomNavigationView bottomNavigationView;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
 
@@ -27,19 +34,20 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        ArrayList<Trip> tripList = new ArrayList<>();
-        tripList.add(new Trip("singapore", "12/05/2022", "17/05.2022", "june holi"));
+        CollectionReference tripRef = db.collection("Trip");
 
+
+        ArrayList<Trip> tripList = new ArrayList<>();
 
         // Show NoTripsFragment if user has not created any trips
-        if (tripList.isEmpty()){
+        if ( tripRef == null){
             loadFragment(new NoTripsFragment());
         }
         else {
             loadFragment(new TripsFragment());
         }
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragFrame,new TripsFragment()).commit();
+//        getSupportFragmentManager().beginTransaction().replace(R.id.fragFrame,new TripsFragment()).commit();
 
         bottomNavigationView = findViewById(R.id.navBar);
 

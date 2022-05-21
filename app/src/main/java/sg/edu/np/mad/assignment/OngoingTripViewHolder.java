@@ -13,7 +13,6 @@ public class OngoingTripViewHolder extends RecyclerView.ViewHolder {
     public OngoingTripViewHolder(View itemView){
         super(itemView);
 
-
         title = itemView.findViewById(R.id.titleVH);
         bg = itemView.findViewById(R.id.bgVH);
 
