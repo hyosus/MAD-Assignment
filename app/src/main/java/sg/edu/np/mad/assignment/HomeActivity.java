@@ -12,10 +12,12 @@ import android.util.Log;
 import android.view.MenuItem;
 
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -34,20 +36,10 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        CollectionReference tripRef = db.collection("Trip");
+//        ArrayList<Trip> tripList = new ArrayList<>();
 
-
-        ArrayList<Trip> tripList = new ArrayList<>();
-
-        // Show NoTripsFragment if user has not created any trips
-        if ( tripRef == null){
-            loadFragment(new NoTripsFragment());
-        }
-        else {
-            loadFragment(new TripsFragment());
-        }
-
-//        getSupportFragmentManager().beginTransaction().replace(R.id.fragFrame,new TripsFragment()).commit();
+        // Show different fragments
+        showTripFragment();
 
         bottomNavigationView = findViewById(R.id.navBar);
 
@@ -66,10 +58,41 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showTripFragment();
+    }
+
     public void loadFragment(Fragment fragment){
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragFrame, fragment);
         ft.commit();
+    }
+
+    public void showTripFragment(){
+        db.collection("Trip")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            int count = 0;
+                            for (DocumentSnapshot document : task.getResult()) {
+                                count++;
+                            }
+                            if (count == 0){
+                                loadFragment(new NoTripsFragment());
+                            }
+                            else {
+                                loadFragment(new TripsFragment());
+                            }
+                        }
+                        else {
+                            Log.d("checkTripListEmpty()", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 }

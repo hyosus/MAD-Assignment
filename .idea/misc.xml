@@ -13,10 +13,12 @@
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/ic_time.xml" value="0.1155" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/img_corners.xml" value="0.1795" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/light_round_button.xml" value="0.196" />
+        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/popup_menu_style.xml" value="0.1" />
+        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/popupstyle.xml" value="0.1" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/save_icon.xml" value="0.1875" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/waypoint_icon.xml" value="0.1" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_add_trip.xml" value="0.22" />
-        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_home.xml" value="0.22" />
+        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_home.xml" value="0.2" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_itinerary.xml" value="0.31068840579710144" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_main.xml" value="0.3171171171171171" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_trip_view_holder.xml" value="0.25" />
@@ -25,11 +27,14 @@
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/fragment_itinerary.xml" value="0.31068840579710144" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/fragment_no_trips.xml" value="0.25" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/fragment_trips.xml" value="0.25" />
+        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/navtest.xml" value="0.18" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/ongoing_trip_view_holder.xml" value="0.2148224043715847" />
-        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/trip_view_holder.xml" value="0.33" />
+        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/trip_view_holder.xml" value="0.22" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/upcoming_trip_view_holder.xml" value="0.2148224043715847" />
-        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/menu/bottom_nav.xml" value="0.3171171171171171" />
+        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/menu/bottom_nav.xml" value="0.22" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/menu/menu.xml" value="0.3171171171171171" />
+        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/menu/overflow_menu.xml" value="0.22" />
+        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/menu/popup_menu.xml" value="0.1" />
       </map>
     </option>
   </component>
