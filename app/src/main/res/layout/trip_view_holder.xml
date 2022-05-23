@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".OngoingTripViewHolder">
+    tools:context=".TripViewHolder">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -29,12 +29,14 @@
 
         <TextView
             android:id="@+id/titleVH"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
             android:text="TextView"
             android:textColor="@color/bg_color"
+            app:layout_constraintEnd_toStartOf="@+id/menuVH"
             app:layout_constraintStart_toStartOf="@+id/bgVH"
             app:layout_constraintTop_toTopOf="@+id/bgVH" />
 
@@ -59,7 +61,7 @@
             app:layout_constraintStart_toStartOf="@+id/titleVH" />
 
         <ImageView
-            android:id="@+id/imageView4"
+            android:id="@+id/menuVH"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginEnd="12dp"
@@ -74,7 +76,7 @@
             android:text="TextView"
             android:textColor="@color/bg_color"
             app:layout_constraintBottom_toBottomOf="@+id/dateVH"
-            app:layout_constraintEnd_toEndOf="@+id/imageView4"
+            app:layout_constraintEnd_toEndOf="@+id/menuVH"
             app:layout_constraintTop_toTopOf="@+id/dateVH" />
 
         <ImageView

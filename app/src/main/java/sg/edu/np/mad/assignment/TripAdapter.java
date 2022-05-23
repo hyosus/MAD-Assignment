@@ -1,11 +1,16 @@
 package sg.edu.np.mad.assignment;
 
 import android.content.Context;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,7 +47,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
 
         // get start and end duration in a single string
         String durationStr = dataHolder.get(position).getStartDate() + " - " + dataHolder.get(position).getEndDate();
-
         holder.duration.setText(durationStr);
 
         // get current date
@@ -53,12 +57,13 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
         try {
             Date today = dateFormat.parse(todaydate);
             Date startdate = dateFormat.parse(dataHolder.get(position).getStartDate());
+            Date enddate = dateFormat.parse(dataHolder.get(position).getEndDate());
 
             long difference = Math.abs(startdate.getTime() - today.getTime());
             long differenceDates = difference / (24 * 60 * 60 * 1000);
             String dayDifference = Long.toString(differenceDates);
 
-            if (today.after(startdate))
+            if (today.after(startdate) && today.before(enddate) || today.equals(startdate))
             {
                 holder.daysLeft.setVisibility(View.GONE);
                 holder.timeIcon.setVisibility(View.GONE);
@@ -70,6 +75,35 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
             e.printStackTrace();
         }
 
+        // Menu popup
+        holder.menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
+                MenuInflater inflater = popupMenu.getMenuInflater();
+                inflater.inflate(R.menu.popup_menu, popupMenu.getMenu());
+
+                // When selecting item menu
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()){
+                            case R.id.editMenu:
+                                Toast.makeText(view.getContext(), "Edit selected", Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case R.id.delMenu:
+                                Toast.makeText(view.getContext(), "Delete selected", Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                        return true;
+                    }
+                });
+
+                popupMenu.show();
+            }
+        });
+
     }
 
     @Override
@@ -79,7 +113,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
 
     class myviewholder extends RecyclerView.ViewHolder
     {
-        ImageView img, timeIcon;
+        ImageView img, timeIcon, menu;
         TextView title, duration, daysLeft;
 
         public myviewholder(View itemView) {
@@ -89,6 +123,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
             title = itemView.findViewById(R.id.titleVH);
             duration = itemView.findViewById(R.id.dateVH);
             daysLeft = itemView.findViewById(R.id.daysLeftVH);
+            menu = itemView.findViewById(R.id.menuVH);
 
         }
     }

@@ -1,26 +1,21 @@
 package sg.edu.np.mad.assignment;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.content.Intent;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -91,8 +86,8 @@ public class TripsFragment extends Fragment {
                                 Date startdate = dateFormat.parse(doc.getString("startDate"));
                                 Date enddate = dateFormat.parse(doc.getString("endDate"));
 
-                                // Display Upcoming trips - today's date AFTER start date & BEFORE end date
-                                if (today.after(startdate) && today.before(enddate)) {
+                                // Display ongoing trips - today's date AFTER start date & BEFORE end date
+                                if (today.after(startdate) && today.before(enddate) || today.equals(startdate)) {
                                     dataHolder.add(trip);
 
                                     TripAdapter adapter = new TripAdapter(getContext(), dataHolder);

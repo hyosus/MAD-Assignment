@@ -9,11 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Assignment">
+
         <activity
-            android:name=".UpcomingTripViewHolder"
-            android:exported="false" />
-        <activity
-            android:name=".OngoingTripViewHolder"
+            android:name=".TripViewHolder"
             android:exported="false" />
         <activity
             android:name=".AddTrip"
