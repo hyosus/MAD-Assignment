@@ -22,6 +22,10 @@
         <item name="cornerSize">12dp</item>
 
     </style>
+
+    <style name="roundProfilePic" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
     
     <style name="popupStyle" parent="Widget.MaterialComponents.PopupMenu">
         <item name="android:popupBackground">@drawable/popupstyle</item>
