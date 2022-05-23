@@ -66,14 +66,14 @@ public class AddTrip extends AppCompatActivity {
                 else if (destination.isEmpty()) {
                     showError(dest, "Missing information");
                 }
-                else if (sd == null){
-                    showError(sd, "Missing information");
+                else if (sDate.isEmpty()){
+                    Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
                 }
                 else if (eDate.isEmpty()){
-                    showError(ed, "Missing information");
+                    Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
                 }
                 else if (eDate.compareTo(sDate)<0) {
-                    showError(ed, "End date cannot be before Start date");
+                    Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
                 }
                 else {
                     DALTrip dalTrip = new DALTrip();
@@ -95,7 +95,7 @@ public class AddTrip extends AppCompatActivity {
             startCalendar.set(Calendar.YEAR, year);
             startCalendar.set(Calendar.MONTH,month);
             startCalendar.set(Calendar.DAY_OF_MONTH,day);
-            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/M/yyy");
+            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/M/yyyy");
             sd.setText(dateFormat.format(startCalendar.getTime()));
         };
 
@@ -103,7 +103,7 @@ public class AddTrip extends AppCompatActivity {
             endCalendar.set(Calendar.YEAR, year);
             endCalendar.set(Calendar.MONTH,month);
             endCalendar.set(Calendar.DAY_OF_MONTH,day);
-            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/M/yyy");
+            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/M/yyyy");
             ed.setText(dateFormat.format(endCalendar.getTime()));
         };
 
