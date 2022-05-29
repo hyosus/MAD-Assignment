@@ -54,7 +54,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="50dp"
         android:background="@drawable/light_round_button"
-        android:text="Create Account"
+        android:text="Sign In"
         android:textColor="#112D4E"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

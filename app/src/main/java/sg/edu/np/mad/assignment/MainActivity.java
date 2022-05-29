@@ -26,24 +26,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.button:
-                openCreateAcc();
+                startActivity(new Intent(MainActivity.this, CreateAcc.class));
                 break;
             case R.id.button2:
-                openSignin();
+                startActivity(new Intent(MainActivity.this, Signin.class));
                 break;
         }
 
     }
 
-    //Methods for opening activity
-    public void openCreateAcc(){
-        Intent intent= new Intent(this, CreateAcc.class);
-        startActivity(intent);
-    }
 
-    public void openSignin(){
-        Intent intent= new Intent(this, Signin.class);
-        startActivity(intent);
-    }
 
 }
