@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddTrip">
+    tools:context=".UpdateTrip">
 
     <TextView
         android:id="@+id/textView10"
@@ -55,7 +55,7 @@
         android:layout_marginStart="6dp"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="20dp"
-        android:text="Add Trip"
+        android:text="Edit Trip"
         android:textColor="@color/dark_blue"
         android:textSize="22dp"
         android:textStyle="bold"
@@ -158,5 +158,14 @@
         android:textSize="12dp"
         app:layout_constraintStart_toStartOf="@+id/nameEdit"
         app:layout_constraintTop_toBottomOf="@+id/nameEdit" />
+
+    <Button
+        android:id="@+id/updateBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Update"
+        app:layout_constraintEnd_toEndOf="@+id/endEdit"
+        app:layout_constraintStart_toStartOf="@+id/startEdit"
+        tools:layout_editor_absoluteY="369dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,14 +6,10 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,10 +26,10 @@ public class AddTrip extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_trip);
-        final EditText name = findViewById(R.id.nameTxt);
-        final EditText sd = findViewById(R.id.startTxt);
-        final EditText ed = findViewById(R.id.endTxt);
-        final EditText dest = findViewById(R.id.destinationTxt);
+        final EditText name = findViewById(R.id.nameEdit);
+        final EditText sd = findViewById(R.id.startEdit);
+        final EditText ed = findViewById(R.id.endEdit);
+        final EditText dest = findViewById(R.id.destEdit);
 
         back = findViewById(R.id.backBtn);
 

@@ -3,14 +3,20 @@ package sg.edu.np.mad.assignment;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.Exclude;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Trip {
+public class Trip implements Serializable {
     private String destination;
     private String startDate;
     private String endDate;
     private String tripName;
+
+    @Exclude
+    private String id;
 
     // Constructor
     public Trip(String destination, String startDate, String endDate, String tripName) {
@@ -24,6 +30,15 @@ public class Trip {
     public Trip(){}
 
     // Get set
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getDestination() {
         return destination;
     }

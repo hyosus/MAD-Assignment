@@ -1,6 +1,8 @@
 package sg.edu.np.mad.assignment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -14,6 +16,15 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,6 +36,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
     TripsFragment tripsFragment;
     List<Trip> dataHolder;
     Context context;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private Calendar calendar;
     private SimpleDateFormat dateFormat;
@@ -75,6 +87,19 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
             e.printStackTrace();
         }
 
+//        holder.img.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Trip trips = dataHolder.get(position);
+//
+//                Intent i = new Intent(context, UpdateTrip.class);
+//
+//                i.putExtra("trip", trips);
+//
+//                context.startActivity(i);
+//            }
+//        });
+
         // Menu popup
         holder.menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,7 +149,57 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
             duration = itemView.findViewById(R.id.dateVH);
             daysLeft = itemView.findViewById(R.id.daysLeftVH);
             menu = itemView.findViewById(R.id.menuVH);
+//
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    // after clicking of the item of recycler view.
+//                    // we are passing our course object to the new activity.
+//                    Trip trips = dataHolder.get(getAdapterPosition());
+//
+//                    Intent i = new Intent(context, UpdateTrip.class);
+//
+//                    i.putExtra("trip", trips);
+//
+//                    context.startActivity(i);
+//                }
+//            });
 
         }
+    }
+
+    public void deleteTrip(){
+        db.collection("Trip").document("DC")
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("TAG", "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure( Exception e) {
+                        Log.w("TAG", "Error deleting document", e);
+                    }
+                });
+    }
+
+
+    public void getID(){
+        db.collection("Trip")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete( Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG2", document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                            Log.d("TAG2", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 }
