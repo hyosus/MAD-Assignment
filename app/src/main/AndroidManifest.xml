@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Assignment">
         <activity
+            android:name=".TripDetails"
+            android:exported="false" />
+        <activity
             android:name=".UpdateTrip"
             android:exported="false" />
         <activity

@@ -40,16 +40,19 @@ public class DALTrip {
 //        Log.v("fb","DAOTrip.add executed");
 //        return databaseReference.push().setValue(trip);
 //    }
+
     //  CRUD Functions
     //  CRUD:Create
     public void createTrip(Trip trip){
         try{
-            firestoreDatabase.collection(Trip.class.getSimpleName()).add(trip);
+            firestoreDatabase.collection(Trip.class.getSimpleName()).document(trip.getTripName()).set(trip);
+            //  firestoreDatabase.collection(Trip.class.getSimpleName()).add(trip);
         }
         catch(Error e){
             Log.v("DALTrip",String.format("Could not create Trip\n%s",e));
         }
     }
+
     //  CRUD:RETRIEVE
     public void retrieveKeyList(){
 

@@ -87,18 +87,15 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
             e.printStackTrace();
         }
 
-//        holder.img.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Trip trips = dataHolder.get(position);
-//
-//                Intent i = new Intent(context, UpdateTrip.class);
-//
-//                i.putExtra("trip", trips);
-//
-//                context.startActivity(i);
-//            }
-//        });
+        //  Intent to trip details/itinerary
+        holder.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(),TripDetails.class);
+                intent.putExtra("tripKey", dataHolder.get(holder.getAdapterPosition()).getTripName());
+                view.getContext().startActivity(intent);
+            }
+        });
 
         // Menu popup
         holder.menu.setOnClickListener(new View.OnClickListener() {
