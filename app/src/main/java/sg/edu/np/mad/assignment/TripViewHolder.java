@@ -1,28 +1,32 @@
 package sg.edu.np.mad.assignment;
 
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.View;
+import android.content.Intent;
+import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class TripViewHolder extends RecyclerView.ViewHolder {
-    TextView title;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class TripViewHolder extends AppCompatActivity {
     ImageView bg;
+    public static final String EXTRA_TEXT = "sg.edu.np.mad.assignment.EXTRA_TEXT";
 
-    public TripViewHolder(View itemView){
-        super(itemView);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        title = itemView.findViewById(R.id.titleVH);
-        bg = itemView.findViewById(R.id.bgVH);
+        bg.setOnClickListener(v -> OpenActivity());
+    }
+    public void OpenActivity() {
+        TextView textView1 = (TextView) findViewById(R.id.titleVH);
+        String text = textView1.getText().toString();
 
-        // Set intent to itinerary
-        bg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
+        Intent intent = new Intent(this, AddActivityMain.class);
+        intent.putExtra(EXTRA_TEXT, text);
+        startActivity(intent);
     }
 }
+
+
+
