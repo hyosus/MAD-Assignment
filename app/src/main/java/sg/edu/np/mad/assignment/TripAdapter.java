@@ -14,6 +14,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -88,7 +89,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
         }
 
         //  Intent to trip details/itinerary
-        holder.img.setOnClickListener(new View.OnClickListener() {
+        holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(),TripDetails.class);
@@ -137,6 +138,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
     {
         ImageView img, timeIcon, menu;
         TextView title, duration, daysLeft;
+        ConstraintLayout container;
 
         public myviewholder(View itemView) {
             super(itemView);
@@ -146,21 +148,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
             duration = itemView.findViewById(R.id.dateVH);
             daysLeft = itemView.findViewById(R.id.daysLeftVH);
             menu = itemView.findViewById(R.id.menuVH);
-//
-//            itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    // after clicking of the item of recycler view.
-//                    // we are passing our course object to the new activity.
-//                    Trip trips = dataHolder.get(getAdapterPosition());
-//
-//                    Intent i = new Intent(context, UpdateTrip.class);
-//
-//                    i.putExtra("trip", trips);
-//
-//                    context.startActivity(i);
-//                }
-//            });
+            container = itemView.findViewById(R.id.container);
 
         }
     }
