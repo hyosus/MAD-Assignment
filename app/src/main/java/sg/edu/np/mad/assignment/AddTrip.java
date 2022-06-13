@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -41,11 +42,40 @@ public class AddTrip extends AppCompatActivity {
         back = findViewById(R.id.backBtn);
 
         // Send user back to home screen
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddTrip.this);
+
         back.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
-                startActivity(Intent);
+                String title = name.getText().toString();
+                String destination = dest.getText().toString();
+                String sDate = sd.getText().toString();
+                String eDate = ed.getText().toString();
+
+                if (title.isEmpty() == false || destination.isEmpty() == false || sDate.isEmpty() == false || eDate.isEmpty() == false){
+                    builder.setMessage("Discard changes?");
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
+                            startActivity(Intent);
+                        }
+                    });
+
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+                else {
+                    Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
+                    startActivity(Intent);
+                }
             }
         }));
         
@@ -95,9 +125,6 @@ public class AddTrip extends AppCompatActivity {
 
                 // Set custom height and width
                 dialog.getWindow().setLayout(800,1000);
-
-                // Set transparent background
-//                dialog. getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
                 dialog.show();
 
