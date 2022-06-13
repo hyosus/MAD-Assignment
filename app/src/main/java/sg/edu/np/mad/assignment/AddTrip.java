@@ -15,6 +15,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -25,7 +26,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class AddTrip extends AppCompatActivity {
-    private ImageView back, save;
+    private ImageView back;
+    Button save;
     ArrayList<Trip> tripList = new ArrayList<Trip>();
     final Calendar startCalendar= Calendar.getInstance();
     final Calendar endCalendar= Calendar.getInstance();

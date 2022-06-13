@@ -140,16 +140,6 @@
         app:layout_constraintTop_toTopOf="@+id/startEdit"
         tools:ignore="TouchTargetSizeCheck" />
 
-    <ImageView
-        android:id="@+id/saveBtn"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/backBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/backBtn"
-        app:srcCompat="@drawable/save_icon" />
-
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
@@ -160,6 +150,18 @@
         android:textSize="12dp"
         app:layout_constraintStart_toStartOf="@+id/nameEdit"
         app:layout_constraintTop_toBottomOf="@+id/nameEdit" />
+
+    <Button
+        android:id="@+id/saveBtn"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/dark_round_button"
+        android:text="SAVE"
+        android:textColor="@color/bg_color"
+        app:layout_constraintEnd_toEndOf="@+id/destEdit"
+        app:layout_constraintStart_toStartOf="@+id/destEdit"
+        app:layout_constraintTop_toBottomOf="@+id/startEdit" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
