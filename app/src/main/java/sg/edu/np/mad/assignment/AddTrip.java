@@ -51,10 +51,10 @@ public class AddTrip extends AppCompatActivity {
 
         DALTrip dalTrip = new DALTrip();
         Trip trip_edit = (Trip)getIntent().getSerializableExtra("EDIT");
+
         // Edit existing trip
         if(trip_edit != null)
         {
-            Log.v("fucking", "pls work");
             save.setText("UPDATE");
             header.setText("Update Trip");
             name.setText(trip_edit.getTripName());
@@ -66,7 +66,6 @@ public class AddTrip extends AppCompatActivity {
         {
             save.setText("SAVE");
             header.setText("Add Trip");
-            Log.v("fucking", "not fucking working");
         }
 
         // Send user back to home screen

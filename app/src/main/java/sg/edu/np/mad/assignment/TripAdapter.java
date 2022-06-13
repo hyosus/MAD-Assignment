@@ -94,7 +94,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(),TripDetails.class);
-                intent.putExtra("tripKey", dataHolder.get(holder.getAdapterPosition()).getTripName());
+                intent.putExtra("tripDetails",trip);
                 view.getContext().startActivity(intent);
             }
         });
@@ -108,9 +108,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                 MenuInflater inflater = popupMenu.getMenuInflater();
                 inflater.inflate(R.menu.popup_menu, popupMenu.getMenu());
 
-                Log.v("god", String.valueOf(trip));
-                Log.v("god2", trip.getTripName());
-
                 // When selecting item menu
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -121,11 +118,10 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                                 intent.putExtra("EDIT", trip);
                                 view.getContext().startActivity(intent);
 
-                                Toast.makeText(view.getContext(), "" + trip, Toast.LENGTH_SHORT).show();
                                 break;
 
                             case R.id.delMenu:
-                                db.collection("Trip").document(trip.getTripName())
+                                db.collection("Trip").document(trip.getId())
                                         .delete()
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
@@ -140,7 +136,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                                             }
                                         });
 
-//                                Toast.makeText(view.getContext(), "Delete selected", Toast.LENGTH_SHORT).show();
                                 break;
                         }
                         return true;
@@ -177,38 +172,4 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
         }
     }
 
-//    public void deleteTrip(){
-//        db.collection("Trip").document("DC")
-//                .delete()
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Log.d("TAG", "DocumentSnapshot successfully deleted!");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure( Exception e) {
-//                        Log.w("TAG", "Error deleting document", e);
-//                    }
-//                });
-//    }
-
-
-    public void getID(){
-        db.collection("Trip")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete( Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG2", document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.d("TAG2", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-    }
 }
