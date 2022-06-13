@@ -14,16 +14,15 @@ public class Trip implements Serializable {
     private String startDate;
     private String endDate;
     private String tripName;
-
-    @Exclude
     private String id;
 
     // Constructor
-    public Trip(String destination, String startDate, String endDate, String tripName) {
+    public Trip(String destination, String startDate, String endDate, String tripName, String id) {
         this.destination = destination;
         this.startDate = startDate;
         this.endDate = endDate;
         this.tripName = tripName;
+        this.id = id;
     }
 
     // Public constructor for firebase

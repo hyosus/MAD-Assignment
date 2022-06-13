@@ -79,7 +79,8 @@ public class TripsFragment extends Fragment {
                                     doc.getString("destination"),
                                     doc.getString("startDate"),
                                     doc.getString("endDate"),
-                                    doc.getString("tripName"));
+                                    doc.getString("tripName"),
+                                    doc.getString("id"));
 
                             try {
                                 Date today = dateFormat.parse(todaydate);

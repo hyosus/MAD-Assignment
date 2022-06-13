@@ -56,7 +56,8 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
 
     @Override
     public void onBindViewHolder(final TripAdapter.myviewholder holder, int position) {
-        holder.title.setText(dataHolder.get(position).getTripName());
+        Trip trip = dataHolder.get(position);
+        holder.title.setText(trip.getTripName());
 
         // get start and end duration in a single string
         String durationStr = dataHolder.get(position).getStartDate() + " - " + dataHolder.get(position).getEndDate();
@@ -99,6 +100,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
         });
 
         // Menu popup
+
         holder.menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,17 +108,39 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                 MenuInflater inflater = popupMenu.getMenuInflater();
                 inflater.inflate(R.menu.popup_menu, popupMenu.getMenu());
 
+                Log.v("god", String.valueOf(trip));
+                Log.v("god2", trip.getTripName());
+
                 // When selecting item menu
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()){
                             case R.id.editMenu:
-                                Toast.makeText(view.getContext(), "Edit selected", Toast.LENGTH_SHORT).show();
+                                Intent intent=new Intent(view.getContext(),AddTrip.class);
+                                intent.putExtra("EDIT", trip);
+                                view.getContext().startActivity(intent);
+
+                                Toast.makeText(view.getContext(), "" + trip, Toast.LENGTH_SHORT).show();
                                 break;
 
                             case R.id.delMenu:
-                                Toast.makeText(view.getContext(), "Delete selected", Toast.LENGTH_SHORT).show();
+                                db.collection("Trip").document(trip.getTripName())
+                                        .delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d("TAG", "DocumentSnapshot successfully deleted!");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure( Exception e) {
+                                                Log.w("TAG", "Error deleting document", e);
+                                            }
+                                        });
+
+//                                Toast.makeText(view.getContext(), "Delete selected", Toast.LENGTH_SHORT).show();
                                 break;
                         }
                         return true;
@@ -153,22 +177,22 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
         }
     }
 
-    public void deleteTrip(){
-        db.collection("Trip").document("DC")
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("TAG", "DocumentSnapshot successfully deleted!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure( Exception e) {
-                        Log.w("TAG", "Error deleting document", e);
-                    }
-                });
-    }
+//    public void deleteTrip(){
+//        db.collection("Trip").document("DC")
+//                .delete()
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d("TAG", "DocumentSnapshot successfully deleted!");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure( Exception e) {
+//                        Log.w("TAG", "Error deleting document", e);
+//                    }
+//                });
+//    }
 
 
     public void getID(){

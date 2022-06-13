@@ -12,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,11 +20,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class AddTrip extends AppCompatActivity {
     private ImageView back;
@@ -31,6 +36,7 @@ public class AddTrip extends AppCompatActivity {
     ArrayList<Trip> tripList = new ArrayList<Trip>();
     final Calendar startCalendar= Calendar.getInstance();
     final Calendar endCalendar= Calendar.getInstance();
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +46,31 @@ public class AddTrip extends AppCompatActivity {
         final EditText sd = findViewById(R.id.startEdit);
         final EditText ed = findViewById(R.id.endEdit);
         final EditText dest = findViewById(R.id.destEdit);
+        TextView header = findViewById(R.id.headerTxt);
+        save = findViewById(R.id.saveBtn);
 
-        back = findViewById(R.id.backBtn);
+        DALTrip dalTrip = new DALTrip();
+        Trip trip_edit = (Trip)getIntent().getSerializableExtra("EDIT");
+        // Edit existing trip
+        if(trip_edit != null)
+        {
+            Log.v("fucking", "pls work");
+            save.setText("UPDATE");
+            header.setText("Update Trip");
+            name.setText(trip_edit.getTripName());
+            dest.setText(trip_edit.getDestination());
+            sd.setText(trip_edit.getStartDate());
+            ed.setText(trip_edit.getEndDate());
+        }
+        else
+        {
+            save.setText("SAVE");
+            header.setText("Add Trip");
+            Log.v("fucking", "not fucking working");
+        }
 
         // Send user back to home screen
+        back = findViewById(R.id.backBtn);
         AlertDialog.Builder builder = new AlertDialog.Builder(AddTrip.this);
 
         back.setOnClickListener((new View.OnClickListener() {
@@ -170,10 +197,6 @@ public class AddTrip extends AppCompatActivity {
         });
 
 
-        save = findViewById(R.id.saveBtn);
-
-        DALTrip dalTrip = new DALTrip();
-
         // Save user input
         save.setOnClickListener((new View.OnClickListener() {
             @Override
@@ -183,33 +206,63 @@ public class AddTrip extends AppCompatActivity {
                 String sDate = sd.getText().toString();
                 String eDate = ed.getText().toString();
 
-                if (title.isEmpty()){
-                    showError(name, "Missing information");
-                }
-                else if (destination.isEmpty()) {
-                    showError(dest, "Missing information");
-                }
-                else if (sDate.isEmpty()){
-                    Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
-                }
-                else if (eDate.isEmpty()){
-                    Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
-                }
-                else if (eDate.compareTo(sDate)<0) {
-                    Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
-                }
-                else {
-                    DALTrip dalTrip = new DALTrip();
-                    Trip trip = new Trip(dest.getText().toString(), sd.getText().toString(), ed.getText().toString(), name.getText().toString());
-                    dalTrip.createTrip(trip);
-                    finish();
-                    Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                if (trip_edit == null)
+                {
+                    if (title.isEmpty()){
+                        showError(name, "Missing information");
+                    }
+                    else if (destination.isEmpty()) {
+                        showError(dest, "Missing information");
+                    }
+                    else if (sDate.isEmpty()){
+                        Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
+                    }
+                    else if (eDate.isEmpty()){
+                        Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
+                    }
+                    else if (eDate.compareTo(sDate)<0) {
+                        Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        DALTrip dalTrip = new DALTrip();
+                        Trip trip = new Trip(dest.getText().toString(), sd.getText().toString(), ed.getText().toString(), name.getText().toString(), name.getText().toString());
+                        dalTrip.createTrip(trip);
+                        finish();
+                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
 
-                    Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
-                    startActivity(Intent);
+                        Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
+                        startActivity(Intent);
+                    }
                 }
+                else
+                {
+                    if (title.isEmpty()){
+                        showError(name, "Missing information");
+                    }
+                    else if (destination.isEmpty()) {
+                        showError(dest, "Missing information");
+                    }
+                    else if (sDate.isEmpty()){
+                        Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
+                    }
+                    else if (eDate.isEmpty()){
+                        Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
+                    }
+                    else if (eDate.compareTo(sDate)<0) {
+                        Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        db.collection("Trip").document(trip_edit.getId()).update(
+                                "tripName",title, "destination", destination,
+                                "startDate", sDate, "endDate", eDate);
 
+                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
 
+                        Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
+                        startActivity(Intent);
+                    }
+
+                }
             }
         }));
 

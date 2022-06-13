@@ -18,6 +18,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -53,6 +54,7 @@ public class DALTrip {
         }
     }
 
+
     //  CRUD:RETRIEVE
     public void retrieveKeyList(){
 
@@ -85,7 +87,8 @@ public class DALTrip {
                                                 document.get("destination").toString(),
                                                 document.get("startDate").toString(),
                                                 document.get("endDate").toString(),
-                                                document.get("tripName").toString()
+                                                document.get("tripName").toString(),
+                                                document.get("id").toString()
                                         );
                                         Log.v("FUCK",trip.getDestination().toString());
                                         tripList.add(trip);
@@ -103,5 +106,17 @@ public class DALTrip {
                 }
             }
         });
+    }
+
+    // CRUD: UPDATE
+//    public Task<Void> update(String key, HashMap<String ,Object> hashMap)
+//    {
+//        return databaseReference.child(key).updateChildren(hashMap);
+//    }
+
+    // CRUD DELETE
+    public Task<Void> remove(String key)
+    {
+        return databaseReference.child(key).removeValue();
     }
 }
