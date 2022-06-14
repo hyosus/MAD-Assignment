@@ -57,15 +57,8 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
         // get start and end duration in a single string
         String durationStr = dataHolder.get(position).getStartDate() + " - " + dataHolder.get(position).getEndDate();
         holder.duration.setText(durationStr);
-        String dateNoSlash = holder.duration.getText().toString();
 
-        if (dateNoSlash.contains("/")){
-            dateNoSlash = dateNoSlash.replace("/", " ");
-            holder.duration.setText(dateNoSlash);
-        }
-
-
-        // Omit slashes in date
+        //Omit slashes in date
         String dateNoSlash = holder.duration.getText().toString();
 
         if (dateNoSlash.contains("/")){
