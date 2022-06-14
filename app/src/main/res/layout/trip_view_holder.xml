@@ -58,7 +58,7 @@
             android:id="@+id/imageView2"
             android:layout_width="14dp"
             android:layout_height="14dp"
-            android:src="@drawable/calendar"
+            android:src="@drawable/calendar_icon"
             app:layout_constraintBottom_toBottomOf="@+id/dateVH"
             app:layout_constraintStart_toStartOf="@+id/titleVH"
             app:layout_constraintTop_toTopOf="@+id/dateVH" />
@@ -88,7 +88,7 @@
             android:layout_width="14dp"
             android:layout_height="14dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/time"
+            android:src="@drawable/time_icon"
             app:layout_constraintBottom_toBottomOf="@+id/daysLeftVH"
             app:layout_constraintEnd_toStartOf="@+id/daysLeftVH"
             app:layout_constraintTop_toTopOf="@+id/daysLeftVH" />
