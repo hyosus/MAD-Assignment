@@ -1,18 +1,13 @@
 package sg.edu.np.mad.assignment;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,17 +18,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.*;
+import java.util.Collections;
+import java.util.Locale;
 
 public class AddTrip extends AppCompatActivity {
     private ImageView back;
     Button save;
-    ArrayList<Trip> tripList = new ArrayList<Trip>();
     final Calendar startCalendar= Calendar.getInstance();
     final Calendar endCalendar= Calendar.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -52,7 +49,6 @@ public class AddTrip extends AppCompatActivity {
         TextView header = findViewById(R.id.headerTxt);
         save = findViewById(R.id.saveBtn);
 
-        DALTrip dalTrip = new DALTrip();
         Trip trip_edit = (Trip)getIntent().getSerializableExtra("EDIT");
 
         // Edit existing trip
@@ -137,7 +133,8 @@ public class AddTrip extends AppCompatActivity {
                     else if (eDate.isEmpty()){
                         Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
                     }
-                    else if (eDate.compareTo(sDate)<0) {
+                    else if (startCalendar.after(endCalendar)) {
+
                         Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
                     }
                     else {
@@ -145,7 +142,7 @@ public class AddTrip extends AppCompatActivity {
                         Trip trip = new Trip(dest.getText().toString(), sd.getText().toString(), ed.getText().toString(), name.getText().toString(), name.getText().toString());
                         dalTrip.createTrip(trip);
                         finish();
-                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
 
                         Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
                         startActivity(Intent);
@@ -165,7 +162,7 @@ public class AddTrip extends AppCompatActivity {
                     else if (eDate.isEmpty()){
                         Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
                     }
-                    else if (eDate.compareTo(sDate)<0) {
+                    else if (startCalendar.after(endCalendar)) {
                         Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
                     }
                     else{
@@ -188,7 +185,7 @@ public class AddTrip extends AppCompatActivity {
             startCalendar.set(Calendar.YEAR, year);
             startCalendar.set(Calendar.MONTH,month);
             startCalendar.set(Calendar.DAY_OF_MONTH,day);
-            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/M/yyyy");
+            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MMM/yyyy");
             sd.setText(dateFormat.format(startCalendar.getTime()));
         };
 
@@ -196,7 +193,7 @@ public class AddTrip extends AppCompatActivity {
             endCalendar.set(Calendar.YEAR, year);
             endCalendar.set(Calendar.MONTH,month);
             endCalendar.set(Calendar.DAY_OF_MONTH,day);
-            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/M/yyyy");
+            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MMM/yyyy");
             ed.setText(dateFormat.format(endCalendar.getTime()));
         };
 
