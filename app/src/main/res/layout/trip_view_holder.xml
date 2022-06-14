@@ -65,10 +65,12 @@
 
         <ImageView
             android:id="@+id/menuVH"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginEnd="14dp"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="5dp"
             android:src="@drawable/dot_menu"
+            app:layout_constraintBottom_toBottomOf="@+id/titleVH"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/titleVH" />
 
@@ -76,11 +78,11 @@
             android:id="@+id/daysLeftVH"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="7dp"
+            android:layout_marginEnd="21dp"
             android:text="TextView"
             android:textColor="@color/bg_color"
             app:layout_constraintBottom_toBottomOf="@+id/dateVH"
-            app:layout_constraintEnd_toEndOf="@+id/menuVH"
+            app:layout_constraintEnd_toEndOf="@+id/bgVH"
             app:layout_constraintTop_toTopOf="@+id/dateVH" />
 
         <ImageView
@@ -92,6 +94,14 @@
             app:layout_constraintBottom_toBottomOf="@+id/daysLeftVH"
             app:layout_constraintEnd_toStartOf="@+id/daysLeftVH"
             app:layout_constraintTop_toTopOf="@+id/daysLeftVH" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="390dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
