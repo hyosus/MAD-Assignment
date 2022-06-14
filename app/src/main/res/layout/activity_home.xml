@@ -15,7 +15,7 @@
         android:text="My Trips"
         android:textAlignment="textStart"
         android:textColor="#112D4E"
-        android:textSize="24dp"
+        android:textSize="26dp"
         android:textStyle="bold"
         android:typeface="normal"
         app:layout_constraintStart_toStartOf="parent"

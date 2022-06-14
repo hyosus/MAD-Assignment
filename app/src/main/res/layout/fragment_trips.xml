@@ -22,6 +22,7 @@
             android:layout_marginEnd="20dp"
             android:text="Ongoing"
             android:textColor="@color/dark_blue"
+            android:textSize="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -40,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:text="Past"
-            android:textSize="14dp"
+            android:textSize="16dp"
             app:layout_constraintEnd_toEndOf="@+id/ongoingRV"
             app:layout_constraintStart_toEndOf="@+id/textView12"
             app:layout_constraintTop_toTopOf="@+id/textView12" />
@@ -53,7 +54,7 @@
             android:text="Upcoming"
             android:textAlignment="textStart"
             android:textColor="#112D4E"
-            android:textSize="14dp"
+            android:textSize="16dp"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@+id/ongoingRV"
             app:layout_constraintTop_toBottomOf="@+id/ongoingRV" />

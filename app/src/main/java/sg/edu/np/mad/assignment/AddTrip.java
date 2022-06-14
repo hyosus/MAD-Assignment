@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,6 +40,7 @@ public class AddTrip extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     EditText name, sd, ed, dest;
+    private SimpleDateFormat dateFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +139,8 @@ public class AddTrip extends AppCompatActivity {
                     else if (eDate.isEmpty()){
                         Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
                     }
-                    else if (eDate.compareTo(sDate)<0) {
+                    else if (startCalendar.after(endCalendar)) {
+
                         Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
                     }
                     else {
@@ -145,7 +148,7 @@ public class AddTrip extends AppCompatActivity {
                         Trip trip = new Trip(dest.getText().toString(), sd.getText().toString(), ed.getText().toString(), name.getText().toString(), name.getText().toString());
                         dalTrip.createTrip(trip);
                         finish();
-                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
 
                         Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
                         startActivity(Intent);
@@ -188,7 +191,7 @@ public class AddTrip extends AppCompatActivity {
             startCalendar.set(Calendar.YEAR, year);
             startCalendar.set(Calendar.MONTH,month);
             startCalendar.set(Calendar.DAY_OF_MONTH,day);
-            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/M/yyyy");
+            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MMM/yyyy");
             sd.setText(dateFormat.format(startCalendar.getTime()));
         };
 
@@ -196,7 +199,7 @@ public class AddTrip extends AppCompatActivity {
             endCalendar.set(Calendar.YEAR, year);
             endCalendar.set(Calendar.MONTH,month);
             endCalendar.set(Calendar.DAY_OF_MONTH,day);
-            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/M/yyyy");
+            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MMM/yyyy");
             ed.setText(dateFormat.format(endCalendar.getTime()));
         };
 

@@ -62,7 +62,7 @@ public class TripsFragment extends Fragment {
     {
         // get current date
         calendar = Calendar.getInstance();
-        dateFormat = new SimpleDateFormat("dd/M/yyyy");
+        dateFormat = new SimpleDateFormat("dd/MMM/yyyy");
         todaydate = dateFormat.format(calendar.getTime());
 
         // get & write firestore data

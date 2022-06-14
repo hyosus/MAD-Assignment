@@ -3,7 +3,6 @@ package sg.edu.np.mad.assignment;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,19 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -56,16 +49,25 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
 
     @Override
     public void onBindViewHolder(final TripAdapter.myviewholder holder, int position) {
+        // Get position of trip
         Trip trip = dataHolder.get(position);
+
         holder.title.setText(trip.getTripName());
 
         // get start and end duration in a single string
         String durationStr = dataHolder.get(position).getStartDate() + " - " + dataHolder.get(position).getEndDate();
         holder.duration.setText(durationStr);
+        String dateNoSlash = holder.duration.getText().toString();
+
+        if (dateNoSlash.contains("/")){
+            dateNoSlash = dateNoSlash.replace("/", " ");
+            holder.duration.setText(dateNoSlash);
+        }
+
 
         // get current date
         calendar = Calendar.getInstance();
-        dateFormat = new SimpleDateFormat("dd/M/yyyy");
+        dateFormat = new SimpleDateFormat("dd/MMM/yyyy");
         todaydate = dateFormat.format(calendar.getTime());
 
         try {
@@ -73,6 +75,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
             Date startdate = dateFormat.parse(dataHolder.get(position).getStartDate());
             Date enddate = dateFormat.parse(dataHolder.get(position).getEndDate());
 
+            // Calculate difference between current date to start date
             long difference = Math.abs(startdate.getTime() - today.getTime());
             long differenceDates = difference / (24 * 60 * 60 * 1000);
             String dayDifference = Long.toString(differenceDates);
@@ -100,7 +103,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
         });
 
         // Menu popup
-
         holder.menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,6 +128,8 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
+                                                dataHolder.remove(position);
+                                                notifyItemRemoved(position);
                                                 Log.d("TAG", "DocumentSnapshot successfully deleted!");
                                             }
                                         })
