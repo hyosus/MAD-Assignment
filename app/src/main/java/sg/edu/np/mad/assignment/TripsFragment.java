@@ -1,5 +1,6 @@
 package sg.edu.np.mad.assignment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,6 +14,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,6 +36,10 @@ public class TripsFragment extends Fragment {
     RecyclerView ongoingRV, upcomingRV;
     List<Trip> dataHolder = new ArrayList<>();
     List<Trip> dataHolder2 = new ArrayList<>();
+    List<Trip> dataHolder3 = new ArrayList<>();
+
+    TextView pastTxt, upcomingTxt;
+    ImageView addBtn;
 
     private Calendar calendar;
     private SimpleDateFormat dateFormat;
@@ -49,6 +56,9 @@ public class TripsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mview = inflater.inflate(R.layout.fragment_trips, container, false);
+
+        pastTxt = mview.findViewById(R.id.pastTxt);
+        upcomingTxt = mview.findViewById(R.id.upcomingTxt);
 
         // init firestore
         db = FirebaseFirestore.getInstance();
@@ -71,6 +81,9 @@ public class TripsFragment extends Fragment {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(Task<QuerySnapshot> task) {
+                        TripAdapter adapter = new TripAdapter(getContext(), dataHolder);
+                        TripAdapter adapter2 = new TripAdapter(getContext(), dataHolder2);
+                        TripAdapter adapter3 = new TripAdapter(getContext(), dataHolder3);
 
                         // Call when data is retrieved
                         for (DocumentSnapshot doc: task.getResult()) {
@@ -90,9 +103,8 @@ public class TripsFragment extends Fragment {
                                 // Display ongoing trips - today's date AFTER start date & BEFORE end date
                                 if (today.after(startdate) && today.before(enddate) || today.equals(startdate)) {
                                     dataHolder.add(trip);
-
-                                    TripAdapter adapter = new TripAdapter(getContext(), dataHolder);
                                     ongoingRV= mview.findViewById(R.id.ongoingRV);
+
                                     LinearLayoutManager firstManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                                     ongoingRV.setLayoutManager(firstManager);
                                     ongoingRV.setAdapter(adapter);
@@ -101,12 +113,53 @@ public class TripsFragment extends Fragment {
                                 else if (today.before(startdate) && today.before(enddate))
                                 {
                                     dataHolder2.add(trip);
-                                    TripAdapter adapter2 = new TripAdapter(getContext(), dataHolder2);
                                     upcomingRV= mview.findViewById(R.id.upcomingRV);
+
                                     LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                                     upcomingRV.setLayoutManager(secondManager);
                                     upcomingRV.setAdapter(adapter2);
                                 }
+                                // Display past trips
+                                else if (today.after(enddate)) {
+                                    dataHolder3.add(trip);
+                                    upcomingRV= mview.findViewById(R.id.upcomingRV);
+
+                                    LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                                    upcomingRV.setLayoutManager(secondManager);
+                                    upcomingRV.setAdapter(adapter3);
+                                }
+
+                                pastTxt.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+
+                                        pastTxt.setTextColor(Color.parseColor("#112D4E"));
+                                        upcomingTxt.setTextColor(Color.parseColor("#808080"));
+
+                                        if (dataHolder2.isEmpty() == false)
+                                        {
+                                            LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                                            upcomingRV.setLayoutManager(secondManager);
+                                            upcomingRV.setAdapter(adapter3);
+                                        }
+                                    }
+                                });
+
+                                upcomingTxt.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        pastTxt.setTextColor(Color.parseColor("#808080"));
+                                        upcomingTxt.setTextColor(Color.parseColor("#112D4E"));
+
+                                        if (dataHolder2.isEmpty() == false)
+                                        {
+                                            LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                                            upcomingRV.setLayoutManager(secondManager);
+                                            upcomingRV.setAdapter(adapter2);
+                                        }
+
+                                    }
+                                });
 
                             } catch (ParseException e) {
                                 e.printStackTrace();

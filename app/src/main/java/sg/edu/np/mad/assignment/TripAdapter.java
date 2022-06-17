@@ -82,7 +82,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
             long differenceDates = difference / (24 * 60 * 60 * 1000);
             String dayDifference = Long.toString(differenceDates);
 
-            if (today.after(startdate) && today.before(enddate) || today.equals(startdate))
+            if (today.after(startdate) && today.before(enddate) || today.equals(startdate) || today.after(enddate))
             {
                 holder.daysLeft.setVisibility(View.GONE);
                 holder.timeIcon.setVisibility(View.GONE);

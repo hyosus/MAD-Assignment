@@ -16,7 +16,7 @@
         <TextView
             android:id="@+id/ongoingTxt"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="20dp"
@@ -36,20 +36,21 @@
             app:layout_constraintTop_toBottomOf="@+id/ongoingTxt" />
 
         <TextView
-            android:id="@+id/textView13"
+            android:id="@+id/pastTxt"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:layout_marginStart="30dp"
             android:text="Past"
+            android:textColor="#808080"
             android:textSize="16dp"
             app:layout_constraintEnd_toEndOf="@+id/ongoingRV"
-            app:layout_constraintStart_toEndOf="@+id/textView12"
-            app:layout_constraintTop_toTopOf="@+id/textView12" />
+            app:layout_constraintStart_toEndOf="@+id/upcomingTxt"
+            app:layout_constraintTop_toTopOf="@+id/upcomingTxt" />
 
         <TextView
-            android:id="@+id/textView12"
+            android:id="@+id/upcomingTxt"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:layout_marginTop="18dp"
             android:text="Upcoming"
             android:textAlignment="textStart"
@@ -63,9 +64,9 @@
             android:id="@+id/upcomingRV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/textView13"
-            app:layout_constraintStart_toStartOf="@+id/textView12"
-            app:layout_constraintTop_toBottomOf="@+id/textView12" />
+            app:layout_constraintEnd_toEndOf="@+id/pastTxt"
+            app:layout_constraintStart_toStartOf="@+id/upcomingTxt"
+            app:layout_constraintTop_toBottomOf="@+id/upcomingTxt" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
