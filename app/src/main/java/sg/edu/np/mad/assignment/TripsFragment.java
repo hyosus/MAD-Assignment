@@ -1,8 +1,10 @@
 package sg.edu.np.mad.assignment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -45,6 +48,8 @@ public class TripsFragment extends Fragment {
     private SimpleDateFormat dateFormat;
     private String todaydate;
 
+    String uEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
     // Firestore instance
     FirebaseFirestore db;
 
@@ -59,6 +64,15 @@ public class TripsFragment extends Fragment {
 
         pastTxt = mview.findViewById(R.id.pastTxt);
         upcomingTxt = mview.findViewById(R.id.upcomingTxt);
+        addBtn = mview.findViewById(R.id.addBtn);
+
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(mview.getContext(), AddTrip.class);
+                startActivity(i);
+            }
+        });
 
         // init firestore
         db = FirebaseFirestore.getInstance();
@@ -85,6 +99,7 @@ public class TripsFragment extends Fragment {
                         TripAdapter adapter2 = new TripAdapter(getContext(), dataHolder2);
                         TripAdapter adapter3 = new TripAdapter(getContext(), dataHolder3);
 
+
                         // Call when data is retrieved
                         for (DocumentSnapshot doc: task.getResult()) {
 
@@ -93,12 +108,17 @@ public class TripsFragment extends Fragment {
                                     doc.getString("startDate"),
                                     doc.getString("endDate"),
                                     doc.getString("tripName"),
-                                    doc.getString("id"));
+                                    doc.getString("id"),
+                                    doc.getString("email"));
 
                             try {
                                 Date today = dateFormat.parse(todaydate);
                                 Date startdate = dateFormat.parse(doc.getString("startDate"));
                                 Date enddate = dateFormat.parse(doc.getString("endDate"));
+
+                                Boolean emailMatch = uEmail == trip.getEmail();
+
+                                Log.v("helo", String.valueOf(emailMatch) + " " + uEmail + " " + trip.getEmail());
 
                                 // Display ongoing trips - today's date AFTER start date & BEFORE end date
                                 if (today.after(startdate) && today.before(enddate) || today.equals(startdate)) {
@@ -108,9 +128,11 @@ public class TripsFragment extends Fragment {
                                     LinearLayoutManager firstManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                                     ongoingRV.setLayoutManager(firstManager);
                                     ongoingRV.setAdapter(adapter);
+
+                                    addBtn.setVisibility(View.GONE);
                                 }
                                 //Display upcoming trips - today's date BEFORE start date & BEFORE end date
-                                else if (today.before(startdate) && today.before(enddate))
+                                else if (emailMatch == true && today.before(startdate) && today.before(enddate))
                                 {
                                     dataHolder2.add(trip);
                                     upcomingRV= mview.findViewById(R.id.upcomingRV);
@@ -124,9 +146,6 @@ public class TripsFragment extends Fragment {
                                     dataHolder3.add(trip);
                                     upcomingRV= mview.findViewById(R.id.upcomingRV);
 
-                                    LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-                                    upcomingRV.setLayoutManager(secondManager);
-                                    upcomingRV.setAdapter(adapter3);
                                 }
 
                                 pastTxt.setOnClickListener(new View.OnClickListener() {
@@ -136,7 +155,7 @@ public class TripsFragment extends Fragment {
                                         pastTxt.setTextColor(Color.parseColor("#112D4E"));
                                         upcomingTxt.setTextColor(Color.parseColor("#808080"));
 
-                                        if (dataHolder2.isEmpty() == false)
+                                        if (dataHolder3.isEmpty() == false)
                                         {
                                             LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                                             upcomingRV.setLayoutManager(secondManager);
@@ -150,13 +169,11 @@ public class TripsFragment extends Fragment {
                                     public void onClick(View view) {
                                         pastTxt.setTextColor(Color.parseColor("#808080"));
                                         upcomingTxt.setTextColor(Color.parseColor("#112D4E"));
+                                        Log.v("hello", String.valueOf(dataHolder2.isEmpty()));
 
-                                        if (dataHolder2.isEmpty() == false)
-                                        {
-                                            LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-                                            upcomingRV.setLayoutManager(secondManager);
-                                            upcomingRV.setAdapter(adapter2);
-                                        }
+                                        LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                                        upcomingRV.setLayoutManager(secondManager);
+                                        upcomingRV.setAdapter(adapter2);
 
                                     }
                                 });

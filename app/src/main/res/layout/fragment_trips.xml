@@ -27,13 +27,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/ongoingRV"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="@+id/ongoingTxt"
             app:layout_constraintStart_toStartOf="@+id/ongoingTxt"
-            app:layout_constraintTop_toBottomOf="@+id/ongoingTxt" />
+            app:layout_constraintTop_toBottomOf="@+id/ongoingTxt">
+
+            <ImageView
+                android:id="@+id/addBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="150dp"
+                android:src="@drawable/add_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/ongoingRV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/pastTxt"
@@ -43,7 +64,7 @@
             android:text="Past"
             android:textColor="#808080"
             android:textSize="16dp"
-            app:layout_constraintEnd_toEndOf="@+id/ongoingRV"
+            app:layout_constraintEnd_toEndOf="@+id/ongoingTxt"
             app:layout_constraintStart_toEndOf="@+id/upcomingTxt"
             app:layout_constraintTop_toTopOf="@+id/upcomingTxt" />
 
@@ -51,14 +72,14 @@
             android:id="@+id/upcomingTxt"
             android:layout_width="0dp"
             android:layout_height="25dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="24dp"
             android:text="Upcoming"
             android:textAlignment="textStart"
             android:textColor="#112D4E"
             android:textSize="16dp"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="@+id/ongoingRV"
-            app:layout_constraintTop_toBottomOf="@+id/ongoingRV" />
+            app:layout_constraintStart_toStartOf="@+id/ongoingTxt"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/upcomingRV"
