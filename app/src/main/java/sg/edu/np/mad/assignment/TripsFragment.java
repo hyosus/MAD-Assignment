@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,6 +43,8 @@ public class TripsFragment extends Fragment {
     List<Trip> dataHolder2 = new ArrayList<>();
     List<Trip> dataHolder3 = new ArrayList<>();
 
+    List<String> userList = new ArrayList<>();
+
     TextView pastTxt, upcomingTxt;
     ImageView addBtn;
 
@@ -48,7 +52,7 @@ public class TripsFragment extends Fragment {
     private SimpleDateFormat dateFormat;
     private String todaydate;
 
-    String uEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     // Firestore instance
     FirebaseFirestore db;
@@ -77,6 +81,7 @@ public class TripsFragment extends Fragment {
         // init firestore
         db = FirebaseFirestore.getInstance();
 
+        Log.v("helo1", uid);
         showData();
 
         return mview;
@@ -99,92 +104,98 @@ public class TripsFragment extends Fragment {
                         TripAdapter adapter2 = new TripAdapter(getContext(), dataHolder2);
                         TripAdapter adapter3 = new TripAdapter(getContext(), dataHolder3);
 
-
                         // Call when data is retrieved
+                        boolean hasTrips = false;
                         for (DocumentSnapshot doc: task.getResult()) {
+                            if (uid.equals(doc.getString("userId"))) {
+                                hasTrips = true;
+                                Trip trip = new Trip(
+                                        doc.getString("destination"),
+                                        doc.getString("startDate"),
+                                        doc.getString("endDate"),
+                                        doc.getString("tripName"),
+                                        doc.getString("id"),
+                                        doc.getString("userId"));
 
-                            Trip trip = new Trip(
-                                    doc.getString("destination"),
-                                    doc.getString("startDate"),
-                                    doc.getString("endDate"),
-                                    doc.getString("tripName"),
-                                    doc.getString("id"),
-                                    doc.getString("email"));
+                                try {
+                                    Date today = dateFormat.parse(todaydate);
+                                    Date startdate = dateFormat.parse(doc.getString("startDate"));
+                                    Date enddate = dateFormat.parse(doc.getString("endDate"));
 
-                            try {
-                                Date today = dateFormat.parse(todaydate);
-                                Date startdate = dateFormat.parse(doc.getString("startDate"));
-                                Date enddate = dateFormat.parse(doc.getString("endDate"));
+                                    Boolean idMatch = uid.equals(doc.getString("userId"));
 
-                                Boolean emailMatch = uEmail == trip.getEmail();
+                                    Log.v("helo2", String.valueOf(idMatch) + " " + uid + " " + doc.getString("userId"));
 
-                                Log.v("helo", String.valueOf(emailMatch) + " " + uEmail + " " + trip.getEmail());
+                                    // Display ongoing trips - today's date AFTER start date & BEFORE end date
+                                    if (today.after(startdate) && today.before(enddate) || today.equals(startdate)) {
+                                        dataHolder.add(trip);
+                                        ongoingRV = mview.findViewById(R.id.ongoingRV);
 
-                                // Display ongoing trips - today's date AFTER start date & BEFORE end date
-                                if (today.after(startdate) && today.before(enddate) || today.equals(startdate)) {
-                                    dataHolder.add(trip);
-                                    ongoingRV= mview.findViewById(R.id.ongoingRV);
+                                        LinearLayoutManager firstManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                                        ongoingRV.setLayoutManager(firstManager);
+                                        ongoingRV.setAdapter(adapter);
 
-                                    LinearLayoutManager firstManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-                                    ongoingRV.setLayoutManager(firstManager);
-                                    ongoingRV.setAdapter(adapter);
-
-                                    addBtn.setVisibility(View.GONE);
-                                }
-                                //Display upcoming trips - today's date BEFORE start date & BEFORE end date
-                                else if (emailMatch == true && today.before(startdate) && today.before(enddate))
-                                {
-                                    dataHolder2.add(trip);
-                                    upcomingRV= mview.findViewById(R.id.upcomingRV);
-
-                                    LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-                                    upcomingRV.setLayoutManager(secondManager);
-                                    upcomingRV.setAdapter(adapter2);
-                                }
-                                // Display past trips
-                                else if (today.after(enddate)) {
-                                    dataHolder3.add(trip);
-                                    upcomingRV= mview.findViewById(R.id.upcomingRV);
-
-                                }
-
-                                pastTxt.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-
-                                        pastTxt.setTextColor(Color.parseColor("#112D4E"));
-                                        upcomingTxt.setTextColor(Color.parseColor("#808080"));
-
-                                        if (dataHolder3.isEmpty() == false)
-                                        {
-                                            LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-                                            upcomingRV.setLayoutManager(secondManager);
-                                            upcomingRV.setAdapter(adapter3);
-                                        }
+                                        addBtn.setVisibility(View.GONE);
                                     }
-                                });
-
-                                upcomingTxt.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        pastTxt.setTextColor(Color.parseColor("#808080"));
-                                        upcomingTxt.setTextColor(Color.parseColor("#112D4E"));
-                                        Log.v("hello", String.valueOf(dataHolder2.isEmpty()));
+                                    //Display upcoming trips - today's date BEFORE start date & BEFORE end date
+                                    else if (today.before(startdate) && today.before(enddate)) {
+                                        dataHolder2.add(trip);
+                                        upcomingRV = mview.findViewById(R.id.upcomingRV);
 
                                         LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                                         upcomingRV.setLayoutManager(secondManager);
                                         upcomingRV.setAdapter(adapter2);
+                                    }
+                                    // Display past trips
+                                    else if (today.after(enddate)) {
+                                        dataHolder3.add(trip);
+                                        upcomingRV = mview.findViewById(R.id.upcomingRV);
 
                                     }
-                                });
 
-                            } catch (ParseException e) {
-                                e.printStackTrace();
+                                    pastTxt.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                            pastTxt.setTextColor(Color.parseColor("#112D4E"));
+                                            upcomingTxt.setTextColor(Color.parseColor("#808080"));
+
+                                            if (dataHolder3.isEmpty() == false) {
+                                                LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                                                upcomingRV.setLayoutManager(secondManager);
+                                                upcomingRV.setAdapter(adapter3);
+                                            }
+                                        }
+                                    });
+
+                                    upcomingTxt.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            pastTxt.setTextColor(Color.parseColor("#808080"));
+                                            upcomingTxt.setTextColor(Color.parseColor("#112D4E"));
+                                            Log.v("hello", String.valueOf(dataHolder2.isEmpty()));
+
+                                            if (dataHolder2.isEmpty() == false) {
+                                                LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                                                upcomingRV.setLayoutManager(secondManager);
+                                                upcomingRV.setAdapter(adapter2);
+                                            }
+
+                                        }
+                                    });
+
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
                             }
-
                         }
+//                        if (!hasTrips){
+//                            FragmentManager fm = getParentFragment().getActivity().get;
+//                            FragmentTransaction ft = fm.beginTransaction();
+//                            ft.replace(R.id.fragFrame, new NoTripsFragment());
+//                            ft.commit();
+//                        }
                     }
                 });
     }
-
 }
