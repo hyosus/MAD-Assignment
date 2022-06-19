@@ -14,14 +14,15 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/ongoingFrag"
+            android:id="@+id/ongoingTxt"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:layout_marginEnd="20dp"
             android:text="Ongoing"
             android:textColor="@color/dark_blue"
+            android:textSize="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -30,31 +31,31 @@
             android:id="@+id/ongoingRV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            app:layout_constraintEnd_toEndOf="@+id/ongoingFrag"
-            app:layout_constraintStart_toStartOf="@+id/ongoingFrag"
-            app:layout_constraintTop_toBottomOf="@+id/ongoingFrag" />
+            app:layout_constraintEnd_toEndOf="@+id/ongoingTxt"
+            app:layout_constraintStart_toStartOf="@+id/ongoingTxt"
+            app:layout_constraintTop_toBottomOf="@+id/ongoingTxt" />
 
         <TextView
-            android:id="@+id/textView13"
+            android:id="@+id/pastTxt"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:layout_marginStart="30dp"
             android:text="Past"
-            android:textSize="14dp"
+            android:textColor="#808080"
+            android:textSize="16dp"
             app:layout_constraintEnd_toEndOf="@+id/ongoingRV"
-            app:layout_constraintStart_toEndOf="@+id/textView12"
-            app:layout_constraintTop_toTopOf="@+id/textView12" />
+            app:layout_constraintStart_toEndOf="@+id/upcomingTxt"
+            app:layout_constraintTop_toTopOf="@+id/upcomingTxt" />
 
         <TextView
-            android:id="@+id/textView12"
+            android:id="@+id/upcomingTxt"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="18dp"
             android:text="Upcoming"
             android:textAlignment="textStart"
             android:textColor="#112D4E"
-            android:textSize="14dp"
+            android:textSize="16dp"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@+id/ongoingRV"
             app:layout_constraintTop_toBottomOf="@+id/ongoingRV" />
@@ -62,12 +63,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/upcomingRV"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="18dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/textView13"
-            app:layout_constraintStart_toStartOf="@+id/textView12"
-            app:layout_constraintTop_toBottomOf="@+id/textView12" />
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/pastTxt"
+            app:layout_constraintStart_toStartOf="@+id/upcomingTxt"
+            app:layout_constraintTop_toBottomOf="@+id/upcomingTxt" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/viewHolderContainer"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     tools:context=".TripViewHolder">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/bgVH"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="10dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/city"
-            android:tint="#99000000"
+            android:src="@drawable/gradient"
+            android:tint="#BF000000"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -29,14 +30,78 @@
 
         <TextView
             android:id="@+id/titleVH"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="21dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:text="TextView"
             android:textColor="@color/bg_color"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/menuVH"
             app:layout_constraintStart_toStartOf="@+id/bgVH"
             app:layout_constraintTop_toTopOf="@+id/bgVH" />
+
+        <TextView
+            android:id="@+id/dateVH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="16dp"
+            android:text="TextView"
+            android:textColor="@color/bg_color"
+            app:layout_constraintBottom_toBottomOf="@+id/bgVH"
+            app:layout_constraintStart_toEndOf="@+id/imageView2" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:src="@drawable/calendar_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/dateVH"
+            app:layout_constraintStart_toStartOf="@+id/titleVH"
+            app:layout_constraintTop_toTopOf="@+id/dateVH" />
+
+        <ImageView
+            android:id="@+id/menuVH"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="5dp"
+            android:src="@drawable/dot_menu"
+            app:layout_constraintBottom_toBottomOf="@+id/titleVH"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/titleVH" />
+
+        <TextView
+            android:id="@+id/daysLeftVH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="21dp"
+            android:text="TextView"
+            android:textColor="@color/bg_color"
+            app:layout_constraintBottom_toBottomOf="@+id/dateVH"
+            app:layout_constraintEnd_toEndOf="@+id/bgVH"
+            app:layout_constraintTop_toTopOf="@+id/dateVH" />
+
+        <ImageView
+            android:id="@+id/timeIconVH"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/time_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/daysLeftVH"
+            app:layout_constraintEnd_toStartOf="@+id/daysLeftVH"
+            app:layout_constraintTop_toTopOf="@+id/daysLeftVH" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="390dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

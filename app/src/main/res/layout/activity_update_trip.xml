@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddTrip">
-
+    tools:context=".UpdateTrip">
 
     <TextView
         android:id="@+id/textView10"
@@ -14,7 +13,7 @@
         android:layout_marginTop="25dp"
         android:text="Start Date"
         android:textColor="@color/dark_blue"
-        android:textSize="14dp"
+        android:textSize="12dp"
         app:layout_constraintStart_toStartOf="@+id/destEdit"
         app:layout_constraintTop_toBottomOf="@+id/destEdit" />
 
@@ -35,7 +34,7 @@
         android:layout_marginTop="20dp"
         android:text="Title"
         android:textColor="@color/dark_blue"
-        android:textSize="14dp"
+        android:textSize="12dp"
         app:layout_constraintStart_toStartOf="@+id/headerTxt"
         app:layout_constraintTop_toBottomOf="@+id/headerTxt" />
 
@@ -53,12 +52,12 @@
         android:id="@+id/headerTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="7dp"
+        android:layout_marginStart="6dp"
         android:layout_marginTop="25dp"
-        android:layout_marginEnd="27dp"
-        android:text="Add Trip"
+        android:layout_marginEnd="20dp"
+        android:text="Edit Trip"
         android:textColor="@color/dark_blue"
-        android:textSize="26dp"
+        android:textSize="22dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/backBtn"
@@ -67,7 +66,7 @@
     <EditText
         android:id="@+id/nameEdit"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:layout_marginTop="6dp"
         android:background="@drawable/btn_border"
         android:ems="10"
@@ -84,16 +83,13 @@
     <EditText
         android:id="@+id/destEdit"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:layout_marginTop="6dp"
         android:background="@drawable/btn_border"
-        android:drawableRight="@drawable/dropdown_arrow_icon"
-        android:editable="false"
         android:ems="10"
-        android:filterTouchesWhenObscured="false"
-        android:inputType="none"
+        android:inputType="textPersonName"
         android:paddingLeft="10dp"
-        android:paddingRight="5dp"
+        android:paddingRight="10dp"
         android:textColor="@color/dark_blue"
         android:textSize="16dp"
         app:layout_constraintEnd_toEndOf="@+id/nameEdit"
@@ -105,7 +101,7 @@
     <EditText
         android:id="@+id/startEdit"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:layout_marginTop="6dp"
         android:layout_marginEnd="40dp"
         android:background="@drawable/btn_border"
@@ -126,7 +122,7 @@
     <EditText
         android:id="@+id/endEdit"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="0dp"
         android:background="@drawable/btn_border"
         android:ems="8"
         android:focusable="false"
@@ -142,6 +138,16 @@
         app:layout_constraintTop_toTopOf="@+id/startEdit"
         tools:ignore="TouchTargetSizeCheck" />
 
+    <ImageView
+        android:id="@+id/saveBtn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/backBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/backBtn"
+        app:srcCompat="@drawable/save_icon" />
+
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
@@ -149,28 +155,17 @@
         android:layout_marginTop="25dp"
         android:text="Destination"
         android:textColor="@color/dark_blue"
-        android:textSize="14dp"
+        android:textSize="12dp"
         app:layout_constraintStart_toStartOf="@+id/nameEdit"
         app:layout_constraintTop_toBottomOf="@+id/nameEdit" />
 
     <Button
-        android:id="@+id/saveBtn"
+        android:id="@+id/updateBtn"
         android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/dark_round_button"
-        android:textColor="@color/bg_color"
-        android:textSize="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/destEdit"
-        app:layout_constraintStart_toStartOf="@+id/destEdit"
-        app:layout_constraintTop_toBottomOf="@+id/startEdit" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="26dp" />
-
+        android:text="Update"
+        app:layout_constraintEnd_toEndOf="@+id/endEdit"
+        app:layout_constraintStart_toStartOf="@+id/startEdit"
+        tools:layout_editor_absoluteY="369dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
