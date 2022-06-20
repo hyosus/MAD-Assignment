@@ -43,8 +43,6 @@ public class TripsFragment extends Fragment {
     List<Trip> dataHolder2 = new ArrayList<>();
     List<Trip> dataHolder3 = new ArrayList<>();
 
-    List<String> userList = new ArrayList<>();
-
     TextView pastTxt, upcomingTxt;
     ImageView addBtn;
 
@@ -81,7 +79,6 @@ public class TripsFragment extends Fragment {
         // init firestore
         db = FirebaseFirestore.getInstance();
 
-        Log.v("helo1", uid);
         showData();
 
         return mview;
@@ -107,6 +104,7 @@ public class TripsFragment extends Fragment {
                         // Call when data is retrieved
                         boolean hasTrips = false;
                         for (DocumentSnapshot doc: task.getResult()) {
+                            // If the trip is created by the user
                             if (uid.equals(doc.getString("userId"))) {
                                 hasTrips = true;
                                 Trip trip = new Trip(
@@ -121,10 +119,6 @@ public class TripsFragment extends Fragment {
                                     Date today = dateFormat.parse(todaydate);
                                     Date startdate = dateFormat.parse(doc.getString("startDate"));
                                     Date enddate = dateFormat.parse(doc.getString("endDate"));
-
-                                    Boolean idMatch = uid.equals(doc.getString("userId"));
-
-                                    Log.v("helo2", String.valueOf(idMatch) + " " + uid + " " + doc.getString("userId"));
 
                                     // Display ongoing trips - today's date AFTER start date & BEFORE end date
                                     if (today.after(startdate) && today.before(enddate) || today.equals(startdate)) {
@@ -146,7 +140,7 @@ public class TripsFragment extends Fragment {
                                         upcomingRV.setLayoutManager(secondManager);
                                         upcomingRV.setAdapter(adapter2);
                                     }
-                                    // Display past trips
+                                    // Display past trips - after end date
                                     else if (today.after(enddate)) {
                                         dataHolder3.add(trip);
                                         upcomingRV = mview.findViewById(R.id.upcomingRV);
@@ -166,6 +160,10 @@ public class TripsFragment extends Fragment {
                                                 upcomingRV.setAdapter(adapter3);
                                                 upcomingRV.setVisibility(View.VISIBLE);
                                             }
+                                            else
+                                            {
+                                                upcomingRV.setVisibility(View.GONE);
+                                            }
                                         }
                                     });
 
@@ -180,6 +178,7 @@ public class TripsFragment extends Fragment {
                                                 LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                                                 upcomingRV.setLayoutManager(secondManager);
                                                 upcomingRV.setAdapter(adapter2);
+                                                upcomingRV.setVisibility(View.VISIBLE);
                                             }
                                             else
                                             {
