@@ -164,6 +164,7 @@ public class TripsFragment extends Fragment {
                                                 LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                                                 upcomingRV.setLayoutManager(secondManager);
                                                 upcomingRV.setAdapter(adapter3);
+                                                upcomingRV.setVisibility(View.VISIBLE);
                                             }
                                         }
                                     });
@@ -179,6 +180,10 @@ public class TripsFragment extends Fragment {
                                                 LinearLayoutManager secondManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                                                 upcomingRV.setLayoutManager(secondManager);
                                                 upcomingRV.setAdapter(adapter2);
+                                            }
+                                            else
+                                            {
+                                                upcomingRV.setVisibility(View.GONE);
                                             }
 
                                         }
