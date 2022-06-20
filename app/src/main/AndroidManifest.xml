@@ -22,10 +22,10 @@
             android:name=".HomeActivity"
             android:exported="true" />
         <activity
-            android:name=".Signin"
+            android:name=".SignInActivity"
             android:exported="false" />
         <activity
-            android:name=".CreateAcc"
+            android:name=".RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateAcc">
+    tools:context=".RegisterActivity">
 
     <ImageView
         android:id="@+id/imageView2"
@@ -99,6 +99,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/dark_round_button"
+        android:letterSpacing="0.02"
         android:text="Sign in"
         android:textColor="@color/bg_color"
         android:textSize="16dp"
