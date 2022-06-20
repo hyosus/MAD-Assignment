@@ -37,8 +37,9 @@
 
             <ImageView
                 android:id="@+id/addBtn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="150dp"
+                android:scaleType="center"
                 android:src="@drawable/add_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -61,6 +62,7 @@
             android:layout_width="0dp"
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
+            android:background="@android:color/transparent"
             android:text="Past"
             android:textColor="#808080"
             android:textSize="16dp"
