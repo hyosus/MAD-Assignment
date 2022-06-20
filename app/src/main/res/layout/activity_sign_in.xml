@@ -81,7 +81,7 @@
         android:id="@+id/password4"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/text_border"
         android:ems="10"
         android:hint="Password"

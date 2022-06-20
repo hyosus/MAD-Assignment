@@ -62,6 +62,7 @@
         android:id="@+id/email"
         android:layout_width="0dp"
         android:layout_height="48dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="27dp"
         android:background="@drawable/text_border"
         android:ems="10"
@@ -70,17 +71,15 @@
         android:paddingStart="14dp"
         android:paddingLeft="14dp"
         android:textSize="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textView6"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <EditText
         android:id="@+id/password"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/text_border"
         android:ems="10"
         android:hint="Password"
@@ -88,7 +87,6 @@
         android:paddingStart="14dp"
         android:paddingLeft="14dp"
         android:textSize="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/homeCountry"
         app:layout_constraintEnd_toEndOf="@+id/email"
         app:layout_constraintStart_toStartOf="@+id/email"
         app:layout_constraintTop_toBottomOf="@+id/email" />
@@ -97,7 +95,7 @@
         android:id="@+id/homeCountry"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/text_border"
         android:ems="10"
         android:hint="Home country"
@@ -105,7 +103,6 @@
         android:paddingStart="14dp"
         android:paddingLeft="14dp"
         android:textSize="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/registerUser"
         app:layout_constraintEnd_toEndOf="@+id/password"
         app:layout_constraintStart_toStartOf="@+id/password"
         app:layout_constraintTop_toBottomOf="@+id/password" />
