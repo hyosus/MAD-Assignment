@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -35,6 +36,8 @@ public class AddTrip extends AppCompatActivity {
     final Calendar startCalendar= Calendar.getInstance();
     final Calendar endCalendar= Calendar.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     EditText name, sd, ed, dest;
     private SimpleDateFormat dateFormat;
@@ -141,7 +144,7 @@ public class AddTrip extends AppCompatActivity {
                     }
                     else {
                         DALTrip dalTrip = new DALTrip();
-                        Trip trip = new Trip(dest.getText().toString(), sd.getText().toString(), ed.getText().toString(), name.getText().toString(), name.getText().toString());
+                        Trip trip = new Trip(dest.getText().toString(), sd.getText().toString(), ed.getText().toString(), name.getText().toString(), name.getText().toString(), uid);
                         dalTrip.createTrip(trip);
                         finish();
 //                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
