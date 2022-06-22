@@ -13,6 +13,9 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -138,6 +141,9 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                                                 dataHolder.remove(position);
                                                 notifyItemRemoved(position);
                                                 Log.d("TAG", "DocumentSnapshot successfully deleted!");
+                                                if (dataHolder.isEmpty()){
+                                                    loadFragment(new NoTripsFragment());
+                                                }
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
@@ -157,6 +163,13 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
             }
         });
 
+    }
+
+    public void loadFragment(Fragment fragment){
+        FragmentManager fm = fragment.getActivity().getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.fragFrame, fragment);
+        ft.commit();
     }
 
     @Override

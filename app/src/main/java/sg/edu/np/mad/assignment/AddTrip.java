@@ -5,9 +5,11 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +28,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -35,6 +40,9 @@ public class AddTrip extends AppCompatActivity {
     Button save;
     final Calendar startCalendar= Calendar.getInstance();
     final Calendar endCalendar= Calendar.getInstance();
+    final Calendar customCalendarStart= Calendar.getInstance();
+    final Calendar customCalendarEnd= Calendar.getInstance();
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -138,7 +146,7 @@ public class AddTrip extends AppCompatActivity {
                     else if (eDate.isEmpty()){
                         Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
                     }
-                    else if (startCalendar.after(endCalendar)) {
+                    else if (startCalendar.after(endCalendar) || customCalendarStart.after(customCalendarEnd)) {
 
                         Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
                     }
@@ -167,7 +175,7 @@ public class AddTrip extends AppCompatActivity {
                     else if (eDate.isEmpty()){
                         Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
                     }
-                    else if (startCalendar.after(endCalendar)) {
+                    else if (startCalendar.after(endCalendar) || customCalendarStart.after(customCalendarEnd)) {
                         Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
                     }
                     else{
@@ -204,22 +212,51 @@ public class AddTrip extends AppCompatActivity {
 
 //         Start date
         sd.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(AddTrip.this, AlertDialog.THEME_HOLO_LIGHT, date,startCalendar.get(Calendar.YEAR),startCalendar.get(Calendar.MONTH),startCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                if (trip_edit == null){
+                    new DatePickerDialog(AddTrip.this, AlertDialog.THEME_HOLO_LIGHT, date,startCalendar.get(Calendar.YEAR),startCalendar.get(Calendar.MONTH),startCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                }
+                else {
+                    Toast.makeText(AddTrip.this, "WHHUATT AHH", Toast.LENGTH_SHORT).show();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy", Locale.ENGLISH);
+                    LocalDate date = LocalDate.parse(sd.getText().toString(), formatter);
+                    DatePickerDialog.OnDateSetListener thisdatelistener = (v, year, month, day) -> {
+                        customCalendarStart.set(Calendar.YEAR, year);
+                        customCalendarStart.set(Calendar.MONTH,month);
+                        customCalendarStart.set(Calendar.DAY_OF_MONTH,day);
+                        SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MMM/yyyy");
+                        sd.setText(dateFormat.format(customCalendarStart.getTime()));
+                    };
+                    new DatePickerDialog(AddTrip.this, AlertDialog.THEME_HOLO_LIGHT, thisdatelistener,date.getYear(),date.getMonthValue()-1,date.getDayOfMonth()).show();                }
             }
         });
 
 //         End date
         ed.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(AddTrip.this, AlertDialog.THEME_HOLO_LIGHT, enddate,endCalendar.get(Calendar.YEAR),endCalendar.get(Calendar.MONTH),endCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                if (trip_edit == null) {
+                    new DatePickerDialog(AddTrip.this, AlertDialog.THEME_HOLO_LIGHT, enddate, endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                }
+                else {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy", Locale.ENGLISH);
+                    LocalDate date = LocalDate.parse(ed.getText().toString(), formatter);
+                    DatePickerDialog.OnDateSetListener thisDate = (thisview, year, month, day) -> {
+                        customCalendarEnd.set(Calendar.YEAR, year);
+                        customCalendarEnd.set(Calendar.MONTH,month);
+                        customCalendarEnd.set(Calendar.DAY_OF_MONTH,day);
+                        SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MMM/yyyy");
+                        ed.setText(dateFormat.format(customCalendarEnd.getTime()));
+                    };
+                    new DatePickerDialog(AddTrip.this, AlertDialog.THEME_HOLO_LIGHT, thisDate,date.getYear(),date.getMonthValue()-1,date.getDayOfMonth()).show();
+                }
             }
         });
 
     }
-
 
     // Input validation
     private void showError(EditText input, String missing_information) {
