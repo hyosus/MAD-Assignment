@@ -3,22 +3,27 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/add_icon.xml" value="0.1" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/back_arrow.xml" value="0.1875" />
+        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/back_arrow_white.xml" value="0.164" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/btn_border.xml" value="0.175" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/dark_round_button.xml" value="0.196" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/dot_menu.xml" value="0.1455" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/dropdown_arrow_icon.xml" value="0.1455" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/edittext_border.xml" value="0.215" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/ic_home.xml" value="0.1" />
+        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/ic_signin_bg.xml" value="0.164" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/img_corners.xml" value="0.1795" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/light_round_button.xml" value="0.196" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/save_icon.xml" value="0.1875" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/waypoint_icon.xml" value="0.1" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_add_trip.xml" value="0.5" />
+        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_create_acc.xml" value="0.33" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_home.xml" value="0.33" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_itinerary.xml" value="0.31068840579710144" />
-        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_main.xml" value="0.3171171171171171" />
+        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_sign_in.xml" value="0.33" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_trip_details.xml" value="0.23157894736842105" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_trip_view_holder.xml" value="0.25" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/dialog_searchable_spinner.xml" value="0.21" />

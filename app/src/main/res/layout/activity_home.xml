@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
+        android:fontFamily="@font/roboto_bold"
         android:text="My Trips"
         android:textAlignment="textStart"
         android:textColor="#112D4E"
