@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.util.Patterns;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,7 +24,7 @@ public class Signin extends AppCompatActivity implements View.OnClickListener{
 
     private EditText editTextEmails, editTextPasswords;
     private Button signIn1;
-
+    private TextView forgotpassword;
     private FirebaseAuth mAuth;
 
 
@@ -41,7 +42,9 @@ public class Signin extends AppCompatActivity implements View.OnClickListener{
         editTextEmails = (EditText) findViewById(R.id.email2);
         editTextPasswords = (EditText) findViewById(R.id.password4);
 
-
+        //forgot password
+        forgotpassword = (TextView) findViewById(R.id.forgotpassword);
+        forgotpassword.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -59,6 +62,9 @@ public class Signin extends AppCompatActivity implements View.OnClickListener{
                 break;
             case R.id.backspace2:
                 startActivity(new Intent(this, MainActivity.class));
+                break;
+            case R.id.forgotpassword:
+                startActivity(new Intent(this, Forgotpassword.class));
                 break;
         }
 

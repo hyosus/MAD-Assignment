@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.util.Patterns;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
 
+import org.w3c.dom.Text;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +34,7 @@ public class CreateAcc extends AppCompatActivity implements View.OnClickListener
 
     //Declarations start
     private EditText editTextEmail, editTextPassword, editTextHomeCountry;
+
     private ProgressBar progressBar;
     private ImageView backspace;
     private Button registerUser;
@@ -59,6 +63,8 @@ public class CreateAcc extends AppCompatActivity implements View.OnClickListener
         Button registerUser = findViewById(R.id.registerUser);
         registerUser.setOnClickListener(this);
 
+
+
         //Input text box
         editTextEmail = (EditText) findViewById(R.id.email);
         editTextPassword = (EditText) findViewById(R.id.password);
@@ -79,6 +85,7 @@ public class CreateAcc extends AppCompatActivity implements View.OnClickListener
             case R.id.registerUser:
                 registerUser();
                 break;
+
         }
     }
 
