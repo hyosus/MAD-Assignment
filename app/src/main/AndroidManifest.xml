@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Assignment">
         <activity
+            android:name=".Forgotpassword"
+            android:exported="false" />
+        <activity
             android:name=".TripDetails"
             android:exported="false" />
         <activity
@@ -30,20 +33,11 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
-
-
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-
-
-
-
-
         </activity>
     </application>
 

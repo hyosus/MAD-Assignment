@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.util.Patterns;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,6 +22,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.w3c.dom.Text;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +31,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     //Declarations start
     private EditText editTextEmail, editTextPassword, editTextHomeCountry;
+
     private ProgressBar progressBar;
     private ImageView backspace;
     private Button registerUser;
@@ -56,6 +60,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         Button registerUser = findViewById(R.id.registerUser);
         registerUser.setOnClickListener(this);
 
+
+
         //Input text box
         editTextEmail = (EditText) findViewById(R.id.email);
         editTextPassword = (EditText) findViewById(R.id.password);
@@ -76,6 +82,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.registerUser:
                 registerUser();
                 break;
+
         }
     }
 
