@@ -15,20 +15,30 @@ public class Trip implements Serializable {
     private String endDate;
     private String tripName;
     private String id;
+    private String userId;
 
     // Constructor
-    public Trip(String destination, String startDate, String endDate, String tripName, String id) {
+    public Trip(String destination, String startDate, String endDate, String tripName, String id, String userId) {
         this.destination = destination;
         this.startDate = startDate;
         this.endDate = endDate;
         this.tripName = tripName;
         this.id = id;
+        this.userId = userId;
     }
 
     // Public constructor for firebase
     public Trip(){}
 
     // Get set
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getId() {
         return id;

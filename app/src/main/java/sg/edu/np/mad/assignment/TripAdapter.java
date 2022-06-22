@@ -52,8 +52,13 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
         // Get position of trip
         Trip trip = dataHolder.get(position);
 
+        // Set title
         holder.title.setText(trip.getTripName());
 
+        // Set country/destination
+        holder.country.setText(trip.getDestination());
+
+        // Set date
         // get start and end duration in a single string
         String durationStr = dataHolder.get(position).getStartDate() + " - " + dataHolder.get(position).getEndDate();
         holder.duration.setText(durationStr);
@@ -66,7 +71,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
             holder.duration.setText(dateNoSlash);
         }
 
-
+        // Set time left till start of trip
         // get current date
         calendar = Calendar.getInstance();
         dateFormat = new SimpleDateFormat("dd/MMM/yyyy");
@@ -162,7 +167,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
     class myviewholder extends RecyclerView.ViewHolder
     {
         ImageView img, timeIcon, menu;
-        TextView title, duration, daysLeft;
+        TextView title, duration, daysLeft, country;
         ConstraintLayout container;
 
         public myviewholder(View itemView) {
@@ -170,6 +175,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
             img = itemView.findViewById(R.id.bgVH);
             timeIcon = itemView.findViewById(R.id.timeIconVH);
             title = itemView.findViewById(R.id.titleVH);
+            country = itemView.findViewById(R.id.countryVH);
             duration = itemView.findViewById(R.id.dateVH);
             daysLeft = itemView.findViewById(R.id.daysLeftVH);
             menu = itemView.findViewById(R.id.menuVH);

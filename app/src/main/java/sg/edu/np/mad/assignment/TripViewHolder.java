@@ -16,13 +16,5 @@ public class TripViewHolder extends RecyclerView.ViewHolder {
         title = itemView.findViewById(R.id.titleVH);
         bg = itemView.findViewById(R.id.bgVH);
 
-        // Set intent to itinerary
-        bg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
     }
 }

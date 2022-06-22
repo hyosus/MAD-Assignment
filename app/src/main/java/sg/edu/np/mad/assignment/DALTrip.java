@@ -88,7 +88,8 @@ public class DALTrip {
                                                 document.get("startDate").toString(),
                                                 document.get("endDate").toString(),
                                                 document.get("tripName").toString(),
-                                                document.get("id").toString()
+                                                document.get("id").toString(),
+                                                document.get("userId").toString()
                                         );
                                         Log.v("FUCK",trip.getDestination().toString());
                                         tripList.add(trip);
