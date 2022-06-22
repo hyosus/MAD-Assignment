@@ -15,9 +15,7 @@ import android.view.MenuItem;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -31,7 +29,6 @@ public class HomeActivity extends AppCompatActivity {
     private Object Trips;
     BottomNavigationView bottomNavigationView;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     @Override
 
@@ -54,7 +51,10 @@ public class HomeActivity extends AppCompatActivity {
                         Intent Intent = new Intent(HomeActivity.this, AddTrip.class);
                         startActivity(Intent);
                         return true;
-
+                    case R.id.calculate:
+                        Intent currencyIntent = new Intent(HomeActivity.this, CurrencyConvertor.class);
+                        startActivity(currencyIntent);
+                        return true;
                 }
                 return false;
             }
@@ -83,9 +83,7 @@ public class HomeActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             int count = 0;
                             for (DocumentSnapshot document : task.getResult()) {
-                                if (uid.equals(document.getString("userId"))) {
-                                    count++;
-                                }
+                                count++;
                             }
                             if (count == 0){
                                 loadFragment(new NoTripsFragment());
