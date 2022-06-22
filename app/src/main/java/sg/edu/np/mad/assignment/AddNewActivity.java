@@ -61,29 +61,29 @@ public class AddNewActivity extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         setDueDate = view.findViewById(R.id.set_due_tv);
-        mActivityEdit = view.findViewById(R.id.activity_edittext);
+        mActivityEdit = view.findViewById(R.id.task_edittextactivity);
         mVenueEdit = view.findViewById(R.id.venue_edittext);
         mAddressEdit = view.findViewById(R.id.Address_editText);
         mSaveBtn = view.findViewById(R.id.save_btn);
 
         firestore = FirebaseFirestore.getInstance();
 
+
         boolean isUpdate = false;
 
         final Bundle bundle = getArguments();
         if (bundle != null){
             isUpdate = true;
-            String activity = bundle.getString("activity");
-            String venue = bundle.getString("venue");
-            String address = bundle.getString("address");
+            String activity = bundle.getString("Activity");
+            String Venue = bundle.getString("Venue");
+            String Address = bundle.getString("Address");
             id = bundle.getString("id");
             dueDateUpdate = bundle.getString("due");
 
             mActivityEdit.setText(activity);
-            mVenueEdit.setText(venue);
-            mAddressEdit.setText(address);
+            mVenueEdit.setText(Venue);
+            mAddressEdit.setText(Address);
             setDueDate.setText(dueDateUpdate);
 
             if (activity.length() > 0){
@@ -91,13 +91,13 @@ public class AddNewActivity extends BottomSheetDialogFragment {
                 mSaveBtn.setBackgroundColor(Color.GRAY);
             }
         }
-        // Edit changes listener
+
         mActivityEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-            // Users will be able to see the changes on edit
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                if (s.toString().equals("")){
@@ -114,7 +114,7 @@ public class AddNewActivity extends BottomSheetDialogFragment {
 
             }
         });
-        // We are creating an on click listener for our Date time picker
+
         setDueDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +123,6 @@ public class AddNewActivity extends BottomSheetDialogFragment {
                 int MONTH = calendar.get(Calendar.MONTH);
                 int YEAR = calendar.get(Calendar.YEAR);
                 int DAY = calendar.get(Calendar.DATE);
-
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -134,53 +133,45 @@ public class AddNewActivity extends BottomSheetDialogFragment {
 
                     }
                 } , YEAR , MONTH , DAY);
+
                 datePickerDialog.show();
             }
-
         });
-        // On save button on click listener
+
         boolean finalIsUpdate = isUpdate;
         mSaveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String Activity = mActivityEdit.getText().toString();
+                String activity = mActivityEdit.getText().toString();
                 String Venue = mVenueEdit.getText().toString();
                 String Address = mAddressEdit.getText().toString();
 
-                // saving activity name, date, venue and address to firebase
                 if (finalIsUpdate){
-                    firestore.collection("Activity").document(id).update(
-                            "Activity" , Activity ,
-                            "due" , dueDate,
-                            "Venue", Venue,
-                            "Address", Address
-                    );
+                    firestore.collection("Activity").document(id).update("Activity" , activity , "due" , dueDate);
                     Toast.makeText(context, "Activity Updated", Toast.LENGTH_SHORT).show();
 
                 }
                 else {
-                    // Error toast message if no input in Activity name
-                    if (Activity.isEmpty()) {
-                        Toast.makeText(context, "Empty Activity not Allowed", Toast.LENGTH_SHORT).show();
+                    if (activity.isEmpty()) {
+                        Toast.makeText(context, "Empty Activity not Allowed !", Toast.LENGTH_SHORT).show();
                     } else {
-                        // Adding data to firebase
-                        Map<String, Object> ActivityMap = new HashMap<>();
 
-                        ActivityMap.put("Activity", Activity);
-                        ActivityMap.put("Venue", Venue);
-                        ActivityMap.put("Address", Address);
-                        ActivityMap.put("due", dueDate);
-                        ActivityMap.put("status", 0);
-                        ActivityMap.put("time", FieldValue.serverTimestamp());
+                        Map<String, Object> taskMap = new HashMap<>();
+                        taskMap.put("Activity", activity);
+                        taskMap.put("Venue", Venue);
+                        taskMap.put("Address", Address);
+                        taskMap.put("due", dueDate);
+                        taskMap.put("status", 0);
+                        taskMap.put("time", FieldValue.serverTimestamp());
 
-                        firestore.collection("Activity").add(ActivityMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        firestore.collection("Activity").add(taskMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                             @Override
-                            public void onComplete(@NonNull Task<DocumentReference> Activity) {
-                                if (Activity.isSuccessful()) {
+                            public void onComplete(@NonNull Task<DocumentReference> activity) {
+                                if (activity.isSuccessful()) {
                                     Toast.makeText(context, "Activity Saved", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(context, Activity.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, activity.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }).addOnFailureListener(new OnFailureListener() {

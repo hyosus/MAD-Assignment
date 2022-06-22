@@ -1,14 +1,12 @@
 package sg.edu.np.mad.assignment;
 
-
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,10 +22,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-import sg.edu.np.mad.assignment.Adapter.AddActivityAdapter;
+import  sg.edu.np.mad.assignment.Adapter.AddActivityAdapter;
 import sg.edu.np.mad.assignment.Model.ActivityModel;
 
-public class AddActivityMain extends AppCompatActivity implements OnDialogCloseListner{
+public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.assignment.OnDialogCloseListner {
 
     private RecyclerView recyclerView;
     private FloatingActionButton mFab;
@@ -41,15 +39,7 @@ public class AddActivityMain extends AppCompatActivity implements OnDialogCloseL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_activity_main);
-
-        // intent - retrieve trip name as title
-        Intent intent = getIntent();
-
-        TextView textView1 = (TextView) findViewById(R.id.Trip_name);
-        String text = intent.getStringExtra(TripViewHolder.EXTRA_TEXT);
-        textView1.setText(text);
-
+        setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.recycerlview);
         mFab = findViewById(R.id.floatingActionButton);
@@ -61,18 +51,20 @@ public class AddActivityMain extends AppCompatActivity implements OnDialogCloseL
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddNewActivity.newInstance().show(getSupportFragmentManager() , AddNewActivity.TAG);
+                sg.edu.np.mad.assignment.AddNewActivity.newInstance().show(getSupportFragmentManager() , sg.edu.np.mad.assignment.AddNewActivity.TAG);
             }
         });
 
-        mList = new ArrayList<ActivityModel>();
+        mList = new ArrayList<>();
         adapter = new AddActivityAdapter(AddActivityMain.this , mList);
 
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new sg.edu.np.mad.assignment.TouchHelper(adapter));
+        itemTouchHelper.attachToRecyclerView(recyclerView);
         showData();
         recyclerView.setAdapter(adapter);
     }
     private void showData(){
-       query = firestore.collection("Activity").orderBy("due" , Query.Direction.DESCENDING);
+       query = firestore.collection("Activity").orderBy("time" , Query.Direction.DESCENDING);
 
        listenerRegistration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
