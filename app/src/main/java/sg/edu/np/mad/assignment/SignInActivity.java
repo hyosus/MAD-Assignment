@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.util.Patterns;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class Signin extends AppCompatActivity implements View.OnClickListener{
+public class SignInActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText editTextEmails, editTextPasswords;
     private Button signIn1;
@@ -105,11 +104,11 @@ public class Signin extends AppCompatActivity implements View.OnClickListener{
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     //redirect to Home Screen
-                    startActivity(new Intent(Signin.this, HomeActivity.class));
+                    startActivity(new Intent(SignInActivity.this, HomeActivity.class));
 
 
                 } else {
-                    Toast.makeText(Signin.this, "Failed to sign in! Please check your credentials!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SignInActivity.this, "Failed to sign in! Please check your credentials!", Toast.LENGTH_LONG).show();
                 }
             }
         });
