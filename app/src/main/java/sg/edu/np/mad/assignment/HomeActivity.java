@@ -88,9 +88,9 @@ public class HomeActivity extends AppCompatActivity {
                             if (count == 0){
                                 loadFragment(new NoTripsFragment());
                             }
-                            else {
-                                loadFragment(new TripsFragment());
-                            }
+//                            else {
+//                                loadFragment(new TripsFragment());
+//                            }
                         }
                         else {
                             Log.d("checkTripListEmpty()", "Error getting documents: ", task.getException());
