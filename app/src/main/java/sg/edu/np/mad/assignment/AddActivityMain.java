@@ -1,8 +1,14 @@
 package sg.edu.np.mad.assignment;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,18 +45,41 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.add_activity_main);
 
         recyclerView = findViewById(R.id.recycerlview);
+        ImageView backBtn = findViewById(R.id.backBtn2);
         mFab = findViewById(R.id.floatingActionButton);
         firestore = FirebaseFirestore.getInstance();
+
+        TextView header = findViewById(R.id.tripNameTxt);
+        TextView date = findViewById(R.id.datesTxt);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(AddActivityMain.this));
 
+        DALTrip dalTrip = new DALTrip();
+        Trip trip = (Trip)getIntent().getSerializableExtra("tripDetails");
+
+        if (trip != null) {
+            Log.v("cb", trip.getTripName());
+            header.setText(trip.getTripName());
+            date.setText(trip.getStartDate() + " - " + trip.getEndDate());
+        }
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddActivityMain.this,HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                Intent intent = new Intent(AddActivityMain.this,AddNewActivity.class);
+//                startActivity(intent);
                 sg.edu.np.mad.assignment.AddNewActivity.newInstance().show(getSupportFragmentManager() , sg.edu.np.mad.assignment.AddNewActivity.TAG);
             }
         });

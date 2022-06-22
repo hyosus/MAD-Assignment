@@ -106,7 +106,7 @@ public class AddActivityAdapter extends RecyclerView.Adapter<AddActivityAdapter.
             super(itemView);
 
             mDueDateTv = itemView.findViewById(R.id.due_date_tv);
-            mDueDateTv = itemView.findViewById(R.id.Venue);
+            Venue = itemView.findViewById(R.id.Venue);
             mCheckBox = itemView.findViewById(R.id.mcheckbox);
 
         }
