@@ -40,6 +40,7 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
     private List<ActivityModel> mList;
     private Query query;
     private ListenerRegistration listenerRegistration;
+    public String TripId;
 
 
     @Override
@@ -60,6 +61,7 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
 
         DALTrip dalTrip = new DALTrip();
         Trip trip = (Trip)getIntent().getSerializableExtra("tripDetails");
+        TripId = trip.getId();
 
         if (trip != null) {
             Log.v("cb", trip.getTripName());
@@ -102,8 +104,10 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
                     if (documentChange.getType() == DocumentChange.Type.ADDED){
                         String id = documentChange.getDocument().getId();
                         ActivityModel activityModel = documentChange.getDocument().toObject(ActivityModel.class).withId(id);
-                        mList.add(activityModel);
-                        adapter.notifyDataSetChanged();
+                        if (TripId.equals(activityModel.getTripId())){
+                            mList.add(activityModel);
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 }
                 listenerRegistration.remove();

@@ -2,7 +2,7 @@ package sg.edu.np.mad.assignment.Model;
 
 public class ActivityModel extends ActivityId {
 
-    private String Activity ,Venue, Address, due;
+    private String Activity ,Venue, Address, due, TripId;
     private int status;
 
     public String getActivity() {
@@ -20,4 +20,5 @@ public class ActivityModel extends ActivityId {
     public int getStatus() {
         return status;
     }
+    public String getTripId() { return TripId; }
 }

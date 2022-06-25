@@ -46,6 +46,7 @@ public class AddNewActivity extends BottomSheetDialogFragment {
     private String dueDate = "";
     private String id = "";
     private String dueDateUpdate = "";
+    private String TripId;
 
     public static AddNewActivity newInstance(){
         return new AddNewActivity();
@@ -54,8 +55,9 @@ public class AddNewActivity extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AddActivityMain parentClass = (AddActivityMain)getActivity();
+        TripId = parentClass.TripId;
         return inflater.inflate(R.layout.add_new_activity, container , false);
-
     }
 
     @Override
@@ -158,6 +160,7 @@ public class AddNewActivity extends BottomSheetDialogFragment {
                     } else {
 
                         Map<String, Object> taskMap = new HashMap<>();
+                        taskMap.put("TripId", TripId);
                         taskMap.put("Activity", activity);
                         taskMap.put("Venue", Venue);
                         taskMap.put("Address", Address);
