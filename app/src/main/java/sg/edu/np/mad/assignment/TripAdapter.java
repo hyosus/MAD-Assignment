@@ -1,6 +1,8 @@
 package sg.edu.np.mad.assignment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -132,25 +134,34 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                                 break;
 
                             case R.id.delMenu:
-                                db.collection("Trip").document(trip.getId())
-                                        .delete()
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                new AlertDialog.Builder(view.getContext())
+                                        .setMessage("Delete this trip?")
+                                        .setPositiveButton("DELETE", new DialogInterface.OnClickListener()
+                                        {
                                             @Override
-                                            public void onSuccess(Void aVoid) {
-                                                dataHolder.remove(position);
-                                                notifyItemRemoved(position);
-                                                Log.d("TAG", "DocumentSnapshot successfully deleted!");
-                                                if (dataHolder.isEmpty()){
-                                                    loadFragment(new NoTripsFragment());
-                                                }
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                db.collection("Trip").document(trip.getId())
+                                                        .delete()
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                dataHolder.remove(position);
+                                                                notifyItemRemoved(position);
+                                                                Log.d("DeleteTrip", "DocumentSnapshot successfully deleted!");
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure( Exception e) {
+                                                                Log.w("DeleteTrip", "Error deleting document", e);
+                                                            }
+                                                        });
                                             }
+
                                         })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure( Exception e) {
-                                                Log.w("TAG", "Error deleting document", e);
-                                            }
-                                        });
+                                        .setNegativeButton("Cancel", null)
+                                        .show();
+
 
                                 break;
                         }
@@ -162,13 +173,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
             }
         });
 
-    }
-
-    public void loadFragment(Fragment fragment){
-        FragmentManager fm = fragment.getActivity().getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.fragFrame, fragment);
-        ft.commit();
     }
 
     @Override

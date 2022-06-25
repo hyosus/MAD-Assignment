@@ -202,8 +202,6 @@ public class AddTrip extends AppCompatActivity {
                                                         "tripName",title, "destination", destination,
                                                         "startDate", sDate, "endDate", eDate);
 
-                                                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
-
                                                 Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
                                                 startActivity(Intent);
                                             }
@@ -246,7 +244,6 @@ public class AddTrip extends AppCompatActivity {
                     new DatePickerDialog(AddTrip.this, AlertDialog.THEME_HOLO_LIGHT, date,startCalendar.get(Calendar.YEAR),startCalendar.get(Calendar.MONTH),startCalendar.get(Calendar.DAY_OF_MONTH)).show();
                 }
                 else {
-                    Toast.makeText(AddTrip.this, "WHHUATT AHH", Toast.LENGTH_SHORT).show();
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy", Locale.ENGLISH);
                     LocalDate date = LocalDate.parse(sd.getText().toString(), formatter);
                     DatePickerDialog.OnDateSetListener thisdatelistener = (v, year, month, day) -> {
