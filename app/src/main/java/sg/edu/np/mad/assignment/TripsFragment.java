@@ -193,11 +193,6 @@ public class TripsFragment extends Fragment {
                                 }
                             }
                         }
-//                        if (!hasTrips){
-//                            FragmentManager fm = getParentFragment().getActivity().get;
-//                            FragmentTransaction ft = fm.beginTransaction();
-//                            ft.replace(R.id.fragFrame, new NoTripsFragment());
-//                            ft.commit();
 //                        }
                     }
                 });

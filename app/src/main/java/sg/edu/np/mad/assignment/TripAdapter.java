@@ -32,7 +32,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
 {
     TripsFragment tripsFragment;
     List<Trip> dataHolder;
-    Context context;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private Calendar calendar;

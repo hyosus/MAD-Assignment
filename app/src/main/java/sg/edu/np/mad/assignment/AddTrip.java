@@ -20,11 +20,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -132,64 +137,87 @@ public class AddTrip extends AppCompatActivity {
                 String sDate = sd.getText().toString();
                 String eDate = ed.getText().toString();
 
-                if (trip_edit == null)
-                {
-                    if (title.isEmpty()){
-                        showError(name, "Missing information");
-                    }
-                    else if (destination.isEmpty()) {
-                        showError(dest, "Missing information");
-                    }
-                    else if (sDate.isEmpty()){
-                        Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
-                    }
-                    else if (eDate.isEmpty()){
-                        Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
-                    }
-                    else if (startCalendar.after(endCalendar) || customCalendarStart.after(customCalendarEnd)) {
+                db.collection("Trip")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (DocumentSnapshot doc : task.getResult()) {
+                                        if (trip_edit == null)
+                                        {
+                                            if (title.isEmpty()){
+                                                showError(name, "Missing information");
+                                            }
+                                            else if (uid.equals(doc.getString("userId")) && title.equals(doc.getString("tripName"))) {
+                                                showError(name, "Name already in use");
+                                                return;
+                                            }
+                                            else if (destination.isEmpty()) {
+                                                showError(dest, "Missing information");
+                                            }
+                                            else if (sDate.isEmpty()){
+                                                Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
+                                            }
+                                            else if (eDate.isEmpty()){
+                                                Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
+                                            }
+                                            else if (startCalendar.after(endCalendar) || customCalendarStart.after(customCalendarEnd)) {
 
-                        Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        DALTrip dalTrip = new DALTrip();
-                        Trip trip = new Trip(dest.getText().toString(), sd.getText().toString(), ed.getText().toString(), name.getText().toString(), name.getText().toString(), uid);
-                        dalTrip.createTrip(trip);
-                        finish();
-//                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
+                                            }
+                                            else {
+                                                DALTrip dalTrip = new DALTrip();
+                                                Trip trip = new Trip(dest.getText().toString(), sd.getText().toString(), ed.getText().toString(), name.getText().toString(), name.getText().toString(), uid);
+                                                dalTrip.createTrip(trip);
+                                                finish();
 
-                        Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
-                        startActivity(Intent);
-                    }
-                }
-                else
-                {
-                    if (title.isEmpty()){
-                        showError(name, "Missing information");
-                    }
-                    else if (destination.isEmpty()) {
-                        showError(dest, "Missing information");
-                    }
-                    else if (sDate.isEmpty()){
-                        Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
-                    }
-                    else if (eDate.isEmpty()){
-                        Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
-                    }
-                    else if (startCalendar.after(endCalendar) || customCalendarStart.after(customCalendarEnd)) {
-                        Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
-                    }
-                    else{
-                        db.collection("Trip").document(trip_edit.getId()).update(
-                                "tripName",title, "destination", destination,
-                                "startDate", sDate, "endDate", eDate);
+                                                Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
+                                                startActivity(Intent);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (title.isEmpty()){
+                                                showError(name, "Missing information");
+                                            }
+                                            else if (uid.equals(doc.getString("userId")) && title.equals(doc.getString("tripName"))) {
+                                                showError(name, "Name already in use");
+                                                return;
+                                            }
+                                            else if (destination.isEmpty()) {
+                                                showError(dest, "Missing information");
+                                            }
+                                            else if (sDate.isEmpty()){
+                                                Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
+                                            }
+                                            else if (eDate.isEmpty()){
+                                                Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
+                                            }
+                                            else if (startCalendar.after(endCalendar) || customCalendarStart.after(customCalendarEnd)) {
+                                                Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
+                                            }
+                                            else{
+                                                db.collection("Trip").document(trip_edit.getId()).update(
+                                                        "tripName",title, "destination", destination,
+                                                        "startDate", sDate, "endDate", eDate);
 
-                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
 
-                        Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
-                        startActivity(Intent);
-                    }
+                                                Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
+                                                startActivity(Intent);
+                                            }
 
-                }
+                                        }
+                                    }
+                                }
+                                else {
+                                    Log.d("checkTripListEmpty()", "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+
+
             }
         }));
 
