@@ -9,14 +9,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Assignment">
+<!--        <activity-->
+<!--            android:name=".AddNewActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".Forgotpassword"
             android:exported="false" />
         <activity
-            android:name=".TripDetails"
+            android:name=".ViewProfile"
             android:exported="false" />
         <activity
-            android:name=".ViewProfile"
+            android:name=".CurrencyConvertor"
+            android:exported="false" />
+        <activity
+            android:name=".AddActivityMain"
             android:exported="false" />
         <activity
             android:name=".TripViewHolder"
@@ -36,11 +42,19 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+
+
+
+
+
         </activity>
     </application>
 

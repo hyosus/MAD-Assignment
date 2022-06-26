@@ -160,7 +160,7 @@ public class TripsFragment extends Fragment {
                                                 upcomingRV.setAdapter(adapter3);
                                                 upcomingRV.setVisibility(View.VISIBLE);
                                             }
-                                            else
+                                            else if (dataHolder2.isEmpty() == false)
                                             {
                                                 upcomingRV.setVisibility(View.GONE);
                                             }
@@ -180,7 +180,7 @@ public class TripsFragment extends Fragment {
                                                 upcomingRV.setAdapter(adapter2);
                                                 upcomingRV.setVisibility(View.VISIBLE);
                                             }
-                                            else
+                                            else if (dataHolder3.isEmpty() == false)
                                             {
                                                 upcomingRV.setVisibility(View.GONE);
                                             }
@@ -193,11 +193,6 @@ public class TripsFragment extends Fragment {
                                 }
                             }
                         }
-//                        if (!hasTrips){
-//                            FragmentManager fm = getParentFragment().getActivity().get;
-//                            FragmentTransaction ft = fm.beginTransaction();
-//                            ft.replace(R.id.fragFrame, new NoTripsFragment());
-//                            ft.commit();
 //                        }
                     }
                 });

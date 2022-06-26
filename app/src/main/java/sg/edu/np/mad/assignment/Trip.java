@@ -16,6 +16,7 @@ public class Trip implements Serializable {
     private String tripName;
     private String id;
     private String userId;
+    private List<String> activityIdList;
 
     // Constructor
     public Trip(String destination, String startDate, String endDate, String tripName, String id, String userId) {
