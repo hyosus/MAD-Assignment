@@ -43,7 +43,7 @@ public class Forgotpassword extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.backspace3:
-                startActivity(new Intent(this, RegisterActivity.class));
+                startActivity(new Intent(this, SignInActivity.class));
                 break;
             case R.id.forgotPasswordBtn:
                 resetPassword();
