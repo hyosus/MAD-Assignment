@@ -8,118 +8,141 @@
     android:background="@color/bg_color"
     tools:context=".CurrencyConvertor">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="20dp"
-        android:textColor="@color/dark_blue"
-        android:text="Currency Converter"
-        android:textSize="36sp"
-        tools:ignore="HardcodedText" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/cBackBtn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="35dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/back_arrow" />
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="33dp"
+            android:text="Currency Converter"
             android:textColor="@color/dark_blue"
-            android:layout_gravity="center_horizontal"
-            android:text="----ENTER AMOUNT----"
-            android:textSize="15sp"
+            android:textSize="26dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="HardcodedText" />
 
         <EditText
             android:id="@+id/edit_amount"
-            android:layout_width="250dp"
-            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
-            android:textColor="@color/dark_blue"
+            android:layout_marginStart="27dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="27dp"
+            android:background="@drawable/bg_white_stroke"
             android:hint="Enter amount"
             android:padding="5dp"
-            android:background="@drawable/bg_white_stroke"
+            android:textColor="@color/dark_blue"
             android:textColorHint="@color/txt_color_hint"
+            android:textSize="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cBackBtn"
             tools:ignore="HardcodedText" />
 
         <TextView
+            android:id="@+id/textView14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_marginTop="30dp"
             android:text="From Currency:"
-            android:textSize="15sp"
             android:textColor="@color/dark_blue"
+            android:textSize="14dp"
+            app:layout_constraintStart_toStartOf="@+id/edit_amount"
+            app:layout_constraintTop_toBottomOf="@+id/edit_amount"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/btnConvert"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/dark_round_button"
+            android:text="Convert"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="@+id/relativeLayout2"
+            app:layout_constraintStart_toStartOf="@+id/relativeLayout2"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout2"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="To Currency:"
+            android:textColor="@color/dark_blue"
+            android:textSize="14dp"
+            app:layout_constraintStart_toStartOf="@+id/relativeLayout"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
             tools:ignore="HardcodedText" />
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/relativeLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
             android:background="@drawable/bg_white_stroke"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp">
+            app:layout_constraintEnd_toEndOf="@+id/edit_amount"
+            app:layout_constraintStart_toStartOf="@+id/edit_amount"
+            app:layout_constraintTop_toBottomOf="@+id/textView14">
 
             <Spinner
                 android:id="@+id/sp_from"
-                android:layout_width="250dp"
-                android:layout_height="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_white_stroke"
+            app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
+            app:layout_constraintStart_toStartOf="@+id/relativeLayout"
+            app:layout_constraintTop_toBottomOf="@+id/textView13">
+
+            <Spinner
+                android:id="@+id/sp_to"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
                 android:layout_gravity="center" />
         </RelativeLayout>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:text="To Currency:"
-            android:textSize="15sp"
+            android:id="@+id/currency_converted"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:hint="Result"
             android:textColor="@color/dark_blue"
+            android:textSize="16dp"
+            app:layout_constraintEnd_toEndOf="@+id/btnConvert"
+            app:layout_constraintStart_toStartOf="@+id/btnConvert"
+            app:layout_constraintTop_toBottomOf="@+id/btnConvert"
             tools:ignore="HardcodedText" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_white_stroke"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp">
-
-            <Spinner
-                android:id="@+id/sp_to"
-                android:layout_width="250dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center" />
-        </RelativeLayout>
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btnConvert"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
-        android:text="Convert"
-        android:background="@color/dark_blue"
-        android:textColor="@color/white"
-        tools:ignore="HardcodedText" />
-
-    <TextView
-        android:id="@+id/currency_converted"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="20dp"
-        android:hint="Result"
-        android:textColor="@color/dark_blue"
-        tools:ignore="HardcodedText" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

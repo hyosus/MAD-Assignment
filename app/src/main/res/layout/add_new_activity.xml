@@ -87,6 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:background="@drawable/dark_round_button"
+        android:letterSpacing="0.02"
         android:text="Save"
         android:textColor="@color/bg_color"
         android:textSize="16dp"
