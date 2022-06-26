@@ -16,6 +16,9 @@
             android:name=".TripDetails"
             android:exported="false" />
         <activity
+            android:name=".ViewProfile"
+            android:exported="false" />
+        <activity
             android:name=".TripViewHolder"
             android:exported="false" />
         <activity

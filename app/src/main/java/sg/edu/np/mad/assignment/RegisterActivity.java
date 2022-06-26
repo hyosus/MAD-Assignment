@@ -3,21 +3,15 @@ package sg.edu.np.mad.assignment;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.provider.ContactsContract;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.util.Patterns;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,24 +20,21 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     //Declarations start
     private EditText editTextEmail, editTextPassword, editTextHomeCountry;
-
     private ProgressBar progressBar;
     private ImageView backspace;
     private Button registerUser;
+
 
 
     private FirebaseAuth mAuth;
@@ -51,6 +42,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String KEY_EMAIL = "email";
     private static final String KEY_HOMECOUNTRY = "homeCountry";
+    private static final String KEY_USERNAME = "username";
+    private static final String KEY_PHONENO = "phoneNo";
+    private static final String KEY_DOB = "dob";
     //Declarations ends
 
     @Override
@@ -68,20 +62,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         Button registerUser = findViewById(R.id.registerUser);
         registerUser.setOnClickListener(this);
 
-
-
         //Input text box
         editTextEmail = (EditText) findViewById(R.id.email);
         editTextPassword = (EditText) findViewById(R.id.password);
         editTextHomeCountry = (EditText) findViewById(R.id.homeCountry);
 
-        // Country dropdown/searchable spinner
-        editTextHomeCountry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getCountryList();
-            }
-        });
 
 
     }
@@ -97,10 +82,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.registerUser:
                 registerUser();
                 break;
-
         }
     }
-
 
 
     private void  registerUser(){
@@ -149,10 +132,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             Map<String, Object> users = new HashMap<>();
                             users.put(KEY_EMAIL, email);
                             users.put(KEY_HOMECOUNTRY, homeCountry);
+                            users.put(KEY_USERNAME, "");
+                            users.put(KEY_PHONENO, "");
+                            users.put(KEY_DOB, "");
+
+                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
                             //firebase collection path to user and auto generate ID
-                            db.collection("users").document().set(users)
+                            db.collection("users").document(uid).set(users)
 
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
@@ -160,7 +148,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                             Toast.makeText(RegisterActivity.this,"user has been registered successfully!",Toast.LENGTH_LONG).show();
 
                                             //direct to login layout
-                                            startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                                            startActivity(new Intent(RegisterActivity.this, ViewProfile.class));
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
@@ -188,74 +176,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
 
-    }
-
-    // get list of countries using Locale
-    public void getCountryList()
-    {
-        // Initialise dialog
-        Dialog dialog = new Dialog(RegisterActivity.this);
-
-        // Set customer dialog
-        dialog.setContentView(R.layout.dialog_searchable_spinner);
-
-        // Set custom height and width
-        dialog.getWindow().setLayout(1000,1200);
-
-        dialog.show();
-
-        // Initialise and assign variable
-        EditText editText = dialog.findViewById(R.id.edit_text);
-        ListView lv = dialog.findViewById(R.id.listView);
-
-        Locale[] locale = Locale.getAvailableLocales();
-        ArrayList<String> countries = new ArrayList<>();
-        String country;
-
-        for (Locale loc : locale)
-        {
-            country = loc.getDisplayCountry();
-
-            if (country.length() > 0 && !countries.contains(country))
-            {
-                countries.add(country);
-            }
-        }
-
-        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(RegisterActivity.this,
-                android.R.layout.simple_list_item_1,countries);
-
-        lv.setAdapter(adapter);
-
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                adapter.getFilter().filter(charSequence);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // Set selected item on textview
-                editTextHomeCountry.setText(adapter.getItem(i));
-
-                // Dismiss dialog
-                dialog.dismiss();
-            }
-        });
     }
 
 
