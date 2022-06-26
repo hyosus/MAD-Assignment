@@ -11,9 +11,7 @@
         android:id="@+id/add"
         android:icon="@drawable/add_icon"
         android:title="Item" />
-    <item android:title="Item"
-        android:icon="@drawable/waypoint_icon"
-        />
+
     <item
         android:id="@+id/calculate"
         android:icon="@drawable/ic_calculate"

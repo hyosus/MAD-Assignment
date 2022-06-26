@@ -1,13 +1,16 @@
 package sg.edu.np.mad.assignment;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class CurrencyConvertor extends AppCompatActivity {
 
@@ -15,6 +18,7 @@ public class CurrencyConvertor extends AppCompatActivity {
     EditText editAmount;
     Button btnConvert;
     TextView currency_converted;
+    ImageView backBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +29,15 @@ public class CurrencyConvertor extends AppCompatActivity {
         editAmount = findViewById(R.id.edit_amount);
         btnConvert = findViewById(R.id.btnConvert);
         currency_converted = findViewById(R.id.currency_converted);
+        backBtn = findViewById(R.id.cBackBtn);
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent Intent = new Intent(CurrencyConvertor.this, HomeActivity.class);
+                startActivity(Intent);
+            }
+        });
 
 
         String[] from = {"USD", "SGD", "CNY", "MYR", "EUR", "JPD", "Pounds", "AUD"};

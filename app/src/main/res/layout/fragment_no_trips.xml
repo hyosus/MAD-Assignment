@@ -71,7 +71,7 @@
             android:text="Create a Trip"
             android:textAllCaps="false"
             android:textColor="#F9F7F7"
-            android:textSize="16dp"
+            android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/textView5"
             app:layout_constraintHorizontal_bias="0.5"
