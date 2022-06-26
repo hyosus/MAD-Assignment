@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Assignment">
         <activity
-            android:name=".Forgotpassword"
+            android:name=".AddNewActivity"
             android:exported="false" />
         <activity
-            android:name=".TripDetails"
+            android:name=".AddActivityMain"
             android:exported="false" />
         <activity
             android:name=".TripViewHolder"
@@ -25,19 +25,28 @@
             android:name=".HomeActivity"
             android:exported="true" />
         <activity
-            android:name=".SignInActivity"
+            android:name=".Signin"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".CreateAcc"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+
+
+
+
+
         </activity>
     </application>
 

@@ -62,9 +62,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.backspace2:
                 startActivity(new Intent(this, MainActivity.class));
                 break;
-//            case R.id.forgotpassword:
-//                startActivity(new Intent(this, Forgotpassword.class));
-//                break;
+            case R.id.forgotpassword:
+                startActivity(new Intent(this, Forgotpassword.class));
+                break;
         }
 
     }

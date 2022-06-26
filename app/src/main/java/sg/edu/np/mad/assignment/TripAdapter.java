@@ -106,7 +106,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(),TripDetails.class);
+                Intent intent = new Intent(view.getContext(),AddActivityMain.class);
                 intent.putExtra("tripDetails",trip);
                 view.getContext().startActivity(intent);
             }
