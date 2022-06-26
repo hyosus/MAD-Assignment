@@ -35,15 +35,15 @@ public class Forgotpassword extends AppCompatActivity implements View.OnClickLis
         forgotPassBtn.setOnClickListener(this);
         auth = FirebaseAuth.getInstance();
 
-        backspace4 = (ImageView) findViewById(R.id.backspace4);
+        backspace4 = (ImageView) findViewById(R.id.backspace3);
         backspace4.setOnClickListener(this);
 
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.backspace4:
-                startActivity(new Intent(this, Signin.class));
+            case R.id.backspace3:
+                startActivity(new Intent(this, RegisterActivity.class));
                 break;
             case R.id.forgotPasswordBtn:
                 resetPassword();
