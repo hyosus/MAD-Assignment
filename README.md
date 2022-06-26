@@ -1,13 +1,12 @@
 # Tripify
-<i>MAD-Assignment</i>
-Tripify is a itinerary trip planner for users to easily plan their holiday trips and activities around the world.
+Tripify is a itinerary trip planner for users to easily plan their holiday trips and activities around the world.<br>
 
 **Playstore Link:**
 https://play.google.com/store/apps/details?id=sg.edu.np.mad.assignment
 
 **Group members:**
 - S10208470A | Shanice Yeong
-- 
+
 
 ## Features
 - Account creation and customization
