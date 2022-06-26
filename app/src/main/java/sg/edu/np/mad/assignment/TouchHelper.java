@@ -10,8 +10,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import sg.edu.np.mad.assignment.Adapter.AddActivityAdapter;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+import sg.edu.np.mad.assignment.Adapter.AddActivityAdapter;
 
 
 public class TouchHelper extends ItemTouchHelper.SimpleCallback {

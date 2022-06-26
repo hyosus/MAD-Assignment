@@ -81,10 +81,16 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
+                    case R.id.calculate:
+                        Intent currencyIntent = new Intent(HomeActivity.this, CurrencyConvertor.class);
+                        startActivity(currencyIntent);
+                        return true;
+
                     case R.id.add:
                         Intent Intent = new Intent(HomeActivity.this, AddTrip.class);
                         startActivity(Intent);
                         return true;
+
                 }
                 return false;
             }

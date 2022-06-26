@@ -9,8 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Assignment">
+<!--        <activity-->
+<!--            android:name=".AddNewActivity"-->
+<!--            android:exported="false" />-->
         <activity
-            android:name=".AddNewActivity"
+            android:name=".CurrencyConvertor"
             android:exported="false" />
         <activity
             android:name=".AddActivityMain"
@@ -25,10 +28,10 @@
             android:name=".HomeActivity"
             android:exported="true" />
         <activity
-            android:name=".Signin"
+            android:name=".SignInActivity"
             android:exported="false" />
         <activity
-            android:name=".CreateAcc"
+            android:name=".RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
