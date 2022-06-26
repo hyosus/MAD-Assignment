@@ -1,67 +1,87 @@
 package sg.edu.np.mad.assignment;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Locale;
 
 public class ViewProfile<maxNumPhotosAndVideos> extends AppCompatActivity {
-TextView changeProfilePic;
-ImageView profileImgLarge;
-String username;
-String email;
-String phoneNo;
-String country;
-String dob;
-User user;
-Uri profImgUri;
-String userId;
-
-StorageReference storageReference;
-
-    ImageView backBtn;
-
-    Button logoutBtn;
+    ImageView profileImgLarge;
+    String username;
+    String email;
+    String phoneNo;
+    String country;
+    String dob;
+    Uri imageUri;
+    String profImageId;
+    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    HashMap<String, Object> hashMap = new HashMap<>();
+    EditText countryInput;
+    Button changeCountry;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseStorage storage;
+    StorageReference storageReference;
+
+    ImageView backBtn;
+    Button logoutBtn;
+    ImageView changeProfilePicture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile);
 
-        changeProfilePic = findViewById(R.id.changeProfPic);
         profileImgLarge = findViewById(R.id.profileImgLarge);
         backBtn = findViewById(R.id.backButton);
+        changeProfilePicture = findViewById(R.id.uploadImgBtn);
+        logoutBtn = findViewById(R.id.logoutButton);
+        countryInput = findViewById(R.id.editTextCountry);
+        changeCountry = findViewById(R.id.changeCountry);
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+
+        DocumentReference documentReference = db.collection("users").document(uid);
 
         EditText usernameInput = findViewById(R.id.editTextName);
         EditText emailInput = findViewById(R.id.editTextEmail);
@@ -69,10 +89,7 @@ StorageReference storageReference;
         EditText dobInput = findViewById(R.id.editTextDate);
         EditText countryInput = findViewById(R.id.editTextCountry);
 
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        storageReference = FirebaseStorage.getInstance().getReference();
-        DocumentReference documentReference = db.collection("users").document(uid);
+        //Setting text on fields from firestore
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -81,6 +98,16 @@ StorageReference storageReference;
                 usernameInput.setText(value.getString("username"));
                 dobInput.setText(value.getString("dob"));
                 phoneNoInput.setText(value.getString("phoneNo"));
+            }
+        });
+
+        StorageReference profileRef = storageReference.child("users/" + uid + "/profilePic");
+
+        //Loading image into profile picture with picasso api
+        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(profileImgLarge);
             }
         });
 
@@ -94,7 +121,6 @@ StorageReference storageReference;
                     dob = dobInput.getText().toString().trim();
                     country = countryInput.getText().toString().trim();
 
-                    HashMap<String, Object> hashMap = new HashMap<>();
                     hashMap.put("username", username);
                     hashMap.put("email", email);
                     hashMap.put("phoneNo", phoneNo);
@@ -105,13 +131,13 @@ StorageReference storageReference;
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    Toast.makeText(ViewProfile.this, "Profile Updated", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ViewProfile.this, "Profile saved", Toast.LENGTH_SHORT).show();
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(ViewProfile.this, "Profile Saving Failed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ViewProfile.this, "Profile saving failed", Toast.LENGTH_SHORT).show();
                                 }
                             });
                     startActivity(new Intent(ViewProfile.this, HomeActivity.class));
@@ -119,20 +145,110 @@ StorageReference storageReference;
             }
         });
 
-
-
-        changeProfilePic.setOnClickListener(new View.OnClickListener() {
+        changeCountry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent openGallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(openGallery, 1000);
-//            changeProfilePic.launch(openGallery);
+                getCountryList();
+            }
+        });
+
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(checkFields(emailInput, usernameInput, phoneNoInput, dobInput, countryInput)){
+                    username = usernameInput.getText().toString().trim();
+                    email = emailInput.getText().toString().trim();
+                    phoneNo = phoneNoInput.getText().toString().trim();
+                    dob = dobInput.getText().toString().trim();
+                    country = countryInput.getText().toString().trim();
+
+                    hashMap.put("username", username);
+                    hashMap.put("email", email);
+                    hashMap.put("phoneNo", phoneNo);
+                    hashMap.put("dob", dob);
+                    hashMap.put("homeCountry", country);
+
+                    db.collection("users").document(uid).set(hashMap)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Toast.makeText(ViewProfile.this, "Profile saved and logged out", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(ViewProfile.this, "Profile saving failed", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                    startActivity(new Intent(ViewProfile.this, MainActivity.class));
+                }
+            }
+        });
+
+        changeProfilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chooseImage();
             }
         });
     }
 
+    public void chooseImage(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, 99);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 99 && resultCode==RESULT_OK && data != null && data.getData() != null){
+            imageUri = data.getData();
+
+            profileImgLarge.setImageURI(imageUri);
+            uploadPicture(imageUri, uid);
+        }
+    }
+
+    private void uploadPicture(Uri imgUri, String uid) {
+
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading Image");
+        progressDialog.show();
+
+        StorageReference image = storageReference.child("users/" + uid + "/" + "profilePic");
+
+        imageUri = imgUri;
+
+        image.putFile(imageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        progressDialog.dismiss();
+                        Toast.makeText(ViewProfile.this, "Profile Photo Updated", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        Toast.makeText(ViewProfile.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                        double progressPercent = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                        progressDialog.setMessage("Uploading: " + (int) progressPercent + "%");
+                    }
+                });
+
+    }
+
     public boolean checkFields(EditText emailInput, EditText usernameInput, EditText phoneNoInput,
-                            EditText dobInput, EditText countryInput){
+                               EditText dobInput, EditText countryInput){
 
         email = emailInput.getText().toString().trim();
         username = usernameInput.getText().toString().trim();
@@ -169,95 +285,70 @@ StorageReference storageReference;
         }
     }
 
+    public void getCountryList()
+    {
+        // Initialise dialog
+        Dialog dialog = new Dialog(ViewProfile.this);
 
-// Uploading image
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1000) {
-            if (resultCode == Activity.RESULT_OK){
-                Uri imageUri = data.getData();
-                profileImgLarge.setImageURI(imageUri);
+        // Set customer dialog
+        dialog.setContentView(R.layout.dialog_searchable_spinner);
 
-                uploadImageToFirebase(imageUri);
+        // Set custom height and width
+        dialog.getWindow().setLayout(1000,1200);
+
+        dialog.show();
+
+        // Initialise and assign variable
+        EditText editText = dialog.findViewById(R.id.edit_text);
+        ListView lv = dialog.findViewById(R.id.listView);
+
+        Locale[] locale = Locale.getAvailableLocales();
+        ArrayList<String> countries = new ArrayList<>();
+        String country;
+
+        for (Locale loc : locale)
+        {
+            country = loc.getDisplayCountry();
+
+            if (country.length() > 0 && !countries.contains(country))
+            {
+                countries.add(country);
             }
         }
 
+        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
 
-    }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(ViewProfile.this,
+                android.R.layout.simple_list_item_1,countries);
 
+        lv.setAdapter(adapter);
 
-//    Uploading image
-    private void uploadImageToFirebase(Uri imgUri) {
-        // uploading to firebase strorage
-        StorageReference fileReference = storageReference.child("profile.jpg");
-        fileReference.putFile(imgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-//                        Picasso.get().load(uri).into();
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                    }
-                })
             }
-        }).addOnFailureListener(new OnFailureListener() {
+
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ViewProfile.this, "Image Uploading Failed", Toast.LENGTH_SHORT).show();
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                adapter.getFilter().filter(charSequence);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // Set selected item on textview
+                countryInput.setText(adapter.getItem(i));
+
+                // Dismiss dialog
+                dialog.dismiss();
+            }
+        });
     }
-
-
-    //    ActivityResultLauncher<Intent> changeProfilePicResultLauncher = registerForActivityResult(
-//            new ActivityResultContracts.StartActivityForResult(),
-//            new ActivityResultCallback<ActivityResult>() {
-//                @Override
-//                public void onActivityResult(ActivityResult result) {
-//                    if (result.getResultCode() == Activity.RESULT_OK) {
-//                        Uri imageUri = data.getData();
-//                    }
-//                }
-//            });
-//
-//    @RequiresApi(api = Build.VERSION_CODES.M)
-//    private void requestStoragePermission() {
-//        requestPermissions(storagePermission, STORAGE_REQUEST);
-//    }
-
-//    private boolean checkStoragePermission() {
-//        boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
-//        return result;
-//    }
-//
-//    private boolean checkCameraPermission() {
-//        boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
-//        boolean result1 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
-//        return result && result1;
-//    }
-
-
-
-//    private void pickFromGallery() {
-//
-//        CropImage.activity()
-//            .setGuidelines(CropImageView.Guidelines.ON)
-//            .start(this);
-//    }
-
-
-//
-//    @RequiresApi(api = Build.VERSION_CODES.M)
-//    private void requestCameraPermission() {
-//        requestPermissions(CameraPermission, CAMERA_REQUEST);
-//    }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == CropImage)
-//    }
 }
