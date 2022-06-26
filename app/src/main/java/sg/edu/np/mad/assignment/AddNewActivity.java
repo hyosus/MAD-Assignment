@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -20,16 +21,24 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AddNewActivity extends BottomSheetDialogFragment {
@@ -68,6 +77,25 @@ public class AddNewActivity extends BottomSheetDialogFragment {
         mVenueEdit = view.findViewById(R.id.venue_edittext);
         mAddressEdit = view.findViewById(R.id.Address_editText);
         mSaveBtn = view.findViewById(R.id.save_btn);
+
+        //Initialize places
+        Places.initialize(context.getApplicationContext(),"AIzaSyDKV4d5j6mwRwKiZzeF7L1Cw45qL8P5_Qs");
+        mVenueEdit.setFocusable(false);
+        mVenueEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS,
+                        Place.Field.LAT_LNG,Place.Field.NAME);
+
+                //create intent
+                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN
+                ,fieldList).build(view.getContext());
+
+                //Start activity result
+                startActivityForResult(intent,100);
+
+            }
+        });
 
         firestore = FirebaseFirestore.getInstance();
 
@@ -140,6 +168,7 @@ public class AddNewActivity extends BottomSheetDialogFragment {
             }
         });
 
+
         boolean finalIsUpdate = isUpdate;
         mSaveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,6 +217,25 @@ public class AddNewActivity extends BottomSheetDialogFragment {
                 dismiss();
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == AutocompleteActivity.RESULT_OK){
+            //When success
+            //Initialize Place
+            Place place = Autocomplete.getPlaceFromIntent(data);
+            mAddressEdit.setText(place.getAddress());
+            mVenueEdit.setText(String.format(place.getName()));
+
+        }else if (resultCode == AutocompleteActivity.RESULT_ERROR){
+            // When error
+            // Initialize status
+            Status status = Autocomplete.getStatusFromIntent(data);
+            Toast.makeText(context.getApplicationContext(), status.getStatusMessage()
+            , Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
