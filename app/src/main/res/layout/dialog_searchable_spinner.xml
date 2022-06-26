@@ -14,6 +14,7 @@
         android:background="@drawable/edittext_border"
         android:drawableLeft="@drawable/search_icon"
         android:drawablePadding="14dp"
+        android:fontFamily="@font/roboto"
         android:hint="Search"
         android:includeFontPadding="true"
         android:padding="10dp"

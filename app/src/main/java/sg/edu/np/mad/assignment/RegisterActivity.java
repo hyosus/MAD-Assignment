@@ -27,7 +27,7 @@ import com.google.firebase.firestore.auth.User;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreateAcc extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     //Declarations start
     private EditText editTextEmail, editTextPassword, editTextHomeCountry;
@@ -42,6 +42,9 @@ public class CreateAcc extends AppCompatActivity implements View.OnClickListener
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String KEY_EMAIL = "email";
     private static final String KEY_HOMECOUNTRY = "homeCountry";
+    private static final String KEY_USERNAME = "username";
+    private static final String KEY_PHONENO = "phoneNo";
+    private static final String KEY_DOB = "dob";
     //Declarations ends
 
     @Override
@@ -129,31 +132,36 @@ public class CreateAcc extends AppCompatActivity implements View.OnClickListener
                             Map<String, Object> users = new HashMap<>();
                             users.put(KEY_EMAIL, email);
                             users.put(KEY_HOMECOUNTRY, homeCountry);
+                            users.put(KEY_USERNAME, "");
+                            users.put(KEY_PHONENO, "");
+                            users.put(KEY_DOB, "");
+
+                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
                             //firebase collection path to user and auto generate ID
-                            db.collection("users").document().set(users)
+                            db.collection("users").document(uid).set(users)
 
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
-                                            Toast.makeText(CreateAcc.this,"user has been registered successfully!",Toast.LENGTH_LONG).show();
+                                            Toast.makeText(RegisterActivity.this,"user has been registered successfully!",Toast.LENGTH_LONG).show();
 
                                             //direct to login layout
-                                            startActivity(new Intent(CreateAcc.this, HomeActivity.class));
+                                            startActivity(new Intent(RegisterActivity.this, ViewProfile.class));
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(CreateAcc.this,"Failed to register! Try Again!",Toast.LENGTH_LONG).show();
+                                            Toast.makeText(RegisterActivity.this,"Failed to register! Try Again!",Toast.LENGTH_LONG).show();
 
                                         }
                                     });
 
                         }
                         else{
-                            Toast.makeText(CreateAcc.this,"Failed to register!",Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterActivity.this,"Failed to register!",Toast.LENGTH_LONG).show();
 
                         }
 

@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
+        android:fontFamily="@font/roboto_bold"
         android:text="My Trips"
         android:textAlignment="textStart"
         android:textColor="#112D4E"
@@ -20,17 +21,6 @@
         android:typeface="normal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/profileImg"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="20dp"
-        android:src="@drawable/profile_pic"
-        app:layout_constraintBottom_toBottomOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView"
-        app:shapeAppearanceOverlay="@style/roundProfilePic"/>
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -72,5 +62,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profileImg"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="20dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView"
+        app:shapeAppearanceOverlay="@style/Circular"
+        app:srcCompat="@drawable/person_new" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

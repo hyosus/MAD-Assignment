@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment/app/src/main/res/layout/activity_home.xml" value="0.2" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment/app/src/main/res/layout/activity_view_profile.xml" value="0.264" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/add_icon.xml" value="0.1" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/back_arrow.xml" value="0.1875" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/btn_border.xml" value="0.175" />
@@ -22,14 +24,12 @@
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_itinerary.xml" value="0.31068840579710144" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_main.xml" value="0.3171171171171171" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_sign_in.xml" value="0.25" />
-        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_splash.xml" value="0.1408274132887589" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_trip_details.xml" value="0.23157894736842105" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/activity_trip_view_holder.xml" value="0.25" />
-        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/add_activity_main.xml" value="0.5" />
-        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/add_new_activity.xml" value="0.5172735760971056" />
+        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/add_activity_main.xml" value="0.28815733219324496" />
+        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/add_new_activity.xml" value="0.27233860624198375" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/dialog_searchable_spinner.xml" value="0.21" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/dropdown_countries.xml" value="0.25" />
-        <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/each_activity.xml" value="0.5" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/each_task.xml" value="0.28815733219324496" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/frag_no_trips.xml" value="0.2966485507246377" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/layout/fragment_itinerary.xml" value="0.31068840579710144" />
@@ -59,6 +59,24 @@
         <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment/app/src/main/res/layout/fragment_no_trips.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment/app/src/main/res/layout/fragment_trips.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment/app/src/main/res/layout/trip_view_holder.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/drawable/add_icon.xml" value="0.137" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/drawable/back_arrow.xml" value="0.1" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/drawable/back_arrow_white.xml" value="0.1" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/drawable/bg_wave.xml" value="0.1" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/drawable/biggerwave.xml" value="0.1" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/drawable/ic_wave__1_.xml" value="0.137" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/drawable/text_border.xml" value="0.199" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/layout/activity_add_trip.xml" value="0.1" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/layout/activity_create_acc.xml" value="0.33" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/layout/activity_forgotpassword.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/layout/activity_home.xml" value="0.1" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/layout/activity_sign_in.xml" value="0.30520833333333336" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/layout/activity_trip_details.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/layout/activity_view_profile.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/layout/dialog_searchable_spinner.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/layout/fragment_trips.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/xuzhi/AndroidStudioProjects/MAD-Assignment2/app/src/main/res/layout/trip_view_holder.xml" value="0.18802083333333333" />
       </map>
     </option>
   </component>
