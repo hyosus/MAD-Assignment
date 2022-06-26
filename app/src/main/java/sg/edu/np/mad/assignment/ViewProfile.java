@@ -7,14 +7,18 @@ import androidx.annotation.Nullable;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,9 +29,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -57,6 +64,8 @@ public class ViewProfile<maxNumPhotosAndVideos> extends AppCompatActivity {
     HashMap<String, Object> hashMap = new HashMap<>();
     EditText countryInput;
     Button changeCountry;
+    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    ImageView saveBttn;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseStorage storage;
@@ -77,6 +86,7 @@ public class ViewProfile<maxNumPhotosAndVideos> extends AppCompatActivity {
         logoutBtn = findViewById(R.id.logoutButton);
         countryInput = findViewById(R.id.editTextCountry);
         changeCountry = findViewById(R.id.changeCountry);
+        saveBttn = findViewById(R.id.saveButton);
 
         storage = FirebaseStorage.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -111,7 +121,7 @@ public class ViewProfile<maxNumPhotosAndVideos> extends AppCompatActivity {
             }
         });
 
-        backBtn.setOnClickListener(new View.OnClickListener() {
+        saveBttn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(checkFields(emailInput, usernameInput, phoneNoInput, dobInput, countryInput)){
@@ -140,8 +150,14 @@ public class ViewProfile<maxNumPhotosAndVideos> extends AppCompatActivity {
                                     Toast.makeText(ViewProfile.this, "Profile saving failed", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                    startActivity(new Intent(ViewProfile.this, HomeActivity.class));
                 }
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ViewProfile.this, HomeActivity.class));
             }
         });
 
@@ -155,34 +171,7 @@ public class ViewProfile<maxNumPhotosAndVideos> extends AppCompatActivity {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(checkFields(emailInput, usernameInput, phoneNoInput, dobInput, countryInput)){
-                    username = usernameInput.getText().toString().trim();
-                    email = emailInput.getText().toString().trim();
-                    phoneNo = phoneNoInput.getText().toString().trim();
-                    dob = dobInput.getText().toString().trim();
-                    country = countryInput.getText().toString().trim();
-
-                    hashMap.put("username", username);
-                    hashMap.put("email", email);
-                    hashMap.put("phoneNo", phoneNo);
-                    hashMap.put("dob", dob);
-                    hashMap.put("homeCountry", country);
-
-                    db.collection("users").document(uid).set(hashMap)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    Toast.makeText(ViewProfile.this, "Profile saved and logged out", Toast.LENGTH_SHORT).show();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(ViewProfile.this, "Profile saving failed", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                    startActivity(new Intent(ViewProfile.this, MainActivity.class));
-                }
+                startActivity(new Intent(ViewProfile.this, MainActivity.class));
             }
         });
 
@@ -192,6 +181,91 @@ public class ViewProfile<maxNumPhotosAndVideos> extends AppCompatActivity {
                 chooseImage();
             }
         });
+
+        changeProfilePicture.setOnTouchListener(new View.OnTouchListener() {
+            GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public void onLongPress(MotionEvent motionEvent) {
+                    AlertDialog.Builder dialogDelete = new AlertDialog.Builder(ViewProfile.this);
+                    dialogDelete.setTitle("Remove profile picture?");
+                    dialogDelete.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            profileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Toast.makeText(ViewProfile.this, "Profile Image Removed", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(ViewProfile.this, ViewProfile.class));
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(ViewProfile.this, "Could not delete profile image", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
+                    dialogDelete.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();;
+                        }
+                    });
+                    AlertDialog alertDialog = dialogDelete.create();
+                    alertDialog.show();
+
+                }
+            });
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                gestureDetector.onTouchEvent(motionEvent);
+                return false;
+            }
+        });
+
+        logoutBtn.setOnTouchListener(new View.OnTouchListener() {
+            GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener(){
+                @Override
+                public void onLongPress(MotionEvent motionEvent) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(ViewProfile.this);
+                    dialog.setTitle("Confirm account deletion?");
+                    dialog.setMessage("Deleting this account will completely remove all your data and" +
+                            " you will not be able to access it again.");
+                    dialog.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            profileRef.delete();
+                            firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(ViewProfile.this, "Account deleted", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(ViewProfile.this, MainActivity.class));
+                                    }
+                                    else{
+                                        Toast.makeText(ViewProfile.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    dialog.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+
+                    AlertDialog alertDialog = dialog.create();
+                    alertDialog.show();
+                }
+            });
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent){
+                gestureDetector.onTouchEvent(motionEvent);
+                return false;
+            }
+        });
+
     }
 
     public void chooseImage(){
