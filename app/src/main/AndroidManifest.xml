@@ -13,6 +13,12 @@
 <!--            android:name=".AddNewActivity"-->
 <!--            android:exported="false" />-->
         <activity
+            android:name=".Forgotpassword"
+            android:exported="false" />
+        <activity
+            android:name=".ViewProfile"
+            android:exported="false" />
+        <activity
             android:name=".CurrencyConvertor"
             android:exported="false" />
         <activity
@@ -36,7 +42,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
-
 
 
             <intent-filter>
