@@ -1,12 +1,18 @@
 package sg.edu.np.mad.assignment;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -21,7 +27,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
@@ -63,6 +72,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         editTextEmail = (EditText) findViewById(R.id.email);
         editTextPassword = (EditText) findViewById(R.id.password);
         editTextHomeCountry = (EditText) findViewById(R.id.homeCountry);
+
+        editTextHomeCountry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getCountryList();
+            }
+        });
 
 
 
@@ -167,6 +183,73 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 });
 
 
+    }
+    // get list of countries using Locale
+    public void getCountryList()
+    {
+        // Initialise dialog
+        Dialog dialog = new Dialog(RegisterActivity.this);
+
+        // Set customer dialog
+        dialog.setContentView(R.layout.dialog_searchable_spinner);
+
+        // Set custom height and width
+        dialog.getWindow().setLayout(1000,1200);
+
+        dialog.show();
+
+        // Initialise and assign variable
+        EditText editText = dialog.findViewById(R.id.edit_text);
+        ListView lv = dialog.findViewById(R.id.listView);
+
+        Locale[] locale = Locale.getAvailableLocales();
+        ArrayList<String> countries = new ArrayList<>();
+        String country;
+
+        for (Locale loc : locale)
+        {
+            country = loc.getDisplayCountry();
+
+            if (country.length() > 0 && !countries.contains(country))
+            {
+                countries.add(country);
+            }
+        }
+
+        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(RegisterActivity.this,
+                android.R.layout.simple_list_item_1,countries);
+
+        lv.setAdapter(adapter);
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                adapter.getFilter().filter(charSequence);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // Set selected item on textview
+                editTextHomeCountry.setText(adapter.getItem(i));
+
+                // Dismiss dialog
+                dialog.dismiss();
+            }
+        });
     }
 
 
