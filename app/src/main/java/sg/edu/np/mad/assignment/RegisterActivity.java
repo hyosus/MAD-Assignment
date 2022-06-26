@@ -37,7 +37,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private Button registerUser;
 
 
-
     private FirebaseAuth mAuth;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
