@@ -8,21 +8,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -30,8 +20,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private Object Trips;
     BottomNavigationView bottomNavigationView;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     @Override
 
@@ -39,10 +27,19 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-//        ArrayList<Trip> tripList = new ArrayList<>();
+        ArrayList<Trip> tripList = new ArrayList<>();
+        tripList.add(new Trip("singapore", "12/05/2022", "17/05.2022", "june holi"));
 
-        // Show different fragments
-        showTripFragment();
+
+        // Show NoTripsFragment if user has not created any trips
+        if (tripList.isEmpty()){
+            loadFragment(new NoTripsFragment());
+        }
+        else {
+            loadFragment(new TripsFragment());
+        }
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragFrame,new TripsFragment()).commit();
 
         bottomNavigationView = findViewById(R.id.navBar);
 
@@ -61,43 +58,10 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        showTripFragment();
-    }
-
     public void loadFragment(Fragment fragment){
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragFrame, fragment);
         ft.commit();
-    }
-
-    public void showTripFragment(){
-        db.collection("Trip")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            int count = 0;
-                            for (DocumentSnapshot document : task.getResult()) {
-                                if (uid.equals(document.getString("userId"))) {
-                                    count++;
-                                }
-                            }
-                            if (count == 0){
-                                loadFragment(new NoTripsFragment());
-                            }
-                            else {
-                                loadFragment(new TripsFragment());
-                            }
-                        }
-                        else {
-                            Log.d("checkTripListEmpty()", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
     }
 }

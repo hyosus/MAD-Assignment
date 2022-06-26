@@ -5,13 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.util.Patterns;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,18 +20,17 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.w3c.dom.Text;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class CreateAcc extends AppCompatActivity implements View.OnClickListener {
 
     //Declarations start
     private EditText editTextEmail, editTextPassword, editTextHomeCountry;
-
     private ProgressBar progressBar;
     private ImageView backspace;
     private Button registerUser;
@@ -43,6 +42,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String KEY_EMAIL = "email";
     private static final String KEY_HOMECOUNTRY = "homeCountry";
+    private static final String KEY_USERNAME = "username";
+    private static final String KEY_PHONENO = "phoneNo";
+    private static final String KEY_DOB = "dob";
     //Declarations ends
 
     @Override
@@ -59,8 +61,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         //register user button
         Button registerUser = findViewById(R.id.registerUser);
         registerUser.setOnClickListener(this);
-
-
 
         //Input text box
         editTextEmail = (EditText) findViewById(R.id.email);
@@ -82,7 +82,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.registerUser:
                 registerUser();
                 break;
-
         }
     }
 
@@ -133,31 +132,36 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             Map<String, Object> users = new HashMap<>();
                             users.put(KEY_EMAIL, email);
                             users.put(KEY_HOMECOUNTRY, homeCountry);
+                            users.put(KEY_USERNAME, "");
+                            users.put(KEY_PHONENO, "");
+                            users.put(KEY_DOB, "");
+
+                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
                             //firebase collection path to user and auto generate ID
-                            db.collection("users").document().set(users)
+                            db.collection("users").document(uid).set(users)
 
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
-                                            Toast.makeText(RegisterActivity.this,"user has been registered successfully!",Toast.LENGTH_LONG).show();
+                                            Toast.makeText(CreateAcc.this,"user has been registered successfully!",Toast.LENGTH_LONG).show();
 
                                             //direct to login layout
-                                            startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                                            startActivity(new Intent(CreateAcc.this, ViewProfile.class));
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(RegisterActivity.this,"Failed to register! Try Again!",Toast.LENGTH_LONG).show();
+                                            Toast.makeText(CreateAcc.this,"Failed to register! Try Again!",Toast.LENGTH_LONG).show();
 
                                         }
                                     });
 
                         }
                         else{
-                            Toast.makeText(RegisterActivity.this,"Failed to register!",Toast.LENGTH_LONG).show();
+                            Toast.makeText(CreateAcc.this,"Failed to register!",Toast.LENGTH_LONG).show();
 
                         }
 
