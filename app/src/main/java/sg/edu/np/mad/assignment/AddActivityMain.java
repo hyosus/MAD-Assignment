@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,7 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-import  sg.edu.np.mad.assignment.Adapter.AddActivityAdapter;
+import sg.edu.np.mad.assignment.Adapter.AddActivityAdapter;
 import sg.edu.np.mad.assignment.Model.ActivityModel;
 
 public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.assignment.OnDialogCloseListner {
@@ -59,14 +57,20 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(AddActivityMain.this));
 
-        DALTrip dalTrip = new DALTrip();
         Trip trip = (Trip)getIntent().getSerializableExtra("tripDetails");
         TripId = trip.getId();
 
         if (trip != null) {
-            Log.v("cb", trip.getTripName());
             header.setText(trip.getTripName());
             date.setText(trip.getStartDate() + " - " + trip.getEndDate());
+
+            String dateNoSlash = date.getText().toString();
+
+            // Omit slashes in date
+            if (dateNoSlash.contains("/")){
+                dateNoSlash = dateNoSlash.replace("/", " ");
+                date.setText(dateNoSlash);
+            }
         }
 
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -80,8 +84,6 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(AddActivityMain.this,AddNewActivity.class);
-//                startActivity(intent);
                 sg.edu.np.mad.assignment.AddNewActivity.newInstance().show(getSupportFragmentManager() , sg.edu.np.mad.assignment.AddNewActivity.TAG);
             }
         });

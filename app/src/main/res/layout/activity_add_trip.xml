@@ -95,6 +95,7 @@
         android:editable="false"
         android:ems="10"
         android:filterTouchesWhenObscured="false"
+        android:focusable="false"
         android:inputType="none"
         android:paddingLeft="14dp"
         android:paddingRight="14dp"

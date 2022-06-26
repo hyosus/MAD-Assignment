@@ -88,7 +88,7 @@ public class AddNewActivity extends BottomSheetDialogFragment {
             mAddressEdit.setText(Address);
             setDueDate.setText(dueDateUpdate);
 
-            if (activity.length() > 0){
+            if (Venue.isEmpty()|| activity.isEmpty()|| Address.isEmpty()){
                 mSaveBtn.setEnabled(false);
                 mSaveBtn.setBackgroundColor(Color.GRAY);
             }
@@ -150,7 +150,7 @@ public class AddNewActivity extends BottomSheetDialogFragment {
                 String Address = mAddressEdit.getText().toString();
 
                 if (finalIsUpdate){
-                    firestore.collection("Activity").document(id).update("Activity" , activity , "due" , dueDate);
+                    firestore.collection("Activity").document(id).update("Activity" , activity , "due" , dueDate, "Venue", Venue, "Address", Address);
                     Toast.makeText(context, "Activity Updated", Toast.LENGTH_SHORT).show();
 
                 }

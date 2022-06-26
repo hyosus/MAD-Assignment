@@ -1,22 +1,16 @@
 package sg.edu.np.mad.assignment;
 
-import static android.content.ContentValues.TAG;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,8 +20,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -46,7 +44,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
@@ -66,6 +68,9 @@ public class ViewProfile<maxNumPhotosAndVideos> extends AppCompatActivity {
     Button changeCountry;
     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     ImageView saveBttn;
+
+    final Calendar dobCalendar= Calendar.getInstance();
+    final Calendar customCalendar= Calendar.getInstance();
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseStorage storage;
@@ -150,6 +155,40 @@ public class ViewProfile<maxNumPhotosAndVideos> extends AppCompatActivity {
                                     Toast.makeText(ViewProfile.this, "Profile saving failed", Toast.LENGTH_SHORT).show();
                                 }
                             });
+                }
+            }
+        });
+
+        // Initiate date picker
+        DatePickerDialog.OnDateSetListener date = (view, year, month, day) -> {
+            dobCalendar.set(Calendar.YEAR, year);
+            dobCalendar.set(Calendar.MONTH,month);
+            dobCalendar.set(Calendar.DAY_OF_MONTH,day);
+            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MMM/yyyy");
+            dobInput.setText(dateFormat.format(dobCalendar.getTime()));
+        };
+
+        //         Date of birth
+        dobInput.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View view) {
+                if (dobInput == null) {
+                    new DatePickerDialog(ViewProfile.this, AlertDialog.THEME_HOLO_LIGHT, date, dobCalendar.get(Calendar.YEAR), dobCalendar.get(Calendar.MONTH), dobCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                }
+                //update calendar date to existing
+                else
+                {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy", Locale.ENGLISH);
+                    LocalDate date = LocalDate.parse(dobInput.getText().toString(), formatter);
+                    DatePickerDialog.OnDateSetListener thisdatelistener = (v, year, month, day) -> {
+                        customCalendar.set(Calendar.YEAR, year);
+                        customCalendar.set(Calendar.MONTH,month);
+                        customCalendar.set(Calendar.DAY_OF_MONTH,day);
+                        SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MMM/yyyy");
+                        dobInput.setText(dateFormat.format(customCalendar.getTime()));
+                    };
+                    new DatePickerDialog(ViewProfile.this, AlertDialog.THEME_HOLO_LIGHT, thisdatelistener,date.getYear(),date.getMonthValue()-1,date.getDayOfMonth()).show();
                 }
             }
         });
