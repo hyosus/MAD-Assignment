@@ -38,6 +38,6 @@ Setting up rules to ensure only authenticated users are allowed to read and writ
 Enabling user to register for an account and authenticate in order to save all of their data in the cloud (Firebase). If a user forgets their password, they can choose to change it by selecting the forget password option. 
 
 ### S10202752B | Sean Tan Yi Xun
-**created currency converter** <br>
+**Created Currency Converter** <br>
 One useful feature of the currency converter is that it has the most frequently used currencies in it and can be converted interchangeably, enabling you to simplify your planning by accessing simple but yet important things such as exchange rates.  Unfortunately as APIs for live updated currencies cost a monthly fee or were not updated I was not able to implement one and had to instead hard code it out. I also added another tab at the bottom of the screen at the home page for ease of navigation to the currency converter. 
 
