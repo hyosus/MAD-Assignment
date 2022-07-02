@@ -45,8 +45,6 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -173,23 +171,23 @@ public class ViewProfile<maxNumPhotosAndVideos> extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                if (dobInput == null) {
+//                if (dobInput == null) {
                     new DatePickerDialog(ViewProfile.this, AlertDialog.THEME_HOLO_LIGHT, date, dobCalendar.get(Calendar.YEAR), dobCalendar.get(Calendar.MONTH), dobCalendar.get(Calendar.DAY_OF_MONTH)).show();
-                }
+//                }
                 //update calendar date to existing
-                else
-                {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy", Locale.ENGLISH);
-                    LocalDate date = LocalDate.parse(dobInput.getText().toString(), formatter);
-                    DatePickerDialog.OnDateSetListener thisdatelistener = (v, year, month, day) -> {
-                        customCalendar.set(Calendar.YEAR, year);
-                        customCalendar.set(Calendar.MONTH,month);
-                        customCalendar.set(Calendar.DAY_OF_MONTH,day);
-                        SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MMM/yyyy");
-                        dobInput.setText(dateFormat.format(customCalendar.getTime()));
-                    };
-                    new DatePickerDialog(ViewProfile.this, AlertDialog.THEME_HOLO_LIGHT, thisdatelistener,date.getYear(),date.getMonthValue()-1,date.getDayOfMonth()).show();
-                }
+//                else
+//                {
+//                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy", Locale.ENGLISH);
+//                    LocalDate date = LocalDate.parse(dobInput.getText().toString(), formatter);
+//                    DatePickerDialog.OnDateSetListener thisdatelistener = (v, year, month, day) -> {
+//                        customCalendar.set(Calendar.YEAR, year);
+//                        customCalendar.set(Calendar.MONTH,month);
+//                        customCalendar.set(Calendar.DAY_OF_MONTH,day);
+//                        SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MMM/yyyy");
+//                        dobInput.setText(dateFormat.format(customCalendar.getTime()));
+//                    };
+//                    new DatePickerDialog(ViewProfile.this, AlertDialog.THEME_HOLO_LIGHT, thisdatelistener,date.getYear(),date.getMonthValue()-1,date.getDayOfMonth()).show();
+//                }
             }
         });
 
