@@ -1,20 +1,34 @@
 package sg.edu.np.mad.assignment;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.dynamiclinks.DynamicLink;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -39,7 +53,10 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
     private Query query;
     private ListenerRegistration listenerRegistration;
     public String TripId;
+    private ImageView menu;
 
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    List<Trip> dataHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +65,7 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
 
         recyclerView = findViewById(R.id.recycerlview);
         ImageView backBtn = findViewById(R.id.backBtn2);
+        menu = findViewById(R.id.addActivityMenu);
         mFab = findViewById(R.id.floatingActionButton);
         firestore = FirebaseFirestore.getInstance();
 
@@ -58,9 +76,10 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
         recyclerView.setLayoutManager(new LinearLayoutManager(AddActivityMain.this));
 
         Trip trip = (Trip)getIntent().getSerializableExtra("tripDetails");
-        TripId = trip.getId();
+
 
         if (trip != null) {
+            TripId = trip.getId();
             header.setText(trip.getTripName());
             date.setText(trip.getStartDate() + " - " + trip.getEndDate());
 
@@ -72,6 +91,115 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
                 date.setText(dateNoSlash);
             }
         }
+
+        // Menu popout
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
+                MenuInflater inflater = popupMenu.getMenuInflater();
+                inflater.inflate(R.menu.popup_menu, popupMenu.getMenu());
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()){
+                            case R.id.shareMenu:
+                                DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
+                                        .setLink(Uri.parse("https://www.example.com"))
+                                        .setDomainUriPrefix("https://madtripify.page.link")
+                                        // Open links with this app on Android
+                                        .setAndroidParameters(new DynamicLink.AndroidParameters.Builder("sg.edu.np.mad.assignment")
+                                                .setMinimumVersion(1).build()).buildDynamicLink();
+
+                                Uri dynamicLinkUri = dynamicLink.getUri();
+
+                                Log.v("CHIBAI", String.valueOf(dynamicLinkUri));
+
+                                Intent myIntent = new Intent(Intent.ACTION_SEND);
+                                myIntent.setType("text/plain");
+                                String body = "Follow me on my trip! ";
+//                                String sub = "Your Subject";
+//                                myIntent.putExtra(Intent.EXTRA_SUBJECT,sub);
+                                myIntent.putExtra(Intent.EXTRA_TEXT,body + String.valueOf(dynamicLinkUri));
+                                view.getContext().startActivity(Intent.createChooser(myIntent, "Share Using"));
+
+
+                                break;
+                            case R.id.editMenu:
+                                Intent intent=new Intent(view.getContext(),AddTrip.class);
+                                intent.putExtra("EDIT", trip);
+                                view.getContext().startActivity(intent);
+
+                                break;
+
+                            case R.id.collabMenu:
+                                Intent cIntent=new Intent(view.getContext(),CollaboratorsActivity.class);
+                                cIntent.putExtra("tripDetails", trip);
+                                view.getContext().startActivity(cIntent);
+
+                                break;
+
+                            case R.id.delMenu:
+                                new AlertDialog.Builder(view.getContext())
+                                        .setMessage("Delete this trip?")
+                                        .setPositiveButton("DELETE", new DialogInterface.OnClickListener()
+                                        {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                db.collection("Trip").document(trip.getId())
+                                                        .delete()
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                Intent dIntent = new Intent(AddActivityMain.this, HomeActivity.class);
+                                                                startActivity(dIntent);
+                                                                Log.d("DeleteTrip", "DocumentSnapshot successfully deleted!");
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure( Exception e) {
+                                                                Log.w("DeleteTrip", "Error deleting document", e);
+                                                            }
+                                                        });
+                                            }
+
+                                        })
+                                        .setNegativeButton("Cancel", null)
+                                        .show();
+
+                                break;
+                        }
+                        return true;
+                    }
+                });
+
+                popupMenu.show();
+            }
+        });
+
+        // Handle firebase deep link
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                    @Override
+                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                        // Get deep link from result (may be null if no link is found)
+                        Uri deepLink = null;
+                        if (pendingDynamicLinkData != null) {
+                            deepLink = pendingDynamicLinkData.getLink();
+                            Log.w("linktest", "getDynamicLink:success");
+                        }
+
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("linktest", "getDynamicLink:onFailure", e);
+                    }
+                });
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override

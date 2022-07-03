@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -14,14 +15,18 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.dynamiclinks.DynamicLink;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -35,6 +40,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
     TripsFragment tripsFragment;
     List<Trip> dataHolder;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     private Calendar calendar;
     private SimpleDateFormat dateFormat;
@@ -121,11 +127,71 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                 MenuInflater inflater = popupMenu.getMenuInflater();
                 inflater.inflate(R.menu.popup_menu, popupMenu.getMenu());
 
+
+                // Set collab menu item to invisible
+                MenuItem collabItem = popupMenu.getMenu().findItem(R.id.collabMenu);
+                collabItem.setVisible(false);
+
+                // Set edit menu to invisible if user got no permission to edit
+                MenuItem editItem = popupMenu.getMenu().findItem(R.id.editMenu);
+
+                if (uid.equals(trip.getUserId()))
+                {
+                    editItem.setVisible(true);
+                }
+                else
+                {
+                    editItem.setVisible(false);
+
+                }
+
                 // When selecting item menu
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()){
+                            case R.id.shareMenu:
+                                DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
+                                        .setLink(Uri.parse("https://www.example.com&d=1"))
+                                        .setDomainUriPrefix("https://madtripify.page.link")
+                                        // Open links with this app on Android
+                                        .setAndroidParameters(new DynamicLink.AndroidParameters.Builder("sg.edu.np.mad.assignment")
+                                                .setMinimumVersion(1).build()).buildDynamicLink();
+
+                                Uri dynamicLinkUri = dynamicLink.getUri();
+
+//                                Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
+//                                        .setLink(Uri.parse("https://www.example.com/"))
+//                                        .setDomainUriPrefix("https://example.page.link")
+//                                        // Set parameters
+//                                        // ...
+//                                        .buildShortDynamicLink()
+//                                        .addOnCompleteListener(this, new OnCompleteListener<ShortDynamicLink>() {
+//                                            @Override
+//                                            public void onComplete(@NonNull Task<ShortDynamicLink> task) {
+//                                                if (task.isSuccessful()) {
+//                                                    // Short link created
+//                                                    Uri shortLink = task.getResult().getShortLink();
+//                                                    Uri flowchartLink = task.getResult().getPreviewLink();
+//                                                } else {
+//                                                    // Error
+//                                                    // ...
+//                                                }
+//                                            }
+//                                        });
+
+                                Log.v("CHIBAI", String.valueOf(dynamicLinkUri));
+
+                                Intent myIntent = new Intent(Intent.ACTION_SEND);
+                                myIntent.setType("text/plain");
+                                String body = "Follow me on my trip! ";
+//                                String sub = "Your Subject";
+//                                myIntent.putExtra(Intent.EXTRA_SUBJECT,sub);
+                                myIntent.putExtra(Intent.EXTRA_TEXT,body + String.valueOf(dynamicLinkUri));
+                                view.getContext().startActivity(Intent.createChooser(myIntent, "Share Using"));
+
+
+                                break;
                             case R.id.editMenu:
                                 Intent intent=new Intent(view.getContext(),AddTrip.class);
                                 intent.putExtra("EDIT", trip);

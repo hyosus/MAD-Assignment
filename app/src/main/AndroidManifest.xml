@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="sg.edu.np.mad.assignment">
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -9,10 +10,16 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Assignment">
-
-<!--        <activity-->
-<!--            android:name=".AddNewActivity"-->
-<!--            android:exported="false" />-->
+        <activity
+            android:name=".CollaboratorViewHolder"
+            android:exported="false" />
+        <activity
+            android:name=".CollaboratorsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_collaborators"
+            android:theme="@style/Theme.Assignment.NoActionBar" /> <!-- <activity -->
+        <!-- android:name=".AddNewActivity" -->
+        <!-- android:exported="false" /> -->
         <activity
             android:name=".Forgotpassword"
             android:exported="false"
@@ -27,8 +34,22 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".AddActivityMain"
-            android:exported="false"
-            android:screenOrientation="portrait" />
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="madtripify.page.link"
+                    android:scheme="http" />
+                <data
+                    android:host="madtripify.page.link"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".TripViewHolder"
             android:exported="false"
@@ -52,15 +73,27 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
+                <data
+                    android:host="madtripify.page.link"
+                    android:pathPrefix="/trip"
+                    android:scheme="http" />
+                <data
+                    android:host="madtripify.page.link"
+                    android:pathPrefix="/trip"
+                    android:scheme="https" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
     </application>
 

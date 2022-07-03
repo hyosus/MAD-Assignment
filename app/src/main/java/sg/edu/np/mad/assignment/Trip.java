@@ -1,12 +1,7 @@
 package sg.edu.np.mad.assignment;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.google.firebase.database.Exclude;
-
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Dictionary;
 import java.util.List;
 
 public class Trip implements Serializable {
@@ -16,7 +11,8 @@ public class Trip implements Serializable {
     private String tripName;
     private String id;
     private String userId;
-    private List<String> activityIdList;
+    public Dictionary userPerm;
+    private List<String> editHistory;
 
     // Constructor
     public Trip(String destination, String startDate, String endDate, String tripName, String id, String userId) {
