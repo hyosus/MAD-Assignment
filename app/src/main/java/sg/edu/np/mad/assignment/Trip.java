@@ -12,9 +12,10 @@ public class Trip implements Serializable {
     private String userId;
     public ArrayList<String> serializedTAL;
     public ArrayList<EditHistory> EditHistoryList;
+    public ArrayList<String> serializedEHL;
 
     // Constructor
-    public Trip(String destination, String startDate, String endDate, String tripName, String id, String userId, ArrayList<String> sTAL, ArrayList<EditHistory> editHistoryList) {
+    public Trip(String destination, String startDate, String endDate, String tripName, String id, String userId, ArrayList<String> sTAL, ArrayList<EditHistory> editHistoryList, ArrayList<String> sEHL) {
         this.destination = destination;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -23,7 +24,7 @@ public class Trip implements Serializable {
         this.userId = userId;
         this.serializedTAL = sTAL;
         this.EditHistoryList = editHistoryList;
-
+        this.serializedEHL = sEHL;
     }
 
     // Public constructor for firebase
@@ -31,6 +32,14 @@ public class Trip implements Serializable {
 
     // Get set
 
+
+    public ArrayList<String> getSerializedEHL() {
+        return serializedEHL;
+    }
+
+    public void setSerializedEHL(ArrayList<String> serializedEHL) {
+        this.serializedEHL = serializedEHL;
+    }
 
     public ArrayList<String> getSerializedTAL() {
         return serializedTAL;

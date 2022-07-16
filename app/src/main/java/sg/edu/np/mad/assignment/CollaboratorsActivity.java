@@ -46,7 +46,6 @@ public class CollaboratorsActivity extends AppCompatActivity {
     StorageReference storageReference;
 
     List<TripAdmin> dataHolder;
-    List<String> spinnerList = new ArrayList<>();
 
     Trip trip;
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -186,37 +185,6 @@ public class CollaboratorsActivity extends AppCompatActivity {
                 }
             }
         });
-
-//        db.collection("Trip").document(trip.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    ArrayList<String> sharedTripLists = new ArrayList<String>();
-//
-//                    ArrayList<String> stalist = new ArrayList<String>();
-//                    stalist = (ArrayList<String>) task.getResult().get("serializedTAL");
-//                    for (int i=0; i<stalist.size(); i++){
-//                        Gson gson = new Gson();
-//                        TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
-//                        dataHolder.add(tempTa);
-//                        sharedTripLists.add(tempTa.userId);
-//                        collaboratorAdapter.notifyDataSetChanged();
-//
-//                        if (uid.equals(task.getResult().getString("userId")) ||
-//                                sharedTripLists.contains(uid) && sharedTripLists.get(sharedTripLists.indexOf(uid)).equals("Can Edit"))
-//                        {
-//                            addCollaboratorBtn.setVisibility(View.VISIBLE);
-//                        }
-//                        else
-//                        {
-//                            addCollaboratorBtn.setVisibility(View.GONE);
-//
-//                        }
-//                }
-//
-//                }
-//            }
-//        });
     }
 
     @Override

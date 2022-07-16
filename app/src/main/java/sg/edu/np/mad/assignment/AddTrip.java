@@ -54,6 +54,7 @@ public class AddTrip extends AppCompatActivity {
     private Calendar calendar;
     private SimpleDateFormat dateFormat;
     private String todaydate;
+    String editByUserName = "";
     private String editLog = "";
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -66,6 +67,17 @@ public class AddTrip extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_trip);
+
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                editByUserName = task.getResult().getString("username");
+                Toast.makeText(AddTrip.this, String.format("name is %s!!!! UNDERSTAND?",editByUserName), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         name = findViewById(R.id.nameEdit);
         sd = findViewById(R.id.startEdit);
         ed = findViewById(R.id.endEdit);
@@ -178,11 +190,24 @@ public class AddTrip extends AppCompatActivity {
                                                 DALTrip dalTrip = new DALTrip();
 
                                                 Trip trip = new Trip(dest.getText().toString(), sd.getText().toString(), ed.getText().toString()
-                                                        ,name.getText().toString(), name.getText().toString(), uid, new ArrayList<String>(), new ArrayList<EditHistory>());
+                                                        ,name.getText().toString(), name.getText().toString(), uid, new ArrayList<String>(), new ArrayList<EditHistory>(), new ArrayList<String>());
 
                                                 dalTrip.createTrip(trip);
 
-                                                EditHistory newEH = new EditHistory(uid, "Trip Created");
+
+
+                                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                                db.collection("users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        editByUserName = task.getResult().getString("username");
+                                                    }
+                                                });
+                                                calendar = Calendar.getInstance();
+                                                dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+                                                todaydate = dateFormat.format(calendar.getTime());
+
+                                                EditHistory newEH = new EditHistory(uid, editByUserName, todaydate, String.format("Trip '%s' Created",name.getText()));
                                                 dal.updateTripEditHistory(newEH, name.getText().toString());
 
                                                 finish();
@@ -218,6 +243,7 @@ public class AddTrip extends AppCompatActivity {
                                                     calendar = Calendar.getInstance();
                                                     dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
                                                     todaydate = dateFormat.format(calendar.getTime());
+
                                                     if (!trip_edit.getTripName().equals(title)){
                                                         editLog += "Trip name updated from '"+trip_edit.getTripName()+"' to '"+title+"'.;";
                                                         Toast.makeText(AddTrip.this, editLog, Toast.LENGTH_SHORT).show();
@@ -232,20 +258,28 @@ public class AddTrip extends AppCompatActivity {
                                                         editLog += "Trip end date updated from '" + trip_edit.getEndDate() +"' to '" + eDate +"'.;";
                                                     }
 
-                                                    EditHistory newEH = new EditHistory(uid, editLog);
-                                                    trip_edit.EditHistoryList.add(newEH);
-                                                    Log.v("help", newEH.getEditedByUserId());
+                                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                                    db.collection("users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                            editByUserName = task.getResult().getString("username");
+                                                        }
+                                                    });
+                                                    calendar = Calendar.getInstance();
+                                                    dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+                                                    todaydate = dateFormat.format(calendar.getTime());
 
-                                                    dal.updateTripEditHistory(newEH, trip_edit.getId());
-                                                    dal.updateTrip(trip_edit.getId(), title, destination, sDate, eDate);
+                                                    EditHistory newEH = new EditHistory(uid, editByUserName, todaydate, editLog);
+
+                                                    Gson gson = new Gson();
+                                                    String ehJsonString = gson.toJson(newEH);
+
+                                                    trip_edit.EditHistoryList.add(newEH);
+                                                    dal.updateTrip(trip_edit.getId(), title, destination, sDate, eDate, trip_edit.EditHistoryList, ehJsonString);
+
+
+                                                    dal.updateTripEditHistory(newEH, title);
                                                     Toast.makeText(AddTrip.this, "Trip Updated", Toast.LENGTH_SHORT).show();
-//                                                trip_edit.setTripName(title);
-//                                                trip_edit.setDestination(destination);
-//                                                trip_edit.setStartDate(sDate);
-//                                                trip_edit.setEndDate(eDate);
-//                                                Intent intent = new Intent(AddTrip.this, AddActivityMain.class);
-//                                                intent.putExtra("updatedTripDetails", trip_edit);
-//                                                startActivity(intent);
                                                     Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
                                                     startActivity(Intent);
                                                     finish();

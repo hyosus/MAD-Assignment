@@ -94,8 +94,6 @@ public class TripsFragment extends Fragment {
         dateFormat = new SimpleDateFormat("d MMM yyyy");
         todaydate = dateFormat.format(calendar.getTime());
 
-        List<Trip> thisTripList = dal.getAllTripArrayList();
-
         // get & write firestore data
         db.collection("Trip").orderBy("startDate", Query.Direction.ASCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -126,7 +124,8 @@ public class TripsFragment extends Fragment {
                                 doc.getString("id"),
                                 doc.getString("userId"),
                                 (ArrayList<String>) doc.get("serializedTAL"),
-                                (ArrayList<EditHistory>) doc.get("EditHistoryList")
+                                (ArrayList<EditHistory>) doc.get("EditHistoryList"),
+                                (ArrayList<String>) doc.get("serializedEHL")
                         );
 
                         try {

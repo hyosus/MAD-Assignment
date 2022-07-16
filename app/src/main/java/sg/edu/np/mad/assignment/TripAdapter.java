@@ -252,6 +252,13 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
 
                                 break;
 
+                            case R.id.verHistMenu:
+                                Intent vIntent=new Intent(view.getContext(),VersionHistoryActivity.class);
+                                vIntent.putExtra("tripId", trip.getId());
+                                view.getContext().startActivity(vIntent);
+
+                                break;
+
                             case R.id.delMenu:
                                 new AlertDialog.Builder(view.getContext())
                                     .setMessage("Delete this trip?")

@@ -4,6 +4,7 @@ package sg.edu.np.mad.assignment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -31,7 +32,6 @@ public class DALTrip {
         firestoreDatabase = FirebaseFirestore.getInstance();
     }
 
-
     //  CRUD Functions
     //  CRUD:Create
     public void createTrip(Trip trip){
@@ -57,17 +57,6 @@ public class DALTrip {
                 }
             }
         });
-//        firestoreDatabase.collection("Trip").document(tripId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    ArrayList<String> temp = new ArrayList<String>();
-//                    temp = (ArrayList<String>) task.getResult().get("serializedTAL");
-//                    temp.add(newdata);
-//                    firestoreDatabase.collection("Trip").document(tripId).update("serializedTAL", temp);
-//                }
-//            }
-//        });
     }
 
     public void updateTripSerializedTAL(String tripId, TripAdmin ta, String newData){
@@ -92,25 +81,6 @@ public class DALTrip {
                 }
             }
         });
-//        firestoreDatabase.collection("Trip").document(tripId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()){
-//                    Gson gson = new Gson();
-//                    ArrayList<String> temp = new ArrayList<String>();
-//                    temp = (ArrayList<String>) task.getResult().get("serializedTAL");
-//
-//                    for (int i=0; i<temp.size(); i++){
-//                        TripAdmin currentta = gson.fromJson(temp.get(i), TripAdmin.class);
-//                        if (currentta.userId.equals(ta.userId)){
-//                            temp.set(i, newData);
-//                            break;
-//                        }
-//                    }
-//                    firestoreDatabase.collection("Trip").document(tripId).update("serializedTAL", temp);
-//                }
-//            }
-//        });
     }
 
 
@@ -137,36 +107,20 @@ public class DALTrip {
             }
         });
 
-//        firestoreDatabase.collection("Trip").document(tripId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    Gson gson = new Gson();
-//                    ArrayList<String> temp = new ArrayList<String>();
-//                    temp = (ArrayList<String>) task.getResult().get("serializedTAL");
-//
-//                    for (int i=0; i<temp.size(); i++){
-//                        TripAdmin currentta = gson.fromJson(temp.get(i), TripAdmin.class);
-//                        if (currentta.userId.equals(ta.userId)){
-//                            temp.remove(i);
-//                            break;
-//                        }
-//                    }
-//                    firestoreDatabase.collection("Trip").document(tripId).update("serializedTAL", temp);
-//                }
-//            }
-//        });
     }
 
     public void updateTripEditHistory(EditHistory eh, String tripId){
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
-        String todaydate = dateFormat.format(calendar.getTime());
-        eh.editTime = todaydate;
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(eh.getEditedByUserId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                eh.editByUserName = task.getResult().getString("username");
+            }
+        });
 
         //  Prepare Collab List
         ArrayList<String> sharedTripLists = new ArrayList<String>();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -193,7 +147,6 @@ public class DALTrip {
                     //  Check if owner or in user in trip collab list
                     if (eh.getEditedByUserId().equals(doc.getString("userId")) || sharedTripLists.contains(eh.getEditedByUserId())) {
                         eh.editByUserName = doc.getString("username");
-                        Log.v("help12345", eh.editByUserName);
                     }
                 }
             }
@@ -208,6 +161,14 @@ public class DALTrip {
                         ArrayList<EditHistory> temp = (ArrayList<EditHistory>) doc.get("EditHistoryList");
                         temp.add(eh);
                         firestoreDatabase.collection("Trip").document(doc.getId()).update("EditHistoryList", temp);
+
+                        //  new
+                        Gson gson = new Gson();
+                        ArrayList<String> sEHL = new ArrayList<String>();
+                        for(EditHistory eh: temp){
+                            sEHL.add(gson.toJson(eh));
+                        }
+                        firestoreDatabase.collection("Trip").document(doc.getId()).update("serializedEHL", sEHL);
                         return;
                     }
                 }
@@ -215,50 +176,26 @@ public class DALTrip {
         });
     }
 
-    public void updateTrip(String oldTripId, String newTitle, String newDestin, String sd, String ed){
+    public void updateTrip(String oldTripId, String newTitle, String newDestin, String sd, String ed, ArrayList<EditHistory> EHL, String newData){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("Trip").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                Gson gson = new Gson();
                 for (DocumentSnapshot doc : task.getResult()) {
+
                     if (oldTripId.equals(doc.getString("id"))) {
+                        ArrayList<String> temp = new ArrayList<String>();
+                        temp = (ArrayList<String>) doc.get("serializedEHL");
+                        temp.add(newData);
+
                         db.collection("Trip").document(doc.getId()).update("tripName",newTitle, "destination", newDestin,
-                                "startDate", sd, "endDate", ed, "id", newTitle);
+                                "startDate", sd, "endDate", ed, "id", newTitle, "EditHistoryList", EHL, "serializedEHL", temp);
                     }
                 }
             }
         });
 
-    }
-
-    public ArrayList<Trip> getAllTripArrayList(){
-        firestoreDatabase.collection("Trip").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    ArrayList<Trip> temp = new ArrayList<Trip>();
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        Trip trip = new Trip(
-                                doc.getString("destination"),
-                                doc.getString("startDate"),
-                                doc.getString("endDate"),
-                                doc.getString("tripName"),
-                                doc.getString("id"),
-                                doc.getString("userId"),
-                                (ArrayList<String>) doc.get("serializedTAL"),
-                                (ArrayList<EditHistory>) doc.get("EditHistoryList")
-                                );
-                        temp.add(trip);
-                        tempTripArrayList = temp;
-                    }
-                }
-                else {
-                    Log.w("getAllTripArrayList", "Error getting documents.", task.getException());
-                }
-
-            }
-        });
-        return tempTripArrayList;
     }
 
 }

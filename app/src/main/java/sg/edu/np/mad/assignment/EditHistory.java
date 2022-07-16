@@ -11,20 +11,15 @@ public class EditHistory {
     private String editedByUserId;
     public String editByUserName;
     public String editTime;
-    public String editLog = "";
+    public String editLog;
 
-    public EditHistory(String editedByUserId, String editLog) {
+
+    public EditHistory(String editedByUserId, String editByUserName, String editTime, String editLog) {
         this.editedByUserId = editedByUserId;
+        this.editByUserName = editByUserName;
         this.editTime = editTime;
         this.editLog = editLog;
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(editedByUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                editByUserName = task.getResult().getString("username");
-            }
-        });
-        }
+    }
 
     public EditHistory(){}
 

@@ -198,7 +198,7 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
                                 Intent intent=new Intent(view.getContext(),AddTrip.class);
                                 intent.putExtra("EDIT", trip);
                                 view.getContext().startActivity(intent);
-
+                                finish();
                                 break;
 
                             case R.id.collabMenu:
@@ -206,13 +206,13 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
                                 cIntent.putExtra("tripDetails", trip);
                                 cIntent.putExtra("tripId", uid);
                                 view.getContext().startActivity(cIntent);
-
+                                finish();
                                 break;
 
                             case R.id.verHistMenu:
                                 Intent vIntent=new Intent(view.getContext(),VersionHistoryActivity.class);
-                                view.getContext().startActivity(vIntent);
-
+                                vIntent.putExtra("tripId", trip.getId());
+                                startActivity(vIntent);
                                 break;
 
                             case R.id.delMenu:

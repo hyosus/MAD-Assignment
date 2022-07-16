@@ -42,7 +42,6 @@ public class CollaboratorAdapter extends RecyclerView.Adapter<CollaboratorAdapte
     StorageReference storageReference;
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     Boolean editPermBtnClickable = false;
-    Boolean spinnerBinded = false;
     RadioButton radioButton, editRB, viewRB;
 
 
@@ -76,8 +75,6 @@ public class CollaboratorAdapter extends RecyclerView.Adapter<CollaboratorAdapte
 
         editRB = (RadioButton) customLayout.findViewById(R.id.editRB);
         viewRB = (RadioButton) customLayout.findViewById(R.id.viewRB);
-
-        Log.v("ythisnotworking", ta.permission);
 
         if (ta.permission.equals("Can Edit")){
             holder.editPernissionBtn.setImageDrawable(collabActivity.getDrawable(R.drawable.ic_edit_black_24dp));
@@ -129,8 +126,8 @@ public class CollaboratorAdapter extends RecyclerView.Adapter<CollaboratorAdapte
 
                 builder.setNegativeButton("Cancel", null);
                 //  Initiating the alert dialog
-                AlertDialog select_task_confirm_dialog = builder.create();
-                select_task_confirm_dialog.show();
+                AlertDialog changePermAlert = builder.create();
+                changePermAlert.show();
             }
         });
 
@@ -220,24 +217,6 @@ public class CollaboratorAdapter extends RecyclerView.Adapter<CollaboratorAdapte
                 }
             }
         });
-//        db.collection("Trip").document(trip.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    dataHolder.clear();
-//                    ArrayList<TripAdmin> data = new ArrayList<TripAdmin>();
-//                    ArrayList<String> stalist = new ArrayList<String>();
-//                    stalist = (ArrayList<String>) task.getResult().get("serializedTAL");
-//                    for (int i=0; i<stalist.size(); i++){
-//                        Gson gson = new Gson();
-//                        TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
-//                        dataHolder.add(tempTa);
-//                    }
-//                    activity.collaboratorAdapter.notifyDataSetChanged();
-//                }
-//
-//            }
-//        });
     }
 }
 
