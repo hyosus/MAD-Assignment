@@ -28,10 +28,20 @@
     <style name="roundProfilePic" parent="">
         <item name="cornerSize">50%</item>
     </style>
-    
+
     <style name="popupStyle" parent="Widget.MaterialComponents.PopupMenu">
         <item name="android:popupBackground">@drawable/popupstyle</item>
     </style>
+    <style name="Theme.Assignment.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.Assignment.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.Assignment.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+
+
 
 
 </resources>

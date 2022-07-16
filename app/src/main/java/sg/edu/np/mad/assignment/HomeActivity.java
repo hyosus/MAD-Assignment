@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,16 +21,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -89,6 +84,10 @@ public class HomeActivity extends AppCompatActivity {
                     case R.id.add:
                         Intent Intent = new Intent(HomeActivity.this, AddTrip.class);
                         startActivity(Intent);
+                        return true;
+                    case R.id.translate:
+                        Intent translate = new Intent(HomeActivity.this, Translate.class);
+                        startActivity(translate);
                         return true;
 
                 }
