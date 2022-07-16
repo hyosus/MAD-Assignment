@@ -8,6 +8,93 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:544462281916:android:f516d83ba27747d3ee04b9",
+        "android_client_info": {
+          "package_name": "com.codingstuff.todolist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "544462281916-j4kmj8k5e9m5md4ujcltqljluuj90bjh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0dQ-elECOug0_RRXoNgdrsy2fn1Qk5ps"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544462281916-j4kmj8k5e9m5md4ujcltqljluuj90bjh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544462281916:android:ee1e1805c1868a75ee04b9",
+        "android_client_info": {
+          "package_name": "com.example.ligma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "544462281916-j4kmj8k5e9m5md4ujcltqljluuj90bjh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0dQ-elECOug0_RRXoNgdrsy2fn1Qk5ps"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544462281916-j4kmj8k5e9m5md4ujcltqljluuj90bjh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544462281916:android:ffca7034eac3c3a6ee04b9",
+        "android_client_info": {
+          "package_name": "sg.edu.np.mad.addactivityfeature"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "544462281916-j4kmj8k5e9m5md4ujcltqljluuj90bjh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0dQ-elECOug0_RRXoNgdrsy2fn1Qk5ps"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544462281916-j4kmj8k5e9m5md4ujcltqljluuj90bjh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:544462281916:android:157e7fe8bbef5ab9ee04b9",
         "android_client_info": {
           "package_name": "sg.edu.np.mad.assignment"

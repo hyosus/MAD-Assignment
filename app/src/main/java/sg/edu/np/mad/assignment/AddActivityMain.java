@@ -1,7 +1,5 @@
 package sg.edu.np.mad.assignment;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,7 +12,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,19 +20,25 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
+import com.google.rpc.ErrorInfoOrBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +57,7 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
     private ListenerRegistration listenerRegistration;
     public String TripId;
     private ImageView menu;
-
+    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     List<Trip> dataHolder;
 
@@ -63,17 +66,15 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_activity_main);
 
-        recyclerView = findViewById(R.id.recycerlview);
+
         ImageView backBtn = findViewById(R.id.backBtn2);
         menu = findViewById(R.id.addActivityMenu);
-        mFab = findViewById(R.id.floatingActionButton);
+        mFab = findViewById(R.id.collabAddBtn);
         firestore = FirebaseFirestore.getInstance();
 
         TextView header = findViewById(R.id.tripNameTxt);
         TextView date = findViewById(R.id.datesTxt);
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(AddActivityMain.this));
 
         Trip trip = (Trip)getIntent().getSerializableExtra("tripDetails");
 
@@ -93,12 +94,79 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
         }
 
         // Menu popout
+
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
                 MenuInflater inflater = popupMenu.getMenuInflater();
                 inflater.inflate(R.menu.popup_menu, popupMenu.getMenu());
+
+                MenuItem editItem = popupMenu.getMenu().findItem(R.id.editMenu);
+                MenuItem deleteItem = popupMenu.getMenu().findItem(R.id.delMenu);
+
+                // If is not owner of trip
+                if (!uid.equals(trip.getUserId()))
+                {
+                    // user cant delete trip
+                    deleteItem.setVisible(false);
+                }
+
+                db.collection("Trip").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                      for (DocumentSnapshot doc : task.getResult()) {
+                          if (trip.getId().equals(doc.getString("id"))) {
+                              if (task.isSuccessful()) {
+//                                  ArrayList<String> sharedTripLists = new ArrayList<String>();
+                                  ArrayList<String> stalist = new ArrayList<String>();
+                                  stalist = (ArrayList<String>) doc.get("serializedTAL");
+                                  for (int i=0; i<stalist.size(); i++){
+                                      Gson gson = new Gson();
+                                      TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
+//                                      sharedTripLists.add(tempTa.userId);
+
+                                      if (uid.equals(doc.getString("userId")) || (tempTa.getUserId().equals(uid) && tempTa.permission.equals("Can Edit")))
+                                      {
+                                          editItem.setVisible(true);
+                                      }
+                                      else
+                                      {
+                                          // cant edit trip
+                                          editItem.setVisible(false);
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                    }
+                });
+
+//                db.collection("Trip").document(trip.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            ArrayList<String> sharedTripLists = new ArrayList<String>();
+//                            ArrayList<String> stalist = new ArrayList<String>();
+//                            stalist = (ArrayList<String>) task.getResult().get("serializedTAL");
+//                            for (int i=0; i<stalist.size(); i++){
+//                                Gson gson = new Gson();
+//                                TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
+//                                sharedTripLists.add(tempTa.userId);
+//                            }
+//                            if (uid.equals(task.getResult().getString("userId")) || sharedTripLists.contains(uid))
+//                            {
+//                                editItem.setVisible(true);
+//                            }
+//                            else
+//                            {
+//                                // cant edit trip
+//                                editItem.setVisible(false);
+//                            }
+//                        }
+//
+//                    }
+//                });
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -136,7 +204,14 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
                             case R.id.collabMenu:
                                 Intent cIntent=new Intent(view.getContext(),CollaboratorsActivity.class);
                                 cIntent.putExtra("tripDetails", trip);
+                                cIntent.putExtra("tripId", uid);
                                 view.getContext().startActivity(cIntent);
+
+                                break;
+
+                            case R.id.verHistMenu:
+                                Intent vIntent=new Intent(view.getContext(),VersionHistoryActivity.class);
+                                view.getContext().startActivity(vIntent);
 
                                 break;
 
@@ -206,6 +281,7 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
             public void onClick(View v) {
                 Intent intent = new Intent(AddActivityMain.this,HomeActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -219,31 +295,104 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
         mList = new ArrayList<>();
         adapter = new AddActivityAdapter(AddActivityMain.this , mList);
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new sg.edu.np.mad.assignment.TouchHelper(adapter));
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-        showData();
-        recyclerView.setAdapter(adapter);
-    }
-    private void showData(){
-       query = firestore.collection("Activity").orderBy("time" , Query.Direction.DESCENDING);
+        recyclerView = findViewById(R.id.recycerlview);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(AddActivityMain.this));
 
-       listenerRegistration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        db.collection("Trip").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                for (DocumentChange documentChange : value.getDocumentChanges()){
-                    if (documentChange.getType() == DocumentChange.Type.ADDED){
-                        String id = documentChange.getDocument().getId();
-                        ActivityModel activityModel = documentChange.getDocument().toObject(ActivityModel.class).withId(id);
-                        if (TripId.equals(activityModel.getTripId())){
-                            mList.add(activityModel);
-                            adapter.notifyDataSetChanged();
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                for (DocumentSnapshot doc : task.getResult()){
+                    if (trip.getId().equals(doc.getString("id"))){
+                        if (task.isSuccessful()) {
+                            ArrayList<String> sharedTripLists = new ArrayList<String>();
+                            ArrayList<String> stalist = new ArrayList<String>();
+                            stalist = (ArrayList<String>) doc.get("serializedTAL");
+                            for (int i=0; i<stalist.size(); i++){
+                                Gson gson = new Gson();
+                                TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
+                                sharedTripLists.add(tempTa.userId);
+
+                                if (uid.equals(doc.getString("userId")) || (tempTa.getUserId().equals(uid) && tempTa.permission.equals("Can Edit")))
+                                {
+                                    mFab.setVisibility(View.VISIBLE);
+                                    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new sg.edu.np.mad.assignment.TouchHelper(adapter));
+                                    itemTouchHelper.attachToRecyclerView(AddActivityMain.this.recyclerView);
+                                }
+                                else
+                                {
+                                    // cant edit trip
+                                    mFab.setVisibility(View.GONE);
+                                }
+                            }
                         }
                     }
                 }
-                listenerRegistration.remove();
-
             }
         });
+
+//        db.collection("Trip").document(trip.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    ArrayList<String> sharedTripLists = new ArrayList<String>();
+//                    ArrayList<String> stalist = new ArrayList<String>();
+//                    stalist = (ArrayList<String>) task.getResult().get("serializedTAL");
+//                    for (int i=0; i<stalist.size(); i++){
+//                        Gson gson = new Gson();
+//                        TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
+//                        sharedTripLists.add(tempTa.userId);
+//                    }
+//                    if (uid.equals(task.getResult().getString("userId")) ||
+//                            sharedTripLists.contains(uid) && sharedTripLists.get(sharedTripLists.indexOf(uid)).equals("Can Edit"))
+//                    {
+//                        // owner/user with edit rights
+//                        mFab.setVisibility(View.VISIBLE);
+//
+//                        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new sg.edu.np.mad.assignment.TouchHelper(adapter));
+//                        itemTouchHelper.attachToRecyclerView(AddActivityMain.this.recyclerView);
+//
+//                    }
+//                    else
+//                    {
+//                        // cant edit trip
+//                        mFab.setVisibility(View.GONE);
+//                    }
+//                }
+//
+//            }
+//        });
+
+        recyclerView.setAdapter(adapter);
+        showData();
+    }
+    private void showData(){
+        try {
+            query = firestore.collection("Activity").orderBy("time" , Query.Direction.DESCENDING);
+
+            listenerRegistration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    for (DocumentChange documentChange : value.getDocumentChanges()){
+                        if (documentChange.getType() == DocumentChange.Type.ADDED){
+                            String id = documentChange.getDocument().getId();
+                            ActivityModel activityModel = documentChange.getDocument().toObject(ActivityModel.class).withId(id);
+                            try {
+                                if (TripId.equals(activityModel.getTripId())){
+                                    mList.add(activityModel);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
+                            catch (Error e){}
+
+                        }
+                    }
+                    listenerRegistration.remove();
+
+                }
+            });
+        }
+        catch (Error e){}
     }
 
     @Override

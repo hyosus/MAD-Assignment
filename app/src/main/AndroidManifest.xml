@@ -11,6 +11,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Assignment">
         <activity
+            android:name=".VersionHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddCollaboratorActivity"
+            android:exported="false" />
+        <activity
             android:name=".CollaboratorViewHolder"
             android:exported="false" />
         <activity

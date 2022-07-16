@@ -1,8 +1,7 @@
 package sg.edu.np.mad.assignment;
 
 import java.io.Serializable;
-import java.util.Dictionary;
-import java.util.List;
+import java.util.ArrayList;
 
 public class Trip implements Serializable {
     private String destination;
@@ -11,23 +10,35 @@ public class Trip implements Serializable {
     private String tripName;
     private String id;
     private String userId;
-    public Dictionary userPerm;
-    private List<String> editHistory;
+    public ArrayList<String> serializedTAL;
+    public ArrayList<EditHistory> EditHistoryList;
 
     // Constructor
-    public Trip(String destination, String startDate, String endDate, String tripName, String id, String userId) {
+    public Trip(String destination, String startDate, String endDate, String tripName, String id, String userId, ArrayList<String> sTAL, ArrayList<EditHistory> editHistoryList) {
         this.destination = destination;
         this.startDate = startDate;
         this.endDate = endDate;
         this.tripName = tripName;
         this.id = id;
         this.userId = userId;
+        this.serializedTAL = sTAL;
+        this.EditHistoryList = editHistoryList;
+
     }
 
     // Public constructor for firebase
     public Trip(){}
 
     // Get set
+
+
+    public ArrayList<String> getSerializedTAL() {
+        return serializedTAL;
+    }
+
+    public void setSerializedTAL(ArrayList<String> serializedTAL) {
+        this.serializedTAL = serializedTAL;
+    }
 
     public String getUserId() {
         return userId;
