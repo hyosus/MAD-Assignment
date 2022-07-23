@@ -66,7 +66,6 @@ public class CollaboratorsActivity extends AppCompatActivity {
 
         storageReference = FirebaseStorage.getInstance().getReference();
 
-        TextView ownerName = findViewById(R.id.ownerName);
 
         // Add collaborator
         addCollaboratorBtn.setOnClickListener(new View.OnClickListener() {
@@ -83,9 +82,6 @@ public class CollaboratorsActivity extends AppCompatActivity {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CollaboratorsActivity.this, AddActivityMain.class);
-                startActivity(intent);
-                intent.putExtra("tripDetails", trip);
                 finish();
             }
         });
@@ -150,34 +146,38 @@ public class CollaboratorsActivity extends AppCompatActivity {
         });
 
 
-        //  💚💚💚
+        //  Set adapter to recyclerview
         collaboratorAdapter = new CollaboratorAdapter(CollaboratorsActivity.this, dataHolder, uid, trip);
         LinearLayoutManager lmg = new LinearLayoutManager(CollaboratorsActivity.this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(lmg);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(collaboratorAdapter);
 
+        // Get trip data
         db.collection("Trip").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 for (DocumentSnapshot doc : task.getResult()) {
+                    // If current trip id is found in firebase
                     if (trip.getId().equals(doc.getString("id"))) {
                         ArrayList<String> sharedTripLists = new ArrayList<String>();
 
                         ArrayList<String> stalist = new ArrayList<String>();
-                        stalist = (ArrayList<String>) doc.get("serializedTAL");
+                        stalist = (ArrayList<String>) doc.get("serializedTAL");     // get data from firebase and add to stalist
+
                         for (int i=0; i<stalist.size(); i++) {
                             Gson gson = new Gson();
-                            TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
+                            TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);      // get trip admin
                             dataHolder.add(tempTa);
                             sharedTripLists.add(tempTa.userId);
                             collaboratorAdapter.notifyDataSetChanged();
 
+                            // if current user is the owner/have edit rights
                             if (uid.equals(doc.getString("userId")) ||
                                     sharedTripLists.contains(uid) && sharedTripLists.get(sharedTripLists.indexOf(uid)).equals("Can Edit")) {
-                                addCollaboratorBtn.setVisibility(View.VISIBLE);
+                                addCollaboratorBtn.setVisibility(View.VISIBLE);     // can add collaborators
                             } else {
-                                addCollaboratorBtn.setVisibility(View.GONE);
+                                addCollaboratorBtn.setVisibility(View.GONE);        // cant add collaborators
                             }
                         }
                     }

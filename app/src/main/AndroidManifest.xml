@@ -23,9 +23,7 @@
             android:name=".CollaboratorsActivity"
             android:exported="false"
             android:label="@string/title_activity_collaborators"
-            android:theme="@style/Theme.Assignment.NoActionBar" /> <!-- <activity -->
-        <!-- android:name=".AddNewActivity" -->
-        <!-- android:exported="false" /> -->
+            />
         <activity
             android:name=".Forgotpassword"
             android:exported="false"
@@ -42,19 +40,7 @@
             android:name=".AddActivityMain"
             android:exported="true"
             android:screenOrientation="portrait">
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="madtripify.page.link"
-                    android:scheme="http" />
-                <data
-                    android:host="madtripify.page.link"
-                    android:scheme="https" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".TripViewHolder"
@@ -67,7 +53,22 @@
         <activity
             android:name=".HomeActivity"
             android:exported="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="example.com"
+                    android:scheme="http"></data>
+                <data
+                    android:host="example.com"
+                    android:scheme="https"></data>
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".SignInActivity"
             android:exported="false"
@@ -80,21 +81,21 @@
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
+<!--            <intent-filter android:autoVerify="true">-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
 
-                <data
-                    android:host="madtripify.page.link"
-                    android:pathPrefix="/trip"
-                    android:scheme="http" />
-                <data
-                    android:host="madtripify.page.link"
-                    android:pathPrefix="/trip"
-                    android:scheme="https" />
-            </intent-filter>
+<!--                <data-->
+<!--                    android:host="madtripify.page.link"-->
+<!--                    android:pathPrefix="/trip"-->
+<!--                    android:scheme="http" />-->
+<!--                <data-->
+<!--                    android:host="madtripify.page.link"-->
+<!--                    android:pathPrefix="/trip"-->
+<!--                    android:scheme="https" />-->
+<!--            </intent-filter>-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

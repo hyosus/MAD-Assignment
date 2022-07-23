@@ -52,7 +52,6 @@ public class CollaboratorAdapter extends RecyclerView.Adapter<CollaboratorAdapte
         if (trip.getUserId().equals(uid)){
             editPermBtnClickable = true;
         }
-
     }
 
 
@@ -87,76 +86,53 @@ public class CollaboratorAdapter extends RecyclerView.Adapter<CollaboratorAdapte
 
 
         // Alert dialog 💢💢
-        holder.editPernissionBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                builder.setMessage("Modify permission for "+ta.userName);
-                builder.setView(customLayout);
+        if (editPermBtnClickable == true) {
+            holder.editPernissionBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                    builder.setMessage("Modify permission for "+ta.userName);
+                    builder.setView(customLayout);
 
-                // Delete user
-                customLayout.findViewById(R.id.deleteBtn).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dal.removeTripSerializedTA(thisTripId, ta);
-                        Toast.makeText(v.getContext(), "User " + ta.userName + " was deleted.", Toast.LENGTH_SHORT).show();
-                        notifyItemRemoved(position);
-                    }
-                });
+                    // Save changes
+                    builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //  UPDATE PERM CODES! 💦💦😋😋😋
+                            final RadioGroup rg = customLayout.findViewById(R.id.collabEditAlertRG);
+                            int selectedId = rg.getCheckedRadioButtonId();
+                            radioButton = (RadioButton) customLayout.findViewById(selectedId);
 
+                            TripAdmin newTA = new TripAdmin(ta.userId, ta.userName, radioButton.getText().toString());
+                            Gson gson = new Gson();
+                            String taJsonString = gson.toJson(newTA);
 
-                // Save changes
-                builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //  UPDATE PERM CODES! 💦💦😋😋😋
-                        final RadioGroup rg = customLayout.findViewById(R.id.collabEditAlertRG);
-                        int selectedId = rg.getCheckedRadioButtonId();
-                        radioButton = (RadioButton) customLayout.findViewById(selectedId);
+                            dal.updateTripSerializedTAL(thisTripId, ta, taJsonString);
+                            notifyDataSetChanged();
 
-                        TripAdmin newTA = new TripAdmin(ta.userId, ta.userName, radioButton.getText().toString());
-                        Gson gson = new Gson();
-                        String taJsonString = gson.toJson(newTA);
+                        }
+                    });
 
-                        dal.updateTripSerializedTAL(thisTripId, ta, taJsonString);
-                        notifyDataSetChanged();
+                    builder.setNegativeButton("Cancel", null);
+                    //  Initiating the alert dialog
+                    AlertDialog changePermAlert = builder.create();
+                    changePermAlert.show();
 
-                    }
-                });
+                    // Delete user
+                    customLayout.findViewById(R.id.deleteBtn).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dal.removeTripSerializedTA(thisTripId, ta);
+                            Toast.makeText(v.getContext(), "User " + ta.userName + " was deleted.", Toast.LENGTH_SHORT).show();
+                            dataHolder.remove(position);
+                            notifyItemRemoved(position);
+                            changePermAlert.dismiss();
+                        }
+                    });
+                }
+            });
+        }
 
-                builder.setNegativeButton("Cancel", null);
-                //  Initiating the alert dialog
-                AlertDialog changePermAlert = builder.create();
-                changePermAlert.show();
-            }
-        });
-
-        // 💢💢💢💢
-
-//        holder.row.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-//                builder.setTitle("Delete Collaborator");
-//                builder.setMessage("Remove "+ta.userName+ " from the collaborator list?");
-//                builder.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        //  Remove COllab! 💦💦😋😋😋
-//                    }
-//                });
-//
-//                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                    }
-//                });
-//                //  Initiating the alert dialog
-//                AlertDialog select_task_confirm_dialog = builder.create();
-//                select_task_confirm_dialog.show();
-//                return false;
-//            }
-//        });
 
         //  Bind Profile Picture
         storageReference = FirebaseStorage.getInstance().getReference();

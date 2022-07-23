@@ -54,7 +54,7 @@ public class VersionHistoryActivity extends AppCompatActivity {
                         for(String json : (ArrayList<String>) doc.get("serializedEHL")){
                             dataholder.add(gson.fromJson(json, EditHistory.class));
                         }
-                        Collections.reverse(dataholder);
+                        Collections.reverse(dataholder);        // reverse list order
                         VersionHistoryAdapter vhAdapter = new VersionHistoryAdapter(dataholder);
                         LinearLayoutManager lmg = new LinearLayoutManager(VersionHistoryActivity.this, LinearLayoutManager.VERTICAL, false);
                         recyclerView.setLayoutManager(lmg);

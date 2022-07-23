@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +32,15 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -42,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AddNewActivity extends BottomSheetDialogFragment {
+    DALTrip dal = new DALTrip();
 
     public static final String TAG = "AddNewActivity";
 
@@ -55,7 +62,15 @@ public class AddNewActivity extends BottomSheetDialogFragment {
     private String dueDate = "";
     private String id = "";
     private String dueDateUpdate = "";
-    private String TripId;
+    private String TripId, currTripName, currTripDest, currTripsDate, currTripeDate;
+    public ArrayList<EditHistory> currentEHList;
+    String editByUserName = "";
+    private String editLog = "";
+    private Calendar calendar;
+    private SimpleDateFormat dateFormat;
+    private String todaydate;
+
+    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     public static AddNewActivity newInstance(){
         return new AddNewActivity();
@@ -66,6 +81,11 @@ public class AddNewActivity extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         AddActivityMain parentClass = (AddActivityMain)getActivity();
         TripId = parentClass.TripId;
+        currTripName = parentClass.currTripName;
+        currTripDest = parentClass.currTripDest;
+        currTripsDate = parentClass.currTripsDate;
+        currTripeDate = parentClass.currTripeDate;
+        currentEHList = parentClass.currentEditHistoryList;
         return inflater.inflate(R.layout.add_new_activity, container , false);
     }
 
@@ -98,7 +118,6 @@ public class AddNewActivity extends BottomSheetDialogFragment {
         });
 
         firestore = FirebaseFirestore.getInstance();
-
 
         boolean isUpdate = false;
 
@@ -168,6 +187,14 @@ public class AddNewActivity extends BottomSheetDialogFragment {
             }
         });
 
+        // Get user data
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                editByUserName = task.getResult().getString("username");    // Find and set username of current user
+            }
+        });
 
         boolean finalIsUpdate = isUpdate;
         mSaveBtn.setOnClickListener(new View.OnClickListener() {
@@ -179,9 +206,36 @@ public class AddNewActivity extends BottomSheetDialogFragment {
                 String Address = mAddressEdit.getText().toString();
 
                 if (finalIsUpdate){
+                    // Update itinerary item
                     firestore.collection("Activity").document(id).update("Activity" , activity , "due" , dueDate, "Venue", Venue, "Address", Address);
-                    Toast.makeText(context, "Activity Updated", Toast.LENGTH_SHORT).show();
 
+                    if (!bundle.getString("Activity").equals(activity)){
+                        editLog += "Activity name updated from '" + bundle.getString("Activity") + "' to '" + activity + "'.";
+                    }
+                    if (!bundle.getString("Venue").equals(Venue)){
+                        editLog += "Activity venue updated from '" + bundle.getString("Venue") + "' to '" + Venue + "'.";
+                    }
+                    if (!bundle.getString("Address").equals(Venue)){
+                        editLog += "Activity Address updated from '" + bundle.getString("Address") + "' to '" + Address + "'.";
+                    }
+
+
+                    // Get date and time of when trip is created
+                    calendar = Calendar.getInstance();
+                    dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+                    todaydate = dateFormat.format(calendar.getTime());
+
+                    EditHistory newEH = new EditHistory(uid, editByUserName, todaydate, editLog);
+
+                    Gson gson = new Gson();
+                    String ehJsonString = gson.toJson(newEH);
+
+                    currentEHList.add(newEH);
+                    dal.updateTrip(TripId, TripId, currTripDest, currTripsDate, currTripeDate, currentEHList, ehJsonString);
+
+                    dal.updateTripEditHistory(newEH, TripId);
+
+                    Toast.makeText(context, "Activity Updated", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     if (activity.isEmpty()) {
@@ -202,6 +256,9 @@ public class AddNewActivity extends BottomSheetDialogFragment {
                             public void onComplete(@NonNull Task<DocumentReference> activity) {
                                 if (activity.isSuccessful()) {
                                     Toast.makeText(context, "Activity Saved", Toast.LENGTH_SHORT).show();
+
+                                    EditHistory newEH = new EditHistory(uid, editByUserName, todaydate, String.format("‣ Activity Created"));
+                                    dal.updateTripEditHistory(newEH, TripId);
                                 } else {
                                     Toast.makeText(context, activity.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }

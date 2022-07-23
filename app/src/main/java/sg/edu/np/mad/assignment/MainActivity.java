@@ -31,31 +31,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        // Keep user logged in
         if(user != null) {
             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
             startActivity(intent);
 
             this.finish();
-        }
-        Log.w("linktest", "getDynamicLink:success");
-
-    }
-
-    @Override
-    protected void onNewIntent ( Intent newIntent ) {
-        super.onNewIntent ( newIntent );
-        setIntent ( newIntent );
-        checkDynamicLinkIntent ();
-    }
-
-    private void checkDynamicLinkIntent () {
-        if (!Objects.equals ( null, getIntent ().getData () )) {
-            Uri dynamicLink = Uri.parse ( getIntent ().getData ().toString () );
-            String parameterValue = dynamicLink.getQueryParameter("tripId");
-            //get any data from your URI if needed
-            Intent intent = new Intent ( MainActivity.this, AddActivityMain.class );
-            intent.putExtra ( "bookDetail", parameterValue );
-            startActivity ( intent );
         }
     }
 

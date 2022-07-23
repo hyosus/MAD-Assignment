@@ -144,7 +144,7 @@ public class DALTrip {
                 });
 
                 for (DocumentSnapshot doc : task.getResult()) {
-                    //  Check if owner or in user in trip collab list
+                    //  Check if owner or user in trip collab list
                     if (eh.getEditedByUserId().equals(doc.getString("userId")) || sharedTripLists.contains(eh.getEditedByUserId())) {
                         eh.editByUserName = doc.getString("username");
                     }
@@ -162,7 +162,6 @@ public class DALTrip {
                         temp.add(eh);
                         firestoreDatabase.collection("Trip").document(doc.getId()).update("EditHistoryList", temp);
 
-                        //  new
                         Gson gson = new Gson();
                         ArrayList<String> sEHL = new ArrayList<String>();
                         for(EditHistory eh: temp){

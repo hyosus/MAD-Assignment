@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -55,11 +56,14 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
     private List<ActivityModel> mList;
     private Query query;
     private ListenerRegistration listenerRegistration;
-    public String TripId;
+    public String TripId, currTripName, currTripDest, currTripsDate, currTripeDate;
+    ArrayList<EditHistory> currentEditHistoryList;
     private ImageView menu;
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     List<Trip> dataHolder;
+
+    public Trip trip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,7 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
         ImageView backBtn = findViewById(R.id.backBtn2);
         menu = findViewById(R.id.addActivityMenu);
         mFab = findViewById(R.id.collabAddBtn);
+        mFab.setVisibility(View.GONE);
         firestore = FirebaseFirestore.getInstance();
 
         TextView header = findViewById(R.id.tripNameTxt);
@@ -80,9 +85,15 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
 
 
         if (trip != null) {
+            currentEditHistoryList = trip.EditHistoryList;
+            currTripName = trip.getTripName();
+            currTripDest = trip.getDestination();
+            currTripsDate = trip.getStartDate();
+            currTripeDate = trip.getEndDate();
             TripId = trip.getId();
             header.setText(trip.getTripName());
             date.setText(trip.getStartDate() + " - " + trip.getEndDate());
+//            Toast.makeText(this, "is this working", Toast.LENGTH_SHORT).show();
 
             String dateNoSlash = date.getText().toString();
 
@@ -94,7 +105,6 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
         }
 
         // Menu popout
-
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,31 +152,6 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
                     }
                 });
 
-//                db.collection("Trip").document(trip.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            ArrayList<String> sharedTripLists = new ArrayList<String>();
-//                            ArrayList<String> stalist = new ArrayList<String>();
-//                            stalist = (ArrayList<String>) task.getResult().get("serializedTAL");
-//                            for (int i=0; i<stalist.size(); i++){
-//                                Gson gson = new Gson();
-//                                TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
-//                                sharedTripLists.add(tempTa.userId);
-//                            }
-//                            if (uid.equals(task.getResult().getString("userId")) || sharedTripLists.contains(uid))
-//                            {
-//                                editItem.setVisible(true);
-//                            }
-//                            else
-//                            {
-//                                // cant edit trip
-//                                editItem.setVisible(false);
-//                            }
-//                        }
-//
-//                    }
-//                });
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -174,26 +159,23 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
                         switch (menuItem.getItemId()){
                             case R.id.shareMenu:
                                 DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                                        .setLink(Uri.parse("https://www.example.com"))
+                                        .setLink(Uri.parse("https://www.example.com/?tripid=" + trip.getTripName()))
                                         .setDomainUriPrefix("https://madtripify.page.link")
                                         // Open links with this app on Android
-                                        .setAndroidParameters(new DynamicLink.AndroidParameters.Builder("sg.edu.np.mad.assignment")
-                                                .setMinimumVersion(1).build()).buildDynamicLink();
+                                        .setAndroidParameters(new DynamicLink.AndroidParameters.Builder("sg.edu.np.mad.assignment").setMinimumVersion(1).build())
+                                        .buildDynamicLink();
 
                                 Uri dynamicLinkUri = dynamicLink.getUri();
-
-                                Log.v("CHIBAI", String.valueOf(dynamicLinkUri));
 
                                 Intent myIntent = new Intent(Intent.ACTION_SEND);
                                 myIntent.setType("text/plain");
                                 String body = "Follow me on my trip! ";
-//                                String sub = "Your Subject";
-//                                myIntent.putExtra(Intent.EXTRA_SUBJECT,sub);
+
                                 myIntent.putExtra(Intent.EXTRA_TEXT,body + String.valueOf(dynamicLinkUri));
                                 view.getContext().startActivity(Intent.createChooser(myIntent, "Share Using"));
 
-
                                 break;
+
                             case R.id.editMenu:
                                 Intent intent=new Intent(view.getContext(),AddTrip.class);
                                 intent.putExtra("EDIT", trip);
@@ -222,22 +204,33 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
                                         {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                db.collection("Trip").document(trip.getId())
-                                                        .delete()
-                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                            @Override
-                                                            public void onSuccess(Void aVoid) {
-                                                                Intent dIntent = new Intent(AddActivityMain.this, HomeActivity.class);
-                                                                startActivity(dIntent);
-                                                                Log.d("DeleteTrip", "DocumentSnapshot successfully deleted!");
+                                                // delete itinerary
+                                                db.collection("Activity").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        for (DocumentSnapshot aDoc : task.getResult()) {
+                                                            if (aDoc.getString("TripId").equals(trip.getId())){
+                                                                db.collection("Activity").document(aDoc.getId()).delete();
                                                             }
-                                                        })
-                                                        .addOnFailureListener(new OnFailureListener() {
-                                                            @Override
-                                                            public void onFailure( Exception e) {
-                                                                Log.w("DeleteTrip", "Error deleting document", e);
-                                                            }
-                                                        });
+                                                        }
+                                                    }
+                                                });
+
+                                                db.collection("Trip").document(trip.getId()).delete()
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+
+                                                            finish();
+                                                            Log.d("DeleteTrip", "DocumentSnapshot successfully deleted!");
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure( Exception e) {
+                                                            Log.w("DeleteTrip", "Error deleting document", e);
+                                                        }
+                                                    });
                                             }
 
                                         })
@@ -253,28 +246,6 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
                 popupMenu.show();
             }
         });
-
-        // Handle firebase deep link
-        FirebaseDynamicLinks.getInstance()
-                .getDynamicLink(getIntent())
-                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
-                    @Override
-                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
-                        // Get deep link from result (may be null if no link is found)
-                        Uri deepLink = null;
-                        if (pendingDynamicLinkData != null) {
-                            deepLink = pendingDynamicLinkData.getLink();
-                            Log.w("linktest", "getDynamicLink:success");
-                        }
-
-                    }
-                })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("linktest", "getDynamicLink:onFailure", e);
-                    }
-                });
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -304,6 +275,17 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 for (DocumentSnapshot doc : task.getResult()){
                     if (trip.getId().equals(doc.getString("id"))){
+                        if (uid.equals(doc.getString("userId")))
+                        {
+                            mFab.setVisibility(View.VISIBLE);
+                            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new sg.edu.np.mad.assignment.TouchHelper(adapter));
+                            itemTouchHelper.attachToRecyclerView(AddActivityMain.this.recyclerView);
+                        }
+                        else
+                        {
+                            // cant edit trip
+                            mFab.setVisibility(View.GONE);
+                        }
                         if (task.isSuccessful()) {
                             ArrayList<String> sharedTripLists = new ArrayList<String>();
                             ArrayList<String> stalist = new ArrayList<String>();
@@ -313,7 +295,7 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
                                 TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
                                 sharedTripLists.add(tempTa.userId);
 
-                                if (uid.equals(doc.getString("userId")) || (tempTa.getUserId().equals(uid) && tempTa.permission.equals("Can Edit")))
+                                if ((tempTa.getUserId().equals(uid) && tempTa.permission.equals("Can Edit")))
                                 {
                                     mFab.setVisibility(View.VISIBLE);
                                     ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new sg.edu.np.mad.assignment.TouchHelper(adapter));
@@ -331,37 +313,6 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
             }
         });
 
-//        db.collection("Trip").document(trip.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    ArrayList<String> sharedTripLists = new ArrayList<String>();
-//                    ArrayList<String> stalist = new ArrayList<String>();
-//                    stalist = (ArrayList<String>) task.getResult().get("serializedTAL");
-//                    for (int i=0; i<stalist.size(); i++){
-//                        Gson gson = new Gson();
-//                        TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
-//                        sharedTripLists.add(tempTa.userId);
-//                    }
-//                    if (uid.equals(task.getResult().getString("userId")) ||
-//                            sharedTripLists.contains(uid) && sharedTripLists.get(sharedTripLists.indexOf(uid)).equals("Can Edit"))
-//                    {
-//                        // owner/user with edit rights
-//                        mFab.setVisibility(View.VISIBLE);
-//
-//                        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new sg.edu.np.mad.assignment.TouchHelper(adapter));
-//                        itemTouchHelper.attachToRecyclerView(AddActivityMain.this.recyclerView);
-//
-//                    }
-//                    else
-//                    {
-//                        // cant edit trip
-//                        mFab.setVisibility(View.GONE);
-//                    }
-//                }
-//
-//            }
-//        });
 
         recyclerView.setAdapter(adapter);
         showData();

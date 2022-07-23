@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -26,6 +27,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
+import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -123,10 +126,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                 MenuInflater inflater = popupMenu.getMenuInflater();
                 inflater.inflate(R.menu.popup_menu, popupMenu.getMenu());
 
-                // Set collab menu item to invisible
-                MenuItem collabItem = popupMenu.getMenu().findItem(R.id.collabMenu);
-                collabItem.setVisible(false);
-
                 MenuItem editItem = popupMenu.getMenu().findItem(R.id.editMenu);
                 MenuItem deleteItem = popupMenu.getMenu().findItem(R.id.delMenu);
 
@@ -151,7 +150,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                                   for (int i=0; i<stalist.size(); i++){
                                       Gson gson = new Gson();
                                       TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
-//                                      sharedTripLists.add(tempTa.userId);
 
                                       if (uid.equals(doc.getString("userId")) || (tempTa.getUserId().equals(uid) && tempTa.permission.equals("Can Edit")))
                                       {
@@ -170,33 +168,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                     }
                 });
 
-//                db.collection("Trip").document(trip.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            ArrayList<String> sharedTripLists = new ArrayList<String>();
-//                            ArrayList<String> stalist = new ArrayList<String>();
-//                            stalist = (ArrayList<String>) task.getResult().get("serializedTAL");
-//
-//                            for (int i=0; i<stalist.size(); i++){
-//                                Gson gson = new Gson();
-//                                TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
-//                                sharedTripLists.add(tempTa.userId);
-//                            }
-//                            Log.v("stupid", String.valueOf(sharedTripLists.contains(uid)));
-//                            if (uid.equals(task.getResult().getString("userId")) || sharedTripLists.contains(uid))
-//                            {
-//                                editItem.setVisible(true);
-//                            }
-//                            else
-//                            {
-//                                // cant edit trip
-//                                editItem.setVisible(false);
-//                            }
-//                        }
-//
-//                    }
-//                });
 
                 // When selecting item menu
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -205,51 +176,34 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                         switch (menuItem.getItemId()){
                             case R.id.shareMenu:
                                 DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                                        .setLink(Uri.parse("https://www.example.com&d=1"))
+                                        .setLink(Uri.parse("https://www.example.com/?tripid=" + trip.getTripName()))
                                         .setDomainUriPrefix("https://madtripify.page.link")
                                         // Open links with this app on Android
-                                        .setAndroidParameters(new DynamicLink.AndroidParameters.Builder("sg.edu.np.mad.assignment")
-                                                .setMinimumVersion(1).build()).buildDynamicLink();
+                                        .setAndroidParameters(new DynamicLink.AndroidParameters.Builder("sg.edu.np.mad.assignment").setMinimumVersion(1).build())
+                                        .buildDynamicLink();
 
                                 Uri dynamicLinkUri = dynamicLink.getUri();
-
-//                                Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
-//                                        .setLink(Uri.parse("https://www.example.com/"))
-//                                        .setDomainUriPrefix("https://example.page.link")
-//                                        // Set parameters
-//                                        // ...
-//                                        .buildShortDynamicLink()
-//                                        .addOnCompleteListener(this, new OnCompleteListener<ShortDynamicLink>() {
-//                                            @Override
-//                                            public void onComplete(@NonNull Task<ShortDynamicLink> task) {
-//                                                if (task.isSuccessful()) {
-//                                                    // Short link created
-//                                                    Uri shortLink = task.getResult().getShortLink();
-//                                                    Uri flowchartLink = task.getResult().getPreviewLink();
-//                                                } else {
-//                                                    // Error
-//                                                    // ...
-//                                                }
-//                                            }
-//                                        });
-
-                                Log.v("CHIBAI", String.valueOf(dynamicLinkUri));
 
                                 Intent myIntent = new Intent(Intent.ACTION_SEND);
                                 myIntent.setType("text/plain");
                                 String body = "Follow me on my trip! ";
-//                                String sub = "Your Subject";
-//                                myIntent.putExtra(Intent.EXTRA_SUBJECT,sub);
+
                                 myIntent.putExtra(Intent.EXTRA_TEXT,body + String.valueOf(dynamicLinkUri));
                                 view.getContext().startActivity(Intent.createChooser(myIntent, "Share Using"));
 
-
                                 break;
+
                             case R.id.editMenu:
                                 Intent intent=new Intent(view.getContext(),AddTrip.class);
                                 intent.putExtra("EDIT", trip);
                                 view.getContext().startActivity(intent);
 
+                                break;
+
+                            case R.id.collabMenu:
+                                Intent cIntent=new Intent(view.getContext(),CollaboratorsActivity.class);
+                                cIntent.putExtra("tripDetails", trip);
+                                view.getContext().startActivity(cIntent);
                                 break;
 
                             case R.id.verHistMenu:
@@ -271,6 +225,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                     for (DocumentSnapshot doc : task.getResult()) {
                                                         if (trip.getId().equals(doc.getString("id"))) {
+                                                            // delete trip
                                                             db.collection("Trip").document(doc.getId())
                                                                 .delete()
                                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -287,13 +242,23 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                                                                         Log.w("DeleteTrip", "Error deleting document", e);
                                                                     }
                                                                 });
+
+                                                            // delete itinerary
+                                                            db.collection("Activity").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                    for (DocumentSnapshot aDoc : task.getResult()) {
+                                                                        if (aDoc.getString("TripId").equals(trip.getId())){
+                                                                            db.collection("Activity").document(aDoc.getId()).delete();
+                                                                        }
+                                                                    }
+                                                                }
+                                                            });
                                                         }
                                                     }
                                                 }
                                             });
-
                                         }
-
                                     })
                                     .setNegativeButton("Cancel", null)
                                     .show();
@@ -302,7 +267,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                         return true;
                     }
                 });
-
                 popupMenu.show();
             }
         });

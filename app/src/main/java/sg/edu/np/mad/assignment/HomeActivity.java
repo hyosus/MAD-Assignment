@@ -21,6 +21,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -40,12 +42,58 @@ public class HomeActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    String queryTripId = "";
 
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // Handle deep link
+        try{
+            FirebaseDynamicLinks.getInstance().getDynamicLink(getIntent()).addOnSuccessListener(new OnSuccessListener<PendingDynamicLinkData>() {
+                @Override
+                public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                    Uri deepLink = null;
+                    if (pendingDynamicLinkData != null) {
+                        deepLink = pendingDynamicLinkData.getLink();
+                    }
+
+                    if (deepLink != null){
+                        // get tripId from link query
+                        queryTripId = deepLink.getQueryParameter("tripid");
+
+                        FirebaseFirestore.getInstance().collection("Trip").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                for (DocumentSnapshot doc : task.getResult()) {
+                                    if (queryTripId.equals(doc.getString("id"))) {
+                                        Trip trip = new Trip(
+                                                doc.getString("destination"),
+                                                doc.getString("startDate"),
+                                                doc.getString("endDate"),
+                                                doc.getString("tripName"),
+                                                doc.getString("id"),
+                                                doc.getString("userId"),
+                                                (ArrayList<String>) doc.get("serializedTAL"),
+                                                (ArrayList<EditHistory>) doc.get("EditHistoryList"),
+                                                (ArrayList<String>) doc.get("serializedEHL")
+                                        );
+                                        Intent intent = new Intent(HomeActivity.this, AddActivityMain.class);
+                                        intent.putExtra("tripDetails", trip);
+                                        startActivity(intent);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        catch (Error e){
+            Toast.makeText(this, "Error getting trip", Toast.LENGTH_SHORT).show();
+        }
 
         // Show different fragments
         showTripFragment();

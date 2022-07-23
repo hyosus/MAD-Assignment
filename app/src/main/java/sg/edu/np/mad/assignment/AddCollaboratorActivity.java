@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -64,7 +65,6 @@ public class AddCollaboratorActivity extends AppCompatActivity {
                 }
                 else
                 {
-
                     db.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @RequiresApi(api = Build.VERSION_CODES.N)
                         @Override
@@ -73,13 +73,33 @@ public class AddCollaboratorActivity extends AppCompatActivity {
                                 String email = doc.getString("email");
                                 String userId = doc.getString("userId");
 
-                                if(email.equals(collabEmail)){
-                                    TripAdmin newTA = new TripAdmin(userId,doc.getString("username"), selectedRB.getText().toString());
-                                    Gson gson = new Gson();
-                                    String taJsonString = gson.toJson(newTA);
-                                    dal.addTripSerializedTA(trip.getId(), taJsonString);
-                                    finish();
-                                }
+                                ArrayList<String> sharedTripLists = new ArrayList<String>();
+
+                                db.collection("Trip").document(trip.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        ArrayList<String> stalist = new ArrayList<String>();
+                                        stalist = (ArrayList<String>) task.getResult().get("serializedTAL");     // get data from firebase and add to stalist
+
+                                        for (int i=0; i<stalist.size(); i++) {
+                                            Gson gson = new Gson();
+                                            TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);      // get trip admin
+                                            sharedTripLists.add(tempTa.userId);
+                                        }
+
+                                        if(email.equals(collabEmail) && !sharedTripLists.contains(userId)){
+                                            TripAdmin newTA = new TripAdmin(userId,doc.getString("username"), selectedRB.getText().toString());
+                                            Gson gson = new Gson();
+                                            String taJsonString = gson.toJson(newTA);
+                                            dal.addTripSerializedTA(trip.getId(), taJsonString);
+                                            Toast.makeText(AddCollaboratorActivity.this, "Added user" + doc.getString("username"), Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        }
+                                        else if (sharedTripLists.contains(userId)){
+                                            Toast.makeText(AddCollaboratorActivity.this, "User has already been added", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
                             }
                         }
                     });
@@ -91,8 +111,7 @@ public class AddCollaboratorActivity extends AppCompatActivity {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AddCollaboratorActivity.this, CollaboratorsActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
 
@@ -103,6 +122,5 @@ public class AddCollaboratorActivity extends AppCompatActivity {
         input.setError(missing_information);
         input.requestFocus();
     }
-
 
 }

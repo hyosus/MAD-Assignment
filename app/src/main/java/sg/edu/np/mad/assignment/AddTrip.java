@@ -53,7 +53,7 @@ public class AddTrip extends AppCompatActivity {
     final Calendar customCalendarEnd= Calendar.getInstance();
     private Calendar calendar;
     private SimpleDateFormat dateFormat;
-    private String todaydate;
+    private String todaydate, activityId;
     String editByUserName = "";
     private String editLog = "";
 
@@ -74,7 +74,6 @@ public class AddTrip extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 editByUserName = task.getResult().getString("username");
-                Toast.makeText(AddTrip.this, String.format("name is %s!!!! UNDERSTAND?",editByUserName), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -146,6 +145,14 @@ public class AddTrip extends AppCompatActivity {
             }
         });
 
+        // Get itinerary bundle
+        final Bundle bundle = AddNewActivity.newInstance().getArguments();
+        if (bundle != null) {
+            activityId = bundle.getString("id");
+            Toast.makeText(this, activityId, Toast.LENGTH_SHORT).show();
+
+        }
+
 
         // Save user input
         save.setOnClickListener((new View.OnClickListener() {
@@ -156,201 +163,159 @@ public class AddTrip extends AppCompatActivity {
                 String sDate = sd.getText().toString();
                 String eDate = ed.getText().toString();
 
-                db.collection("Trip")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (DocumentSnapshot doc : task.getResult()) {
-                                        if (trip_edit == null)
-                                        {
-                                            if (title.isEmpty()){
-                                                showError(name, "Missing information");
+                // Get trip data
+                db.collection("Trip").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot doc : task.getResult()) {
+                                if (trip_edit == null)      // Add new trip
+                                {
+                                    if (title.isEmpty()){
+                                        showError(name, "Missing information");
+                                    }
+                                    else if (uid.equals(doc.getString("userId")) && title.equals(doc.getString("tripName"))) {
+                                        showError(name, "Name already in use");
+                                        return;
+                                    }
+                                    else if (destination.isEmpty()) {
+                                        showError(dest, "Missing information");
+                                    }
+                                    else if (sDate.isEmpty()){
+                                        Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
+                                    }
+                                    else if (eDate.isEmpty()){
+                                        Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
+                                    }
+                                    else if (startCalendar.after(endCalendar) || customCalendarStart.after(customCalendarEnd)) {
+
+                                        Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
+                                    }
+                                    else {
+
+                                        DALTrip dalTrip = new DALTrip();
+
+                                        Trip trip = new Trip(dest.getText().toString(), sd.getText().toString(), ed.getText().toString()
+                                                ,name.getText().toString(), name.getText().toString(), uid, new ArrayList<String>(), new ArrayList<EditHistory>(), new ArrayList<String>());
+
+                                        dalTrip.createTrip(trip);
+
+
+                                        // Get user data
+                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                        db.collection("users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                editByUserName = task.getResult().getString("username");    // Find and set username of current user
                                             }
-                                            else if (uid.equals(doc.getString("userId")) && title.equals(doc.getString("tripName"))) {
-                                                showError(name, "Name already in use");
-                                                return;
-                                            }
-                                            else if (destination.isEmpty()) {
-                                                showError(dest, "Missing information");
-                                            }
-                                            else if (sDate.isEmpty()){
-                                                Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
-                                            }
-                                            else if (eDate.isEmpty()){
-                                                Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
-                                            }
-                                            else if (startCalendar.after(endCalendar) || customCalendarStart.after(customCalendarEnd)) {
+                                        });
 
-                                                Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
-                                            }
-                                            else {
+                                        // Get date and time of when trip is created
+                                        calendar = Calendar.getInstance();
+                                        dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+                                        todaydate = dateFormat.format(calendar.getTime());
 
-                                                DALTrip dalTrip = new DALTrip();
+                                        EditHistory newEH = new EditHistory(uid, editByUserName, todaydate, String.format("‣ Trip '%s' Created",name.getText()));
+                                        dal.updateTripEditHistory(newEH, name.getText().toString());
 
-                                                Trip trip = new Trip(dest.getText().toString(), sd.getText().toString(), ed.getText().toString()
-                                                        ,name.getText().toString(), name.getText().toString(), uid, new ArrayList<String>(), new ArrayList<EditHistory>(), new ArrayList<String>());
+                                        finish();
 
-                                                dalTrip.createTrip(trip);
-
-
-
-                                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                                db.collection("users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                        editByUserName = task.getResult().getString("username");
-                                                    }
-                                                });
-                                                calendar = Calendar.getInstance();
-                                                dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
-                                                todaydate = dateFormat.format(calendar.getTime());
-
-                                                EditHistory newEH = new EditHistory(uid, editByUserName, todaydate, String.format("Trip '%s' Created",name.getText()));
-                                                dal.updateTripEditHistory(newEH, name.getText().toString());
-
-                                                finish();
-
-//                                                Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
-//                                                startActivity(Intent);
-                                            }
+                                    }
+                                }
+                                else        // Edit existing trip
+                                {
+                                    if (doc.getString("id").equals(trip_edit.getId())){
+                                        if (title.isEmpty()){
+                                            showError(name, "Missing information");
                                         }
-                                        else
-                                        {
-                                            if (doc.getString("id").equals(trip_edit.getId())){
-                                                if (title.isEmpty()){
-                                                    showError(name, "Missing information");
-                                                }
-                                                else if (uid.equals(doc.getString("userId")) && title.equals(doc.getString("tripName"))) {
-                                                    showError(name, "Name already in use");
-                                                    return;
-                                                }
-                                                else if (destination.isEmpty()) {
-                                                    showError(dest, "Missing information");
-                                                }
-                                                else if (sDate.isEmpty()){
-                                                    Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
-                                                }
-                                                else if (eDate.isEmpty()){
-                                                    Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
-                                                }
-                                                else if (startCalendar.after(endCalendar) || customCalendarStart.after(customCalendarEnd)) {
-                                                    Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
-                                                }
-                                                else{
-                                                    // Get current date time
-                                                    calendar = Calendar.getInstance();
-                                                    dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
-                                                    todaydate = dateFormat.format(calendar.getTime());
+                                        else if (uid.equals(doc.getString("userId")) && title.equals(doc.getString("tripName"))) {
+                                            showError(name, "Name already in use");
+                                            return;
+                                        }
+                                        else if (destination.isEmpty()) {
+                                            showError(dest, "Missing information");
+                                        }
+                                        else if (sDate.isEmpty()){
+                                            Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
+                                        }
+                                        else if (eDate.isEmpty()){
+                                            Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
+                                        }
+                                        else if (startCalendar.after(endCalendar) || customCalendarStart.after(customCalendarEnd)) {
+                                            Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
+                                        }
+                                        else{
+                                            // Get current date time
+                                            calendar = Calendar.getInstance();
+                                            dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+                                            todaydate = dateFormat.format(calendar.getTime());
 
-                                                    if (!trip_edit.getTripName().equals(title)){
-                                                        editLog += "Trip name updated from '"+trip_edit.getTripName()+"' to '"+title+"'.;";
-                                                        Toast.makeText(AddTrip.this, editLog, Toast.LENGTH_SHORT).show();
-                                                    }
-                                                    if (!trip_edit.getDestination().equals(destination)){
-                                                        editLog += "Trip destination updated from '" + trip_edit.getDestination() +"' to '" + destination +"'.;";
-                                                    }
-                                                    if (!trip_edit.getStartDate().equals(sDate)){
-                                                        editLog += "Trip start date updated from '" + trip_edit.getStartDate() +"' to '" + sDate +"'.;";
-                                                    }
-                                                    if (!trip_edit.getEndDate().equals(eDate)){
-                                                        editLog += "Trip end date updated from '" + trip_edit.getEndDate() +"' to '" + eDate +"'.;";
-                                                    }
+                                            // Find which fields was edited
+                                            if (!trip_edit.getTripName().equals(title)){        // trip name
+                                                editLog += "‣ Trip name updated from '"+trip_edit.getTripName()+"' to '"+title+"'.;";
+                                                Toast.makeText(AddTrip.this, editLog, Toast.LENGTH_SHORT).show();
+                                            }
+                                            if (!trip_edit.getDestination().equals(destination)){       // trip destination
+                                                editLog += "‣ Trip destination updated from '" + trip_edit.getDestination() +"' to '" + destination +"'.;";
+                                            }
+                                            if (!trip_edit.getStartDate().equals(sDate)){       // trip start date
+                                                editLog += "‣ Trip start date updated from '" + trip_edit.getStartDate() +"' to '" + sDate +"'.;";
+                                            }
+                                            if (!trip_edit.getEndDate().equals(eDate)){     // trip end date
+                                                editLog += "‣ Trip end date updated from '" + trip_edit.getEndDate() +"' to '" + eDate +"'.;";
+                                            }
 
-                                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                                    db.collection("users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                            editByUserName = task.getResult().getString("username");
+                                            db.collection("Activity").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    for (DocumentSnapshot doc : task.getResult()){
+                                                        if (doc.getString("TripId").equals(trip_edit.getId())){
+                                                            db.collection("Activity").document(doc.getId()).update("TripId" , title);
                                                         }
-                                                    });
-                                                    calendar = Calendar.getInstance();
-                                                    dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
-                                                    todaydate = dateFormat.format(calendar.getTime());
+                                                    }
+                                                }
+                                            });
 
-                                                    EditHistory newEH = new EditHistory(uid, editByUserName, todaydate, editLog);
+                                            // Get user data
+                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                            db.collection("users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                    editByUserName = task.getResult().getString("username");    // Find and set username of current user
+                                                }
+                                            });
 
-                                                    Gson gson = new Gson();
-                                                    String ehJsonString = gson.toJson(newEH);
+                                            // Get current date and time when user edit the trip
+                                            calendar = Calendar.getInstance();
+                                            dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+                                            todaydate = dateFormat.format(calendar.getTime());
 
-                                                    trip_edit.EditHistoryList.add(newEH);
-                                                    dal.updateTrip(trip_edit.getId(), title, destination, sDate, eDate, trip_edit.EditHistoryList, ehJsonString);
+                                            EditHistory newEH = new EditHistory(uid, editByUserName, todaydate, editLog);
+
+                                            Gson gson = new Gson();
+                                            String ehJsonString = gson.toJson(newEH);
+
+                                            trip_edit.EditHistoryList.add(newEH);
+                                            dal.updateTrip(trip_edit.getId(), title, destination, sDate, eDate, trip_edit.EditHistoryList, ehJsonString);
+
+                                            dal.updateTripEditHistory(newEH, title);
 
 
-                                                    dal.updateTripEditHistory(newEH, title);
-                                                    Toast.makeText(AddTrip.this, "Trip Updated", Toast.LENGTH_SHORT).show();
-                                                    Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
-                                                    startActivity(Intent);
-                                                    finish();
-                                                    return;
-                                            }
-
-
-//                                                db.collection("Trip").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                                                    @Override
-//                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                                                        for (DocumentSnapshot doc : task.getResult()) {
-//                                                            if (doc.getString("id").equals(trip_edit.getTripName())){
-//
-//                                                            }
-//
-//                                                        }
-//                                                    }
-//                                                });
-
-//                                                db.collection("Trip").document(trip_edit.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                                                    @Override
-//                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                                                        if (task.isSuccessful()){
-//                                                            Gson gson = new Gson();
-//                                                            ArrayList<String> temp = new ArrayList<String>();
-//                                                            temp = (ArrayList<String>) task.getResult().get("serializedTAL");
-//
-//                                                            for (int i=0; i<temp.size(); i++){
-//                                                                TripAdmin currentta = gson.fromJson(temp.get(i), TripAdmin.class);
-//
-//                                                                if (currentta.userId.equals(uid)){
-//                                                                    TripAdmin newTA = new TripAdmin(currentta.userId, currentta.userName, currentta.getPermission());
-//                                                                    String taJsonString = gson.toJson(newTA);
-//                                                                    temp.set(i,taJsonString);
-//
-//                                                                }
-//                                                            }
-//
-//                                                            db.collection("Trip").document(trip_edit.getId()).update("serializedTAL", temp);
-//                                                            if (!trip_edit.getTripName().equals(title)){
-//                                                                editLog = "Trip name updated from '"+trip_edit.getTripName()+"' to '"+title+"'.";
-//                                                            }
-//                                                            if (!trip_edit.getDestination().equals(destination)){
-//                                                                editLog = "Trip destination updated from '" + trip_edit.getDestination() +"' to '" + destination +"'.";
-//                                                            }
-//                                                            if (!trip_edit.getStartDate().equals(sDate)){
-//                                                                editLog = "Trip start date updated from '" + trip_edit.getStartDate() +"' to '" + sDate +"'.";
-//                                                            }
-//                                                            if (!trip_edit.getEndDate().equals(eDate)){
-//                                                                editLog = "Trip end date updated from '" + trip_edit.getEndDate() +"' to '" + eDate +"'.";
-//                                                            }
-//
-//                                                            EditHistory newEH = new EditHistory(uid, editLog);
-//                                                            trip_edit.EditHistoryList.add(newEH);
-//
-////                                                            dal.createTrip(trip_edit);
-//                                                            dal.updateTripEditHistory(newEH, trip_edit.getId());
-//                                                        }
-//                                                    }
-//                                                });
-
-                                            }
-
+                                            Toast.makeText(AddTrip.this, "Trip Updated", Toast.LENGTH_SHORT).show();
+                                            Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
+                                            startActivity(Intent);
+                                            finish();
+                                            return;
                                         }
                                     }
                                 }
-                                else {
-                                    Log.d("checkTripListEmpty()", "Error getting documents: ", task.getException());
-                                }
                             }
-                        });
+                        }
+                        else {
+                            Log.d("checkTripListEmpty()", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
 
             }
         }));
