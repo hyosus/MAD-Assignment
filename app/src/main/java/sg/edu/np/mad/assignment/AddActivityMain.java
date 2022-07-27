@@ -3,7 +3,6 @@ package sg.edu.np.mad.assignment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -53,6 +52,7 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
 
         TextView header = findViewById(R.id.tripNameTxt);
         TextView date = findViewById(R.id.datesTxt);
+        TextView datestart= findViewById(R.id.datestart);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(AddActivityMain.this));
@@ -63,16 +63,20 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
         if (trip != null) {
             header.setText(trip.getTripName());
             date.setText(trip.getStartDate() + " - " + trip.getEndDate());
+            datestart.setText(trip.getStartDate());
 
             String dateNoSlash = date.getText().toString();
+            String startdateNoSlash = datestart.getText().toString();
 
             // Omit slashes in date
             if (dateNoSlash.contains("/")){
                 dateNoSlash = dateNoSlash.replace("/", " ");
+                startdateNoSlash = startdateNoSlash.replace("/", " ");
                 date.setText(dateNoSlash);
+                datestart.setText(startdateNoSlash);
             }
         }
-
+        // back button to return to Home
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,24 +84,26 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
                 startActivity(intent);
             }
         });
-
+        // When user click any part of the trip image, it will create/bring you to the activity page
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sg.edu.np.mad.assignment.AddNewActivity.newInstance().show(getSupportFragmentManager() , sg.edu.np.mad.assignment.AddNewActivity.TAG);
+                AddNewActivity.newInstance().show(getSupportFragmentManager() , AddNewActivity.TAG);
             }
         });
 
         mList = new ArrayList<>();
         adapter = new AddActivityAdapter(AddActivityMain.this , mList);
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new sg.edu.np.mad.assignment.TouchHelper(adapter));
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new TouchHelper(adapter));
         itemTouchHelper.attachToRecyclerView(recyclerView);
         showData();
         recyclerView.setAdapter(adapter);
     }
+    // Show data on page
     private void showData(){
-       query = firestore.collection("Activity").orderBy("time" , Query.Direction.DESCENDING);
+        // Sorted by time ascending as earliest activity should be at the top
+       query = firestore.collection("Activity").orderBy("time" , Query.Direction.ASCENDING);
 
        listenerRegistration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -117,7 +123,7 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
             }
         });
     }
-
+    // When complete, show data and clear list, and update adapter on data change (if any)
     @Override
     public void onDialogClose(DialogInterface dialogInterface) {
         mList.clear();

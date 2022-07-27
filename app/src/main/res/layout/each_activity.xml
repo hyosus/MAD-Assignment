@@ -2,10 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contain"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="15dp"
-    android:background="@color/bg_color">
+    android:background="@color/bg_color"
+    android:insetTop="0dp"
+    android:insetBottom="0dp">
 
     <TextView
         android:id="@+id/due_date_tv"
@@ -17,24 +19,40 @@
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/Venue"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/Venue"
-        app:layout_constraintTop_toBottomOf="@+id/Venue" />
+        app:layout_constraintTop_toBottomOf="@+id/Venue"
+        app:layout_constraintVertical_bias="0.0" />
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/mcheckbox"
-        android:layout_width="0dp"
+
+    <TextView
+        android:id="@+id/Activity_name"
+        android:layout_width="303dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginTop="16dp"
         android:buttonTint="@color/dark_blue"
-        android:layoutDirection="rtl"
         android:text="This is Activity 1"
         android:textColor="@color/dark_blue"
         android:textSize="16dp"
         android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/imageView10"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/mcheckbox"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="245dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="68dp"
+        android:buttonTint="@color/dark_blue"
+        android:textColor="@color/dark_blue"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/Activity_name"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -43,17 +61,38 @@
         android:layout_height="wrap_content"
         android:text="Venue 1"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/mcheckbox"
-        app:layout_constraintStart_toStartOf="@+id/mcheckbox"
-        app:layout_constraintTop_toBottomOf="@+id/mcheckbox" />
+        app:layout_constraintEnd_toEndOf="@+id/Activity_name"
+        app:layout_constraintStart_toStartOf="@+id/Activity_name"
+        app:layout_constraintTop_toBottomOf="@+id/Activity_name" />
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="409dp"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"
+    <ImageView
+        android:id="@+id/imageView10"
+        android:layout_width="53dp"
+        android:layout_height="120dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:scaleType="centerInside"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.126"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/timeline2" />
+
+    <TextView
+        android:id="@+id/Time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="09:00"
+        android:textColor="@color/dark_blue"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageView10"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.17" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

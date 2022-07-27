@@ -11,12 +11,12 @@
         android:id="@+id/recycerlview"
         android:layout_width="411dp"
         android:layout_height="0dp"
-        android:layout_marginTop="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/datesTxt" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView6"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/backBtn2"
@@ -68,4 +68,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_baseline_add_24"
         app:tint="@color/white" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="423dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="10dp"
+        android:insetBottom="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/datesTxt"
+        app:srcCompat="@drawable/header" />
+
+    <TextView
+        android:id="@+id/datestart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView6" />
 </androidx.constraintlayout.widget.ConstraintLayout>
