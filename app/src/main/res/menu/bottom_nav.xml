@@ -17,4 +17,9 @@
         android:icon="@drawable/ic_calculate"
         android:title="Item" />
 
+    <item
+        android:id="@+id/location"
+        android:icon="@drawable/ic_location"
+        android:title="Item" />
+
 </menu>
