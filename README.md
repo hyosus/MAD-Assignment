@@ -15,12 +15,16 @@ https://play.google.com/store/apps/details?id=sg.edu.np.mad.assignment
 ## Features
 - Account creation and customization
 - Creation of trip and activities
+- Trip sharing and collaboration
 - Currency conversion calculator
 
 ## Contributions of group members
 ### S10208470A | Shanice Yeong
-**Creation of trips** <br>
+**Creation of Trips** <br>
 One of the app's main features; without it, it would not be a planning app. Using Recyclerview and View Holder, created trips are then displayed on the Homescreen.
+
+**Trip collaboration**<br>
+Trips are shareable with an unique link. Anyone with the link will be addeed as an collaborator. Collaborators can also be added using email. Any changes made to the trip by users will be displayed in 'Version History'.
 
 **Layout / UI design**<br>
 Using Figma, I created a UI design prototype. Making sure that the design is clean and modern, while also being simple enough to translate into code. Also responsible of the most of of the layout constraints in Android Studio.
