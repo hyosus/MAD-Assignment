@@ -4,7 +4,6 @@
     package="sg.edu.np.mad.assignment"
     tools:ignore="CoarseFineLocation">
 
-
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION_LOCATION"/>
@@ -16,17 +15,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Assignment">
-        <activity
-            android:name=".AddBudgetActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AddFlightActivity"
-            android:exported="false" />
-        <activity
-            android:name=".BudgetInfoActivity"
-            android:exported="false" /> <!-- <activity -->
-        <!-- android:name=".AddNewActivity" -->
-        <!-- android:exported="false" /> -->
 
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="@string/map_key"/>
@@ -38,6 +26,12 @@
 
         <activity
             android:name=".VersionHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".weather.activity.WeatherDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".weather.activity.WeatherActivity"
             android:exported="false" />
         <activity
             android:name=".AddCollaboratorActivity"
@@ -56,10 +50,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ViewProfile"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Translate"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
@@ -131,9 +121,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data
-                android:name="preloaded_fonts"
-                android:resource="@array/preloaded_fonts" />
         </activity>
     </application>
 

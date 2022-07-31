@@ -11,7 +11,4 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="txt_color_hint">#464646</color>
-    <color name="yellow">#ffa500</color>
-    <color name="offwhite">#f7f6f9</color>
-    <color name="black_shade_1">#292D36</color>
 </resources>
