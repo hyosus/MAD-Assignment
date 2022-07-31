@@ -9,6 +9,7 @@ https://play.google.com/store/apps/details?id=sg.edu.np.mad.assignment
 - S10204757E | Faris Zharfan BAG
 - S10208045C | Xu Zhihong
 - S10202752B | Sean Tan Yi Xun
+- S10207999D | Nur Harith Mirza
 
 
 ## Features
@@ -41,3 +42,6 @@ Enabling user to register for an account and authenticate in order to save all o
 **Created Currency Converter** <br>
 One useful feature of the currency converter is that it has the most frequently used currencies in it and can be converted interchangeably, enabling you to simplify your planning by accessing simple but yet important things such as exchange rates.  Unfortunately as APIs for live updated currencies cost a monthly fee or were not updated I was not able to implement one and had to instead hard code it out. I also added another tab at the bottom of the screen at the home page for ease of navigation to the currency converter. 
 
+### S10207999D | Nur Harith Mirza
+**Creation of Activities** <br>
+One of the main feature of the app - Allows users to add travel Itineraries to their travels. Using Recyclerview and View Holder, created activities are then displayed on the Activities Page. Allow users to add the Itinerary name, location (which is autofilled with google autocomplete places api), time of event. Helps users to plan their trips properly.
