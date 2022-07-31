@@ -3,14 +3,11 @@ package sg.edu.np.mad.assignment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,11 +20,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -65,7 +59,7 @@ public class CollaboratorsActivity extends AppCompatActivity {
 
         backBtn = findViewById(R.id.collabBackBtn);
         recyclerView = findViewById(R.id.collabRV);
-        addCollaboratorBtn = findViewById(R.id.collabAddBtn);
+        addCollaboratorBtn = findViewById(R.id.addActivityBtn);
         profilePic = findViewById(R.id.profilePic2);
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
 

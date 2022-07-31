@@ -1,8 +1,11 @@
 package sg.edu.np.mad.assignment;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,7 +15,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +31,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
-import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -39,7 +40,6 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
-import com.google.rpc.ErrorInfoOrBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,10 +58,11 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
     private ListenerRegistration listenerRegistration;
     public String TripId, currTripName, currTripDest, currTripsDate, currTripeDate;
     ArrayList<EditHistory> currentEditHistoryList;
-    private ImageView menu;
+    private ImageView menu, helpBtn;
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     List<Trip> dataHolder;
+    private Dialog mdialog;
 
     public Trip trip;
 
@@ -73,12 +74,15 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
 
         ImageView backBtn = findViewById(R.id.backBtn2);
         menu = findViewById(R.id.addActivityMenu);
-        mFab = findViewById(R.id.collabAddBtn);
+        mFab = findViewById(R.id.addActivityBtn);
         mFab.setVisibility(View.GONE);
         firestore = FirebaseFirestore.getInstance();
+        helpBtn = findViewById(R.id.helpBtn);
+        mdialog = new Dialog(this);
 
         TextView header = findViewById(R.id.tripNameTxt);
         TextView date = findViewById(R.id.datesTxt);
+        TextView datestart= findViewById(R.id.datestart);
 
 
         Trip trip = (Trip)getIntent().getSerializableExtra("tripDetails");
@@ -93,6 +97,7 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
             TripId = trip.getId();
             header.setText(trip.getTripName());
             date.setText(trip.getStartDate() + " - " + trip.getEndDate());
+            datestart.setText(trip.getStartDate());
 //            Toast.makeText(this, "is this working", Toast.LENGTH_SHORT).show();
 
             String dateNoSlash = date.getText().toString();
@@ -103,6 +108,17 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
                 date.setText(dateNoSlash);
             }
         }
+
+        // When user click on ? icon, it will display a popup window on how to use the feature
+        helpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mdialog.setContentView(R.layout.popup_window);
+
+                mdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                mdialog.show();
+            }
+        });
 
         // Menu popout
         menu.setOnClickListener(new View.OnClickListener() {

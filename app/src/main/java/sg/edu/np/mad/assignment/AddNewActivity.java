@@ -2,10 +2,12 @@ package sg.edu.np.mad.assignment;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +19,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,10 +42,12 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +58,8 @@ public class AddNewActivity extends BottomSheetDialogFragment {
     public static final String TAG = "AddNewActivity";
 
     private TextView setDueDate;
+    private TextView setDueTime;
+    private TextView textView2Edit;
     private EditText mActivityEdit;
     private EditText mVenueEdit;
     private EditText mAddressEdit;
@@ -60,6 +67,7 @@ public class AddNewActivity extends BottomSheetDialogFragment {
     private FirebaseFirestore firestore;
     private Context context;
     private String dueDate = "";
+    private String dueTime = "";
     private String id = "";
     private String dueDateUpdate = "";
     private String TripId, currTripName, currTripDest, currTripsDate, currTripeDate;
@@ -69,6 +77,9 @@ public class AddNewActivity extends BottomSheetDialogFragment {
     private Calendar calendar;
     private SimpleDateFormat dateFormat;
     private String todaydate;
+    private int tHour,tMinute;
+    private String dueTimeUpdate = "";
+    private String location;
 
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -93,7 +104,9 @@ public class AddNewActivity extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setDueDate = view.findViewById(R.id.set_due_tv);
+        setDueTime = view.findViewById(R.id.time_picker);
         mActivityEdit = view.findViewById(R.id.task_edittextactivity);
+        textView2Edit = view.findViewById(R.id.textView2);
         mVenueEdit = view.findViewById(R.id.venue_edittext);
         mAddressEdit = view.findViewById(R.id.Address_editText);
         mSaveBtn = view.findViewById(R.id.save_btn);
@@ -129,11 +142,13 @@ public class AddNewActivity extends BottomSheetDialogFragment {
             String Address = bundle.getString("Address");
             id = bundle.getString("id");
             dueDateUpdate = bundle.getString("due");
+            dueTimeUpdate = bundle.getString("time");
 
             mActivityEdit.setText(activity);
             mVenueEdit.setText(Venue);
             mAddressEdit.setText(Address);
             setDueDate.setText(dueDateUpdate);
+            setDueTime.setText(dueTimeUpdate);
 
             if (Venue.isEmpty()|| activity.isEmpty()|| Address.isEmpty()){
                 mSaveBtn.setEnabled(false);
@@ -187,6 +202,40 @@ public class AddNewActivity extends BottomSheetDialogFragment {
             }
         });
 
+        setDueTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Intialize time picker dialog
+                TimePickerDialog timePickerDialog = new TimePickerDialog(context, android.R.style.Theme_Holo_Dialog_MinWidth, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+                        tHour = hourOfDay;
+                        tMinute = minute;
+                        String time = tHour + ":" + tMinute;
+                        SimpleDateFormat f24Hours = new SimpleDateFormat("HH:mm");
+                        try {
+                            Date date = f24Hours.parse(time);
+                            // Initialize 12 hours time format
+                            SimpleDateFormat f12Hours = new SimpleDateFormat("hh:mm aa");
+                            // Set selected time on textview
+                            setDueTime.setText(f12Hours.format(date));
+                            String timeadd = tHour + ":" + tMinute;
+                            dueTime = timeadd;
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },12,0,false
+                );
+                // set transparent background
+                timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                //Displayed previous selected time
+                timePickerDialog.updateTime(tHour,tMinute);
+                //show dialog
+                timePickerDialog.show();
+            }
+        });
+
         // Get user data
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -207,7 +256,7 @@ public class AddNewActivity extends BottomSheetDialogFragment {
 
                 if (finalIsUpdate){
                     // Update itinerary item
-                    firestore.collection("Activity").document(id).update("Activity" , activity , "due" , dueDate, "Venue", Venue, "Address", Address);
+                    firestore.collection("Activity").document(id).update("Activity" , activity , "due" , dueDate, "Venue", Venue, "Address", Address, "Location", location,"time",dueTime);
 
                     if (!bundle.getString("Activity").equals(activity)){
                         editLog += "Activity name updated from '" + bundle.getString("Activity") + "' to '" + activity + "'.";
@@ -248,8 +297,9 @@ public class AddNewActivity extends BottomSheetDialogFragment {
                         taskMap.put("Venue", Venue);
                         taskMap.put("Address", Address);
                         taskMap.put("due", dueDate);
+                        taskMap.put("Location", location);
+                        taskMap.put("time", dueTime);
                         taskMap.put("status", 0);
-                        taskMap.put("time", FieldValue.serverTimestamp());
 
                         firestore.collection("Activity").add(taskMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                             @Override
@@ -285,6 +335,13 @@ public class AddNewActivity extends BottomSheetDialogFragment {
             Place place = Autocomplete.getPlaceFromIntent(data);
             mAddressEdit.setText(place.getAddress());
             mVenueEdit.setText(String.format(place.getName()));
+            location = String.valueOf(place.getLatLng());
+
+            try{
+                firestore.collection("Activity").document(id).update("Location" , location);
+            }catch(Exception e){
+                location = String.valueOf(place.getLatLng());
+            }
 
         }else if (resultCode == AutocompleteActivity.RESULT_ERROR){
             // When error

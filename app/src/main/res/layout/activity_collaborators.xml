@@ -76,7 +76,7 @@
         app:layout_constraintTop_toTopOf="@+id/collabBackBtn" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/collabAddBtn"
+        android:id="@+id/addActivityBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
