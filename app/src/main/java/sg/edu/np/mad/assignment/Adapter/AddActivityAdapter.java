@@ -98,6 +98,7 @@ public class AddActivityAdapter extends RecyclerView.Adapter<AddActivityAdapter.
             }
         });
 
+        // When user click on activity, this will send over the information to activity_mapview
         holder.contain.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick (View view){
@@ -130,7 +131,6 @@ public class AddActivityAdapter extends RecyclerView.Adapter<AddActivityAdapter.
 
         TextView mDueDateTv,Activityname,Venue;
         CheckBox mCheckBox;
-        TextView time;
         ConstraintLayout contain;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -138,7 +138,6 @@ public class AddActivityAdapter extends RecyclerView.Adapter<AddActivityAdapter.
 
             contain = itemView.findViewById(R.id.contain);
             mDueDateTv = itemView.findViewById(R.id.due_date_tv);
-            time = itemView.findViewById(R.id.Time);
             Activityname = itemView.findViewById(R.id.Activity_name);
             Venue = itemView.findViewById(R.id.Venue);
             mCheckBox = itemView.findViewById(R.id.mcheckbox);

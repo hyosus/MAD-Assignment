@@ -103,7 +103,7 @@
         android:layout_height="27dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:drawableStart="@drawable/ic_baseline_calendar_today_24"
+        android:drawableStart="@drawable/clock"
         android:drawablePadding="8dp"
         android:text="Set Time"
         android:textColor="@color/dark_blue"

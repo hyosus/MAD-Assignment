@@ -1,7 +1,10 @@
 package sg.edu.np.mad.assignment;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -38,6 +41,8 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
     private Query query;
     private ListenerRegistration listenerRegistration;
     public String TripId;
+    private ImageView helpBtn;
+    private Dialog mdialog;
 
 
     @Override
@@ -45,10 +50,15 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_activity_main);
 
+        //intent
+        Intent intent = getIntent();
+
         recyclerView = findViewById(R.id.recycerlview);
         ImageView backBtn = findViewById(R.id.backBtn2);
         mFab = findViewById(R.id.floatingActionButton);
         firestore = FirebaseFirestore.getInstance();
+        helpBtn = findViewById(R.id.helpBtn);
+        mdialog = new Dialog(this);
 
         TextView header = findViewById(R.id.tripNameTxt);
         TextView date = findViewById(R.id.datesTxt);
@@ -92,6 +102,17 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
             }
         });
 
+        // When user click on ? icon, it will display a popup window on how to use the feature
+        helpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mdialog.setContentView(R.layout.popup_window);
+
+                mdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                mdialog.show();
+            }
+        });
+
         mList = new ArrayList<>();
         adapter = new AddActivityAdapter(AddActivityMain.this , mList);
 
@@ -100,6 +121,8 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
         showData();
         recyclerView.setAdapter(adapter);
     }
+
+
     // Show data on page
     private void showData(){
         // Sorted by time ascending as earliest activity should be at the top

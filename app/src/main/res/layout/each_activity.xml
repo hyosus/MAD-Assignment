@@ -14,7 +14,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="8dp"
         android:text="31-3-2020"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -29,7 +29,8 @@
         android:id="@+id/Activity_name"
         android:layout_width="303dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
         android:buttonTint="@color/dark_blue"
         android:text="This is Activity 1"
         android:textColor="@color/dark_blue"
@@ -42,16 +43,15 @@
         android:id="@+id/mcheckbox"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="245dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="68dp"
+        android:layout_marginStart="278dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="70dp"
         android:buttonTint="@color/dark_blue"
         android:textColor="@color/dark_blue"
         android:textSize="16dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/Activity_name"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -59,6 +59,7 @@
         android:id="@+id/Venue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
         android:text="Venue 1"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="@+id/Activity_name"
@@ -68,31 +69,17 @@
     <ImageView
         android:id="@+id/imageView10"
         android:layout_width="53dp"
-        android:layout_height="120dp"
+        android:layout_height="123dp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
-        android:scaleType="centerInside"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.126"
+        app:layout_constraintHorizontal_bias="0.016"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/timeline2" />
-
-    <TextView
-        android:id="@+id/Time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="09:00"
-        android:textColor="@color/dark_blue"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageView10"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.17" />
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/timeline_editpng" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
