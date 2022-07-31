@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment-github/app/src/main/res/drawable/background.xml" value="0.1" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment-github/app/src/main/res/drawable/fab_custom.xml" value="0.1575" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment-github/app/src/main/res/drawable/popupstyle.xml" value="0.1575" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment-github/app/src/main/res/layout/activity_budget_info.xml" value="0.264" />
         <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment/app/src/main/res/layout/activity_home.xml" value="0.2" />
         <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment/app/src/main/res/layout/activity_view_profile.xml" value="0.264" />
         <entry key="..\:/Users/shani/Desktop/MAD/Assignment-git/app/src/main/res/drawable/add_icon.xml" value="0.1" />
