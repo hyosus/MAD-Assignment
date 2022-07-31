@@ -69,9 +69,15 @@ public class AddCollaboratorActivity extends AppCompatActivity {
                         @RequiresApi(api = Build.VERSION_CODES.N)
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            ArrayList<String> emailList = new ArrayList<>();
                             for (DocumentSnapshot doc: task.getResult()) {
                                 String email = doc.getString("email");
+                                if (doc.getId().equals(trip.getUserId()) && collabEmail.equals(email)){
+                                    Toast.makeText(AddCollaboratorActivity.this, "You are the owner of this trip.", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                                 String userId = doc.getString("userId");
+                                emailList.add(email);
 
                                 ArrayList<String> sharedTripLists = new ArrayList<String>();
 
@@ -81,25 +87,36 @@ public class AddCollaboratorActivity extends AppCompatActivity {
                                         ArrayList<String> stalist = new ArrayList<String>();
                                         stalist = (ArrayList<String>) task.getResult().get("serializedTAL");     // get data from firebase and add to stalist
 
-                                        for (int i=0; i<stalist.size(); i++) {
-                                            Gson gson = new Gson();
-                                            TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);      // get trip admin
-                                            sharedTripLists.add(tempTa.userId);
+                                        if (stalist != null){
+                                            for (int i=0; i<stalist.size(); i++) {
+                                                Gson gson = new Gson();
+                                                TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);      // get trip admin
+                                                sharedTripLists.add(tempTa.userId);
+                                            }
                                         }
 
-                                        if(email.equals(collabEmail) && !sharedTripLists.contains(userId)){
-                                            TripAdmin newTA = new TripAdmin(userId,doc.getString("username"), selectedRB.getText().toString());
-                                            Gson gson = new Gson();
-                                            String taJsonString = gson.toJson(newTA);
-                                            dal.addTripSerializedTA(trip.getId(), taJsonString);
-                                            Toast.makeText(AddCollaboratorActivity.this, "Added user" + doc.getString("username"), Toast.LENGTH_SHORT).show();
-                                            finish();
-                                        }
-                                        else if (sharedTripLists.contains(userId)){
-                                            Toast.makeText(AddCollaboratorActivity.this, "User has already been added", Toast.LENGTH_SHORT).show();
+                                        // check if email input is a valid email. Is the user already added. Is the user the owner
+                                        if(email.equals(collabEmail)){
+                                            if (!sharedTripLists.contains(userId) && !userId.equals(task.getResult().getString("userId"))){
+                                                TripAdmin newTA = new TripAdmin(userId,doc.getString("username"), selectedRB.getText().toString());
+                                                Gson gson = new Gson();
+                                                String taJsonString = gson.toJson(newTA);
+                                                dal.addTripSerializedTA(trip.getId(), taJsonString);
+                                                Toast.makeText(AddCollaboratorActivity.this, "Added user " + doc.getString("username"), Toast.LENGTH_SHORT).show();
+                                                finish();
+                                            }
+                                            else if (sharedTripLists.contains(userId)){
+                                                Toast.makeText(AddCollaboratorActivity.this, "User has already been added", Toast.LENGTH_SHORT).show();
+                                            }
+                                            else if (userId.equals(task.getResult().getString("userId"))){
+                                                Toast.makeText(AddCollaboratorActivity.this, "Cannot add yourself", Toast.LENGTH_SHORT).show();
+                                            }
                                         }
                                     }
                                 });
+                            }
+                            if (!emailList.contains(collabEmail)){
+                                Toast.makeText(AddCollaboratorActivity.this, "Invalid user", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

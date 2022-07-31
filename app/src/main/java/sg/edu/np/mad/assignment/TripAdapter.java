@@ -134,8 +134,8 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                 {
                     // user cant delete trip
                     deleteItem.setVisible(false);
-
                 }
+
 
                 db.collection("Trip").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -147,21 +147,27 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
                                   ArrayList<String> stalist = new ArrayList<String>();
                                   stalist = (ArrayList<String>) doc.get("serializedTAL");
 
+                                  if (uid.equals(doc.getString("userId"))){
+                                      editItem.setVisible(true);
+                                  }
+                                  else{
+                                      editItem.setVisible(false);
+                                  }
+
                                   for (int i=0; i<stalist.size(); i++){
                                       Gson gson = new Gson();
                                       TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
 
-                                      if (uid.equals(doc.getString("userId")) || (tempTa.getUserId().equals(uid) && tempTa.permission.equals("Can Edit")))
-                                      {
-                                          editItem.setVisible(true);
-                                      }
-                                      else
-                                      {
-                                          // cant edit trip
-                                          editItem.setVisible(false);
+
+                                      if (tempTa.getUserId().equals(uid)){
+                                          if (tempTa.getPermission().equals("Can Edit")){
+                                              editItem.setVisible(true);
+                                          }
+                                          else {
+                                              editItem.setVisible(false);
+                                          }
                                       }
                                   }
-
                               }
                           }
                         }

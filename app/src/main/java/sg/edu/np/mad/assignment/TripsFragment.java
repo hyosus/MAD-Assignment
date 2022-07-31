@@ -53,7 +53,7 @@ public class TripsFragment extends Fragment {
     private boolean hasTrips = false;
 
 
-    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    String uid;
 
     // Firestore instance
     FirebaseFirestore db;
@@ -66,6 +66,7 @@ public class TripsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mview = inflater.inflate(R.layout.fragment_trips, container, false);
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         pastTxt = mview.findViewById(R.id.pastTxt);
         upcomingTxt = mview.findViewById(R.id.upcomingTxt);
@@ -109,9 +110,11 @@ public class TripsFragment extends Fragment {
                     ArrayList<TripAdmin> tripAdminArrayList = new ArrayList<TripAdmin>();
 
                     ArrayList<String> stalist = (ArrayList<String>) doc.get("serializedTAL");
-                    for (int i=0; i<stalist.size(); i++){
-                        TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
-                        sharedTripLists.add(tempTa.userId);
+                    if (stalist != null) {
+                        for (int i = 0; i < stalist.size(); i++) {
+                            TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
+                            sharedTripLists.add(tempTa.userId);
+                        }
                     }
 
                     if (uid.equals(doc.getString("userId")) || sharedTripLists.contains(uid)){

@@ -35,13 +35,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
+    DALTrip dal = new DALTrip();
 
     ShapeableImageView profileImg;
     StorageReference storageReference;
 
     BottomNavigationView bottomNavigationView;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    String uid;
     String queryTripId = "";
 
     @Override
@@ -49,6 +50,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Handle deep link
         try{
@@ -80,6 +82,32 @@ public class HomeActivity extends AppCompatActivity {
                                                 (ArrayList<EditHistory>) doc.get("EditHistoryList"),
                                                 (ArrayList<String>) doc.get("serializedEHL")
                                         );
+
+                                        // add user to collaborator
+                                        ArrayList<String> stalist = new ArrayList<String>();
+                                        stalist = (ArrayList<String>) doc.get("serializedTAL");     // get data from firebase and add to stalist
+                                        ArrayList<String> sharedTripLists = new ArrayList<String>();
+                                        Gson gson = new Gson();
+
+                                        for (int i=0; i<stalist.size(); i++) {
+                                            TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);      // get trip admin
+                                            sharedTripLists.add(tempTa.userId);
+                                        }
+
+                                        db.collection("users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                // Check if user is the owner or already part of collaborator
+                                                if (!doc.getString("userId").equals(uid) && !sharedTripLists.contains(uid)){
+                                                    TripAdmin newTA = new TripAdmin(uid, task.getResult().getString("username"), "View Only");
+                                                    String taJsonString = gson.toJson(newTA);
+                                                    dal.addTripSerializedTA(trip.getId(), taJsonString);
+                                                    finish();
+                                                }
+                                            }
+                                        });
+
+                                        // view trip
                                         Intent intent = new Intent(HomeActivity.this, AddActivityMain.class);
                                         intent.putExtra("tripDetails", trip);
                                         startActivity(intent);
@@ -169,13 +197,15 @@ public class HomeActivity extends AppCompatActivity {
                                 ArrayList<TripAdmin> tripAdminArrayList = new ArrayList<TripAdmin>();
 
                                 ArrayList<String> stalist = (ArrayList<String>) document.get("serializedTAL");
-                                for (int i=0; i<stalist.size(); i++){
-                                    TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
-                                    sharedTripLists.add(tempTa.userId);
-                                }
+                                if (stalist != null){
+                                    for (int i=0; i<stalist.size(); i++){
+                                        TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
+                                        sharedTripLists.add(tempTa.userId);
+                                    }
 
-                                if (uid.equals(document.getString("userId")) || sharedTripLists.contains(uid)) {
-                                    count++;
+                                    if (uid.equals(document.getString("userId")) || sharedTripLists.contains(uid)) {
+                                        count++;
+                                    }
                                 }
                             }
                             if (count == 0){

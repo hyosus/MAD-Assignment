@@ -118,8 +118,6 @@ public class ViewProfile<maxNumPhotosAndVideos> extends AppCompatActivity {
         String path = "users/" + uid + "/profilePic";
         StorageReference profileRef = storageReference.child(path);
 
-        Log.v("picurl", path);
-
         //Loading image into profile picture with picasso api
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -163,8 +161,6 @@ public class ViewProfile<maxNumPhotosAndVideos> extends AppCompatActivity {
                     // Add user to user class
                     ArrayList<User> users = new ArrayList<>();
                     users.add(new User(username, email, uid, path));
-                    Log.v("userc", String.valueOf(users.isEmpty()));
-
                 }
             }
         });

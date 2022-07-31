@@ -228,7 +228,7 @@ public class AddTrip extends AppCompatActivity {
                                         if (title.isEmpty()){
                                             showError(name, "Missing information");
                                         }
-                                        else if (uid.equals(doc.getString("userId")) && title.equals(doc.getString("tripName"))) {
+                                        else if (uid.equals(doc.getString("userId")) && title.equals(doc.getString("tripName")) && !title.equals(trip_edit.getTripName())) {
                                             showError(name, "Name already in use");
                                             return;
                                         }
@@ -244,6 +244,10 @@ public class AddTrip extends AppCompatActivity {
                                         else if (startCalendar.after(endCalendar) || customCalendarStart.after(customCalendarEnd)) {
                                             Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
                                         }
+                                        else if (title.equals(trip_edit.getTripName()) && destination.equals(trip_edit.getDestination()) && sDate.equals(trip_edit.getStartDate()) && eDate.equals(trip_edit.getEndDate())){
+                                            Toast.makeText(AddTrip.this, "No changes made", Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        }
                                         else{
                                             // Get current date time
                                             calendar = Calendar.getInstance();
@@ -253,7 +257,6 @@ public class AddTrip extends AppCompatActivity {
                                             // Find which fields was edited
                                             if (!trip_edit.getTripName().equals(title)){        // trip name
                                                 editLog += "‣ Trip name updated from '"+trip_edit.getTripName()+"' to '"+title+"'.;";
-                                                Toast.makeText(AddTrip.this, editLog, Toast.LENGTH_SHORT).show();
                                             }
                                             if (!trip_edit.getDestination().equals(destination)){       // trip destination
                                                 editLog += "‣ Trip destination updated from '" + trip_edit.getDestination() +"' to '" + destination +"'.;";

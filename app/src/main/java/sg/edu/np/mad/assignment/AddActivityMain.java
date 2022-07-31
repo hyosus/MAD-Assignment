@@ -128,22 +128,29 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
                       for (DocumentSnapshot doc : task.getResult()) {
                           if (trip.getId().equals(doc.getString("id"))) {
                               if (task.isSuccessful()) {
-//                                  ArrayList<String> sharedTripLists = new ArrayList<String>();
+                                  ArrayList<String> sharedTripLists = new ArrayList<String>();
                                   ArrayList<String> stalist = new ArrayList<String>();
                                   stalist = (ArrayList<String>) doc.get("serializedTAL");
+
+                                  if (uid.equals(doc.getString("userId"))){
+                                      editItem.setVisible(true);
+                                  }
+                                  else{
+                                      editItem.setVisible(false);
+                                  }
+
                                   for (int i=0; i<stalist.size(); i++){
                                       Gson gson = new Gson();
                                       TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
-//                                      sharedTripLists.add(tempTa.userId);
 
-                                      if (uid.equals(doc.getString("userId")) || (tempTa.getUserId().equals(uid) && tempTa.permission.equals("Can Edit")))
-                                      {
-                                          editItem.setVisible(true);
-                                      }
-                                      else
-                                      {
-                                          // cant edit trip
-                                          editItem.setVisible(false);
+
+                                      if (tempTa.getUserId().equals(uid)){
+                                          if (tempTa.getPermission().equals("Can Edit")){
+                                              editItem.setVisible(true);
+                                          }
+                                          else {
+                                              editItem.setVisible(false);
+                                          }
                                       }
                                   }
                               }
@@ -280,6 +287,7 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
                             mFab.setVisibility(View.VISIBLE);
                             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new sg.edu.np.mad.assignment.TouchHelper(adapter));
                             itemTouchHelper.attachToRecyclerView(AddActivityMain.this.recyclerView);
+                            return;
                         }
                         else
                         {
@@ -290,21 +298,16 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
                             ArrayList<String> sharedTripLists = new ArrayList<String>();
                             ArrayList<String> stalist = new ArrayList<String>();
                             stalist = (ArrayList<String>) doc.get("serializedTAL");
+                            mFab.setVisibility(View.GONE);
                             for (int i=0; i<stalist.size(); i++){
                                 Gson gson = new Gson();
                                 TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
                                 sharedTripLists.add(tempTa.userId);
-
                                 if ((tempTa.getUserId().equals(uid) && tempTa.permission.equals("Can Edit")))
                                 {
                                     mFab.setVisibility(View.VISIBLE);
                                     ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new sg.edu.np.mad.assignment.TouchHelper(adapter));
                                     itemTouchHelper.attachToRecyclerView(AddActivityMain.this.recyclerView);
-                                }
-                                else
-                                {
-                                    // cant edit trip
-                                    mFab.setVisibility(View.GONE);
                                 }
                             }
                         }
@@ -339,7 +342,6 @@ public class AddActivityMain extends AppCompatActivity implements sg.edu.np.mad.
                         }
                     }
                     listenerRegistration.remove();
-
                 }
             });
         }

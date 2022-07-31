@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,6 +28,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -41,6 +44,7 @@ public class CollaboratorsActivity extends AppCompatActivity {
     private ShapeableImageView profilePic;
     private FloatingActionButton addCollaboratorBtn;
     CollaboratorAdapter collaboratorAdapter;
+    private SwipeRefreshLayout swipeContainer;
 
     FirebaseFirestore db;
     StorageReference storageReference;
@@ -63,6 +67,17 @@ public class CollaboratorsActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.collabRV);
         addCollaboratorBtn = findViewById(R.id.collabAddBtn);
         profilePic = findViewById(R.id.profilePic2);
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                dataHolder.clear();
+                showData();
+                swipeContainer.setRefreshing(false);
+            }
+        });
 
         storageReference = FirebaseStorage.getInstance().getReference();
 
@@ -85,27 +100,6 @@ public class CollaboratorsActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        showData();
-
-        //  Listener
-        // FIX THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        DocumentReference docRef = db.collection("Trip").document(trip.getId());
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    return;
-                }
-
-                if (snapshot != null && snapshot.exists()) {
-                    collaboratorAdapter.notifyDataSetChanged();
-                } else {
-                    collaboratorAdapter.notifyDataSetChanged();
-                }
-            }
-        });
     }
 
 
@@ -115,7 +109,7 @@ public class CollaboratorsActivity extends AppCompatActivity {
 
         // User data
         db = FirebaseFirestore.getInstance();
-        db.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("users").orderBy("username", Query.Direction.ASCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 TextView ownerName = findViewById(R.id.ownerName);
@@ -165,19 +159,25 @@ public class CollaboratorsActivity extends AppCompatActivity {
                         ArrayList<String> stalist = new ArrayList<String>();
                         stalist = (ArrayList<String>) doc.get("serializedTAL");     // get data from firebase and add to stalist
 
-                        for (int i=0; i<stalist.size(); i++) {
+                        if (uid.equals(doc.getString("userId"))){
+                            addCollaboratorBtn.setVisibility(View.VISIBLE);
+                        }
+                        else{
+                            addCollaboratorBtn.setVisibility(View.GONE);
+                        }
+
+                        for (int i=0; i<stalist.size(); i++){
                             Gson gson = new Gson();
-                            TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);      // get trip admin
+                            TripAdmin tempTa = gson.fromJson(stalist.get(i), TripAdmin.class);
                             dataHolder.add(tempTa);
-                            sharedTripLists.add(tempTa.userId);
                             collaboratorAdapter.notifyDataSetChanged();
 
-                            // if current user is the owner/have edit rights
-                            if (uid.equals(doc.getString("userId")) ||
-                                    sharedTripLists.contains(uid) && sharedTripLists.get(sharedTripLists.indexOf(uid)).equals("Can Edit")) {
-                                addCollaboratorBtn.setVisibility(View.VISIBLE);     // can add collaborators
-                            } else {
-                                addCollaboratorBtn.setVisibility(View.GONE);        // cant add collaborators
+                            if (tempTa.getUserId().equals(uid)){
+                                if (tempTa.getPermission().equals("Can Edit")){
+                                    addCollaboratorBtn.setVisibility(View.VISIBLE);
+                                }
+                                else {
+                                    addCollaboratorBtn.setVisibility(View.GONE);                                }
                             }
                         }
                     }
@@ -188,14 +188,8 @@ public class CollaboratorsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onActivityReenter(int resultCode, Intent data) {
-        super.onActivityReenter(resultCode, data);
-        collaboratorAdapter.update(CollaboratorsActivity.this, trip);
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        collaboratorAdapter.update(CollaboratorsActivity.this, trip);
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        showData();
     }
 }

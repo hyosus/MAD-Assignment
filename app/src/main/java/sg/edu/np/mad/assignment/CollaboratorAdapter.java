@@ -90,6 +90,10 @@ public class CollaboratorAdapter extends RecyclerView.Adapter<CollaboratorAdapte
             holder.editPernissionBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (customLayout.getParent() != null){
+                        ((ViewGroup) customLayout.getParent()).removeView(customLayout);
+                    }
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                     builder.setMessage("Modify permission for "+ta.userName);
                     builder.setView(customLayout);
@@ -107,9 +111,11 @@ public class CollaboratorAdapter extends RecyclerView.Adapter<CollaboratorAdapte
                             Gson gson = new Gson();
                             String taJsonString = gson.toJson(newTA);
 
-                            dal.updateTripSerializedTAL(thisTripId, ta, taJsonString);
-                            notifyDataSetChanged();
-
+                            if (!ta.permission.equals(radioButton.getText().toString())){
+                                dal.updateTripSerializedTAL(thisTripId, ta, taJsonString);
+                                Toast.makeText(collabActivity, "Updated permission", Toast.LENGTH_SHORT).show();
+                                notifyItemChanged(position);
+                            }
                         }
                     });
 
@@ -125,7 +131,7 @@ public class CollaboratorAdapter extends RecyclerView.Adapter<CollaboratorAdapte
                             dal.removeTripSerializedTA(thisTripId, ta);
                             Toast.makeText(v.getContext(), "User " + ta.userName + " was deleted.", Toast.LENGTH_SHORT).show();
                             dataHolder.remove(position);
-                            notifyItemRemoved(position);
+                            notifyDataSetChanged();
                             changePermAlert.dismiss();
                         }
                     });
