@@ -121,6 +121,21 @@
             app:layout_constraintStart_toStartOf="@+id/titleVH"
             app:layout_constraintTop_toBottomOf="@+id/titleVH" />
 
+
+
+
+
+        <ImageView
+            android:id="@+id/menuinfo"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="30dp"
+            android:src="@drawable/ic_baseline_info_24"
+            app:layout_constraintBottom_toBottomOf="@+id/titleVH"
+            app:layout_constraintEnd_toEndOf="@id/menuVH"
+            app:layout_constraintTop_toTopOf="@+id/titleVH" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

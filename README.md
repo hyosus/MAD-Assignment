@@ -15,16 +15,12 @@ https://play.google.com/store/apps/details?id=sg.edu.np.mad.assignment
 ## Features
 - Account creation and customization
 - Creation of trip and activities
-- Trip sharing and collaboration
 - Currency conversion calculator
 
 ## Contributions of group members
 ### S10208470A | Shanice Yeong
-**Creation of Trips** <br>
+**Creation of trips** <br>
 One of the app's main features; without it, it would not be a planning app. Using Recyclerview and View Holder, created trips are then displayed on the Homescreen.
-
-**Trip collaboration**<br>
-Trips are shareable with an unique link. Anyone with the link will be added as a collaborator. Collaborators can also be added using email. Any changes made to the trip by users will be displayed in 'Version History'.
 
 **Layout / UI design**<br>
 Using Figma, I created a UI design prototype. Making sure that the design is clean and modern, while also being simple enough to translate into code. Also responsible of the most of of the layout constraints in Android Studio.
@@ -49,6 +45,3 @@ One useful feature of the currency converter is that it has the most frequently 
 ### S10207999D | Nur Harith Mirza
 **Creation of Activities** <br>
 One of the main feature of the app - Allows users to add travel Itineraries to their travels. Using Recyclerview and View Holder, created activities are then displayed on the Activities Page. Allow users to add the Itinerary name, location (which is autofilled with google autocomplete places api), time of event. Helps users to plan their trips properly.
-
-**Activity Map View**<br>
-Users are able to click on their activities and view each activity on a map - powered by google maps. If a user were to edit the activity name, date or venue/address, it will update automatically and places a marker at the correct location. Mapview can also be moved around and is not static.
