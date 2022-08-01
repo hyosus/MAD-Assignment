@@ -35,7 +35,7 @@
         android:layout_height="60dp"
         android:layout_below="@id/editname"
         android:layout_marginTop="10dp"
-        android:hint="Enter your trip name accurate"
+        android:hint="Trip name"
         android:textColor="@color/dark_blue"
         android:textColorHint="@color/dark_blue" />
 

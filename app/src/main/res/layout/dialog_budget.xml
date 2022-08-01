@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"
-        android:fontFamily="@font/baloo"
+        android:fontFamily="@font/roboto_bold"
         android:text="Add Budget and Expense"
         android:textColor="@color/dark_blue"
         android:textSize="20dp"
@@ -86,7 +86,7 @@
         android:layout_below="@id/tripname"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:hint="Enter Trip Name Accuratley Please"
+        android:hint="Trip name"
         android:textColor="@color/dark_blue"
         android:textColorHint="@color/dark_blue" />
 

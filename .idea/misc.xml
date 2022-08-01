@@ -3,6 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment_github_test/app/src/main/res/layout/activity_add_budget.xml" value="0.22735507246376813" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment_github_test/app/src/main/res/layout/activity_budget_info.xml" value="0.22735507246376813" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment_github_test/app/src/main/res/layout/activity_home.xml" value="0.22735507246376813" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment_github_test/app/src/main/res/layout/activity_main.xml" value="0.22735507246376813" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment_github_test/app/src/main/res/layout/activity_sign_in.xml" value="0.22735507246376813" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment_github_test/app/src/main/res/layout/activity_splash.xml" value="0.22735507246376813" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment_github_test/app/src/main/res/layout/addflightdetails.xml" value="0.22735507246376813" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment_github_test/app/src/main/res/layout/budget_item.xml" value="0.22735507246376813" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment_github_test/app/src/main/res/layout/content_activity_translate.xml" value="0.22735507246376813" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment_github_test/app/src/main/res/layout/dialog_budget.xml" value="0.22735507246376813" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment_github_test/app/src/main/res/layout/dialog_searchable_spinner.xml" value="0.22735507246376813" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment_github_test/app/src/main/res/layout/dialogcontentwrittensermone.xml" value="0.264" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment_github_test/app/src/main/res/layout/fragment_no_trips.xml" value="0.1111111111111111" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment_github_test/app/src/main/res/layout/fragment_second.xml" value="0.1111111111111111" />
+        <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment_github_test/app/src/main/res/layout/item_show_flight.xml" value="0.4" />
         <entry key="..\:/Users/faris/AndroidStudioProjects/MAD-Assignment_github_test/app/src/main/res/layout/trip_view_holder.xml" value="0.190625" />
       </map>
     </option>
