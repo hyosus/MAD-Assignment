@@ -1,0 +1,49 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RadioGroup
+        android:id="@+id/collabEditAlertRG"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="25dp"
+        android:checkedButton="@id/editRB"
+        app:layout_constraintEnd_toEndOf="@+id/collabEmail"
+        app:layout_constraintStart_toStartOf="@+id/collabEmail"
+        app:layout_constraintTop_toBottomOf="@+id/collabEmail">
+
+        <RadioButton
+            android:id="@+id/editRB"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:buttonTint="@color/dark_blue"
+            android:text="Can Edit"
+            android:textColor="@color/dark_blue" />
+
+        <RadioButton
+            android:id="@+id/viewRB"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:buttonTint="@color/dark_blue"
+            android:text="View Only"
+            android:textColor="@color/dark_blue" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/deleteBtn"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:background="#00FFFFFF"
+        android:letterSpacing="0.04"
+        android:text="Delete"
+        android:textAlignment="textEnd"
+        android:textColor="#AA0C0C"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/collabEditAlertRG"
+        app:layout_constraintTop_toBottomOf="@+id/collabEditAlertRG" />
+</androidx.constraintlayout.widget.ConstraintLayout>
