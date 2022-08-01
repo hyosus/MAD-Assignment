@@ -30,35 +30,53 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 
-import java.text.ParseException;
+import java.security.PrivilegedAction;
+import java.security.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Locale;
 
 public class AddTrip extends AppCompatActivity {
+    DALTrip dal = new DALTrip();
     private ImageView back;
     Button save;
     final Calendar startCalendar= Calendar.getInstance();
     final Calendar endCalendar= Calendar.getInstance();
     final Calendar customCalendarStart= Calendar.getInstance();
     final Calendar customCalendarEnd= Calendar.getInstance();
+    private Calendar calendar;
+    private SimpleDateFormat dateFormat;
+    private String todaydate, activityId;
+    String editByUserName = "";
+    private String editLog = "";
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     EditText name, sd, ed, dest;
-    private SimpleDateFormat dateFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_trip);
+
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                editByUserName = task.getResult().getString("username");
+            }
+        });
+
         name = findViewById(R.id.nameEdit);
         sd = findViewById(R.id.startEdit);
         ed = findViewById(R.id.endEdit);
@@ -127,6 +145,14 @@ public class AddTrip extends AppCompatActivity {
             }
         });
 
+        // Get itinerary bundle
+        final Bundle bundle = AddNewActivity.newInstance().getArguments();
+        if (bundle != null) {
+            activityId = bundle.getString("id");
+            Toast.makeText(this, activityId, Toast.LENGTH_SHORT).show();
+
+        }
+
 
         // Save user input
         save.setOnClickListener((new View.OnClickListener() {
@@ -137,83 +163,162 @@ public class AddTrip extends AppCompatActivity {
                 String sDate = sd.getText().toString();
                 String eDate = ed.getText().toString();
 
-                db.collection("Trip")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (DocumentSnapshot doc : task.getResult()) {
-                                        if (trip_edit == null)
-                                        {
-                                            if (title.isEmpty()){
-                                                showError(name, "Missing information");
-                                            }
-                                            else if (uid.equals(doc.getString("userId")) && title.equals(doc.getString("tripName"))) {
-                                                showError(name, "Name already in use");
-                                                return;
-                                            }
-                                            else if (destination.isEmpty()) {
-                                                showError(dest, "Missing information");
-                                            }
-                                            else if (sDate.isEmpty()){
-                                                Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
-                                            }
-                                            else if (eDate.isEmpty()){
-                                                Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
-                                            }
-                                            else if (startCalendar.after(endCalendar) || customCalendarStart.after(customCalendarEnd)) {
+                // Get trip data
+                db.collection("Trip").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot doc : task.getResult()) {
+                                if (trip_edit == null)      // Add new trip
+                                {
+                                    if (title.isEmpty()){
+                                        showError(name, "Missing information");
+                                    }
+                                    else if (uid.equals(doc.getString("userId")) && title.equals(doc.getString("tripName"))) {
+                                        showError(name, "Name already in use");
+                                        return;
+                                    }
+                                    else if (destination.isEmpty()) {
+                                        showError(dest, "Missing information");
+                                    }
+                                    else if (sDate.isEmpty()){
+                                        Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
+                                    }
+                                    else if (eDate.isEmpty()){
+                                        Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
+                                    }
+                                    else if (startCalendar.after(endCalendar) || customCalendarStart.after(customCalendarEnd)) {
 
-                                                Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
-                                            }
-                                            else {
-                                                DALTrip dalTrip = new DALTrip();
-                                                Trip trip = new Trip(dest.getText().toString(), sd.getText().toString(), ed.getText().toString(), name.getText().toString(), name.getText().toString(), uid);
-                                                dalTrip.createTrip(trip);
-                                                finish();
+                                        Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
+                                    }
+                                    else {
 
-                                                Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
-                                                startActivity(Intent);
+                                        DALTrip dalTrip = new DALTrip();
+
+                                        Trip trip = new Trip(dest.getText().toString(), sd.getText().toString(), ed.getText().toString()
+                                                ,name.getText().toString(), name.getText().toString(), uid, new ArrayList<String>(), new ArrayList<EditHistory>(), new ArrayList<String>());
+
+                                        dalTrip.createTrip(trip);
+
+
+                                        // Get user data
+                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                        db.collection("users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                editByUserName = task.getResult().getString("username");    // Find and set username of current user
                                             }
+                                        });
+
+                                        // Get date and time of when trip is created
+                                        calendar = Calendar.getInstance();
+                                        dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+                                        todaydate = dateFormat.format(calendar.getTime());
+
+                                        EditHistory newEH = new EditHistory(uid, editByUserName, todaydate, String.format("‣ Trip '%s' Created",name.getText()));
+                                        dal.updateTripEditHistory(newEH, name.getText().toString());
+
+                                        finish();
+
+                                    }
+                                }
+                                else        // Edit existing trip
+                                {
+                                    if (doc.getString("id").equals(trip_edit.getId())){
+                                        if (title.isEmpty()){
+                                            showError(name, "Missing information");
                                         }
-                                        else
-                                        {
-                                            if (title.isEmpty()){
-                                                showError(name, "Missing information");
-                                            }
-                                            else if (uid.equals(doc.getString("userId")) && title.equals(doc.getString("tripName"))) {
-                                                showError(name, "Name already in use");
-                                                return;
-                                            }
-                                            else if (destination.isEmpty()) {
-                                                showError(dest, "Missing information");
-                                            }
-                                            else if (sDate.isEmpty()){
-                                                Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
-                                            }
-                                            else if (eDate.isEmpty()){
-                                                Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
-                                            }
-                                            else if (startCalendar.after(endCalendar) || customCalendarStart.after(customCalendarEnd)) {
-                                                Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
-                                            }
-                                            else{
-                                                db.collection("Trip").document(trip_edit.getId()).update(
-                                                        "tripName",title, "destination", destination,
-                                                        "startDate", sDate, "endDate", eDate);
+                                        else if (uid.equals(doc.getString("userId")) && title.equals(doc.getString("tripName")) && !title.equals(trip_edit.getTripName())) {
+                                            showError(name, "Name already in use");
+                                            return;
+                                        }
+                                        else if (destination.isEmpty()) {
+                                            showError(dest, "Missing information");
+                                        }
+                                        else if (sDate.isEmpty()){
+                                            Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
+                                        }
+                                        else if (eDate.isEmpty()){
+                                            Toast.makeText(AddTrip.this, "Missing Date", Toast.LENGTH_LONG).show();
+                                        }
+                                        else if (startCalendar.after(endCalendar) || customCalendarStart.after(customCalendarEnd)) {
+                                            Toast.makeText(AddTrip.this, "End Date cannot be before Start Date", Toast.LENGTH_LONG).show();
+                                        }
+                                        else if (title.equals(trip_edit.getTripName()) && destination.equals(trip_edit.getDestination()) && sDate.equals(trip_edit.getStartDate()) && eDate.equals(trip_edit.getEndDate())){
+                                            Toast.makeText(AddTrip.this, "No changes made", Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        }
+                                        else{
+                                            // Get current date time
+                                            calendar = Calendar.getInstance();
+                                            dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+                                            todaydate = dateFormat.format(calendar.getTime());
 
-                                                Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
-                                                startActivity(Intent);
+                                            // Find which fields was edited
+                                            if (!trip_edit.getTripName().equals(title)){        // trip name
+                                                editLog += "‣ Trip name updated from '"+trip_edit.getTripName()+"' to '"+title+"'.;";
+                                            }
+                                            if (!trip_edit.getDestination().equals(destination)){       // trip destination
+                                                editLog += "‣ Trip destination updated from '" + trip_edit.getDestination() +"' to '" + destination +"'.;";
+                                            }
+                                            if (!trip_edit.getStartDate().equals(sDate)){       // trip start date
+                                                editLog += "‣ Trip start date updated from '" + trip_edit.getStartDate() +"' to '" + sDate +"'.;";
+                                            }
+                                            if (!trip_edit.getEndDate().equals(eDate)){     // trip end date
+                                                editLog += "‣ Trip end date updated from '" + trip_edit.getEndDate() +"' to '" + eDate +"'.;";
                                             }
 
+                                            db.collection("Activity").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    for (DocumentSnapshot doc : task.getResult()){
+                                                        if (doc.getString("TripId").equals(trip_edit.getId())){
+                                                            db.collection("Activity").document(doc.getId()).update("TripId" , title);
+                                                        }
+                                                    }
+                                                }
+                                            });
+
+                                            // Get user data
+                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                            db.collection("users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                    editByUserName = task.getResult().getString("username");    // Find and set username of current user
+                                                }
+                                            });
+
+                                            // Get current date and time when user edit the trip
+                                            calendar = Calendar.getInstance();
+                                            dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+                                            todaydate = dateFormat.format(calendar.getTime());
+
+                                            EditHistory newEH = new EditHistory(uid, editByUserName, todaydate, editLog);
+
+                                            Gson gson = new Gson();
+                                            String ehJsonString = gson.toJson(newEH);
+
+                                            trip_edit.EditHistoryList.add(newEH);
+                                            dal.updateTrip(trip_edit.getId(), title, destination, sDate, eDate, trip_edit.EditHistoryList, ehJsonString);
+
+                                            dal.updateTripEditHistory(newEH, title);
+
+
+                                            Toast.makeText(AddTrip.this, "Trip Updated", Toast.LENGTH_SHORT).show();
+                                            Intent Intent = new Intent(AddTrip.this, HomeActivity.class);
+                                            startActivity(Intent);
+                                            finish();
+                                            return;
                                         }
                                     }
                                 }
-                                else {
-                                    Log.d("checkTripListEmpty()", "Error getting documents: ", task.getException());
-                                }
                             }
-                        });
+                        }
+                        else {
+                            Log.d("checkTripListEmpty()", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
 
             }
         }));
@@ -223,7 +328,7 @@ public class AddTrip extends AppCompatActivity {
             startCalendar.set(Calendar.YEAR, year);
             startCalendar.set(Calendar.MONTH,month);
             startCalendar.set(Calendar.DAY_OF_MONTH,day);
-            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MMM/yyyy");
+            SimpleDateFormat dateFormat=new SimpleDateFormat("d MMM yyyy");
             sd.setText(dateFormat.format(startCalendar.getTime()));
         };
 
@@ -231,7 +336,7 @@ public class AddTrip extends AppCompatActivity {
             endCalendar.set(Calendar.YEAR, year);
             endCalendar.set(Calendar.MONTH,month);
             endCalendar.set(Calendar.DAY_OF_MONTH,day);
-            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MMM/yyyy");
+            SimpleDateFormat dateFormat=new SimpleDateFormat("d MMM yyyy");
             ed.setText(dateFormat.format(endCalendar.getTime()));
         };
 
@@ -244,13 +349,13 @@ public class AddTrip extends AppCompatActivity {
                     new DatePickerDialog(AddTrip.this, AlertDialog.THEME_HOLO_LIGHT, date,startCalendar.get(Calendar.YEAR),startCalendar.get(Calendar.MONTH),startCalendar.get(Calendar.DAY_OF_MONTH)).show();
                 }
                 else {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy", Locale.ENGLISH);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH);
                     LocalDate date = LocalDate.parse(sd.getText().toString(), formatter);
                     DatePickerDialog.OnDateSetListener thisdatelistener = (v, year, month, day) -> {
                         customCalendarStart.set(Calendar.YEAR, year);
                         customCalendarStart.set(Calendar.MONTH,month);
                         customCalendarStart.set(Calendar.DAY_OF_MONTH,day);
-                        SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MMM/yyyy");
+                        SimpleDateFormat dateFormat=new SimpleDateFormat("d MMM yyyy");
                         sd.setText(dateFormat.format(customCalendarStart.getTime()));
                     };
                     new DatePickerDialog(AddTrip.this, AlertDialog.THEME_HOLO_LIGHT, thisdatelistener,date.getYear(),date.getMonthValue()-1,date.getDayOfMonth()).show();                }
@@ -266,13 +371,13 @@ public class AddTrip extends AppCompatActivity {
                     new DatePickerDialog(AddTrip.this, AlertDialog.THEME_HOLO_LIGHT, enddate, endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.DAY_OF_MONTH)).show();
                 }
                 else {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy", Locale.ENGLISH);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH);
                     LocalDate date = LocalDate.parse(ed.getText().toString(), formatter);
                     DatePickerDialog.OnDateSetListener thisDate = (thisview, year, month, day) -> {
                         customCalendarEnd.set(Calendar.YEAR, year);
                         customCalendarEnd.set(Calendar.MONTH,month);
                         customCalendarEnd.set(Calendar.DAY_OF_MONTH,day);
-                        SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MMM/yyyy");
+                        SimpleDateFormat dateFormat=new SimpleDateFormat("d MMM yyyy");
                         ed.setText(dateFormat.format(customCalendarEnd.getTime()));
                     };
                     new DatePickerDialog(AddTrip.this, AlertDialog.THEME_HOLO_LIGHT, thisDate,date.getYear(),date.getMonthValue()-1,date.getDayOfMonth()).show();

@@ -34,7 +34,6 @@
         <item name="android:popupBackground">@drawable/popupstyle</item>
     </style>
 
-
     <style name="customfab">
         <item name="android:background">@drawable/fab_custom</item>
         <item name="android:textColor">@color/white</item>
