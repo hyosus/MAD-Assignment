@@ -28,6 +28,12 @@
             android:name=".VersionHistoryActivity"
             android:exported="false" />
         <activity
+            android:name=".weather.activity.WeatherDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".weather.activity.WeatherActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddCollaboratorActivity"
             android:exported="false" />
         <activity
