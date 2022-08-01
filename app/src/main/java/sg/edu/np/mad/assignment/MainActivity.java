@@ -1,19 +1,11 @@
 package sg.edu.np.mad.assignment;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Objects;
-
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -28,16 +20,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         createAcc.setOnClickListener(this);
         signIn.setOnClickListener(this);
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        // Keep user logged in
-        if(user != null) {
-            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-            startActivity(intent);
-
-            this.finish();
-        }
     }
 
     @Override
