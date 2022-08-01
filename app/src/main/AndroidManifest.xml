@@ -20,6 +20,13 @@
             android:value="@string/map_key"/>
 
         <activity
+            android:name=".weather.activity.WeatherDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".weather.activity.WeatherActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".Model.activity_mapview"
             android:exported="false"
             android:screenOrientation="portrait" />

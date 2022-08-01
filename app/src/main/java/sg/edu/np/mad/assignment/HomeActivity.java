@@ -3,6 +3,8 @@ package sg.edu.np.mad.assignment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +35,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import sg.edu.np.mad.assignment.weather.activity.WeatherActivity;
 
 public class HomeActivity extends AppCompatActivity {
     DALTrip dal = new DALTrip();
@@ -161,6 +165,16 @@ public class HomeActivity extends AppCompatActivity {
                     case R.id.add:
                         Intent Intent = new Intent(HomeActivity.this, AddTrip.class);
                         startActivity(Intent);
+                        return true;
+
+                    case R.id.location:
+                        // Delay for wait fragment load first
+                        new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(new Intent(HomeActivity.this, WeatherActivity.class));
+                            }
+                        }, 500);
                         return true;
 
                 }
