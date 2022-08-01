@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -114,7 +115,8 @@ public class ViewProfile<maxNumPhotosAndVideos> extends AppCompatActivity {
             }
         });
 
-        StorageReference profileRef = storageReference.child("users/" + uid + "/profilePic");
+        String path = "users/" + uid + "/profilePic";
+        StorageReference profileRef = storageReference.child(path);
 
         //Loading image into profile picture with picasso api
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -134,11 +136,13 @@ public class ViewProfile<maxNumPhotosAndVideos> extends AppCompatActivity {
                     dob = dobInput.getText().toString().trim();
                     country = countryInput.getText().toString().trim();
 
+                    hashMap.put("userId", uid);
                     hashMap.put("username", username);
                     hashMap.put("email", email);
                     hashMap.put("phoneNo", phoneNo);
                     hashMap.put("dob", dob);
                     hashMap.put("homeCountry", country);
+                    hashMap.put("profilePic", path);
 
                     db.collection("users").document(uid).set(hashMap)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -153,9 +157,14 @@ public class ViewProfile<maxNumPhotosAndVideos> extends AppCompatActivity {
                                     Toast.makeText(ViewProfile.this, "Profile saving failed", Toast.LENGTH_SHORT).show();
                                 }
                             });
+
+                    // Add user to user class
+                    ArrayList<User> users = new ArrayList<>();
+                    users.add(new User(username, email, uid, path));
                 }
             }
         });
+
 
         // Initiate date picker
         DatePickerDialog.OnDateSetListener date = (view, year, month, day) -> {
@@ -208,6 +217,7 @@ public class ViewProfile<maxNumPhotosAndVideos> extends AppCompatActivity {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(ViewProfile.this, MainActivity.class));
             }
         });
