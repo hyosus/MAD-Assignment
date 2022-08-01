@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BudgetInfoActivity">
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:layout_marginTop="75dp" />
+
+
+    <TextView
+        android:id="@+id/headerTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/recyclerview"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="27dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="Budget And Expenses"
+        android:textColor="@color/dark_blue"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/textname"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/recyclerview"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="27dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="Budget And Expenses"
+        android:textColor="@color/dark_blue"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerviewbudget"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/headerTxt"
+        android:layout_marginTop="10dp" />
+
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        app:fab_addButtonColorNormal="@color/dark_blue"
+        app:fab_addButtonColorPressed="@color/dark_blue"
+        android:layout_marginBottom="20dp"
+        app:fab_labelStyle="@style/customfab"
+        android:src="@drawable/ic_baseline_add_24" >
+
+
+
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/floating"
+            android:src="@drawable/plane_white"
+            android:backgroundTint="@color/dark_blue"
+            app:fab_title="Add Flight Details"/>
+
+
+
+
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/floatingbudget"
+            android:src="@drawable/ic_baseline_attach_money_24"
+            android:backgroundTint="@color/dark_blue"
+            app:fab_title="Add Budget"/>
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+    <ImageView
+        android:id="@+id/bckbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/recyclerview"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+
+
+        android:layout_marginTop="-55dp"
+        app:srcCompat="@drawable/back_arrow" />
+
+
+</RelativeLayout>
