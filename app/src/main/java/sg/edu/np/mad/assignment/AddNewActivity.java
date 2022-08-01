@@ -264,7 +264,7 @@ public class AddNewActivity extends BottomSheetDialogFragment {
                     if (!bundle.getString("Venue").equals(Venue)){
                         editLog += "Activity venue updated from '" + bundle.getString("Venue") + "' to '" + Venue + "'.";
                     }
-                    if (!bundle.getString("Address").equals(Venue)){
+                    if (!bundle.getString("Address").equals(Address)){
                         editLog += "Activity Address updated from '" + bundle.getString("Address") + "' to '" + Address + "'.";
                     }
 
