@@ -277,14 +277,14 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
             }
         });
 
-//        holder.menuinfo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(view.getContext(),BudgetInfoActivity.class);
-//                intent.putExtra("name", trip.getTripName());
-//                view.getContext().startActivity(intent);
-//            }
-//        });
+        holder.menuinfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(),BudgetInfoActivity.class);
+                intent.putExtra("name", trip.getTripName());
+                view.getContext().startActivity(intent);
+            }
+        });
 
 
 
@@ -297,7 +297,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.myviewholder>
 
     class myviewholder extends RecyclerView.ViewHolder
     {
-        ImageView img, timeIcon, menu,menuinfo;
+        ImageView img, timeIcon, menu,menuinfo ;
         TextView title, duration, daysLeft, country;
         ConstraintLayout container;
 
