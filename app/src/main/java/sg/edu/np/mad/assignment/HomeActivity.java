@@ -167,6 +167,11 @@ public class HomeActivity extends AppCompatActivity {
                         startActivity(Intent);
                         return true;
 
+                    case R.id.translate:
+                        Intent Translate = new Intent(HomeActivity.this, Translate.class);
+                        startActivity(Translate);
+                        return true;
+
                     case R.id.location:
                         // Delay for wait fragment load first
                         new Handler(Looper.myLooper()).postDelayed(new Runnable() {
