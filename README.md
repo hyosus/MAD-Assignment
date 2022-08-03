@@ -22,6 +22,9 @@ https://play.google.com/store/apps/details?id=sg.edu.np.mad.assignment
 **Creation of trips** <br>
 One of the app's main features; without it, it would not be a planning app. Using Recyclerview and View Holder, created trips are then displayed on the Homescreen.
 
+**Trip Collaboration**<br>
+Edit and share trips with friends or family using a shareable link or adding through email. Specify each person's edit rights as well as view any changes made by anyone in the Version History.
+
 **Layout / UI design**<br>
 Using Figma, I created a UI design prototype. Making sure that the design is clean and modern, while also being simple enough to translate into code. Also responsible of the most of of the layout constraints in Android Studio.
 
